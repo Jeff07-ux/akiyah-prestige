@@ -2,11 +2,19 @@
    Skills: image-first-grid-layout (full-bleed stages, guide rails, anchored copy, glass side boxes),
    masked-reveal (headlines). Palette: Palmeraie Smoke. */
 :root {
-  --smoke: #171612; --smoke-2: #23211B; --bone: #F5F2EB; --sage: #A9AE93; --sage-hi: #C4C8B0; --ash: #A6A196;
+  /* Theme tokens: warm grey is the default; html[data-theme] swaps to "forest" or "navy". */
+  --smoke: #8C8980; --smoke-2: #A7A398; --text: #F5F2EB; --sage: #B8A889; --sage-hi: #C4C8B0; --ash: #A6A196;
+  --bone: var(--text);
   --rail: rgba(245,242,235,.18); --soft: rgba(245,242,235,.75);
   --gut: clamp(16px, 4vw, 56px); --pad: clamp(0px, 1.6vw, 24px);
   --sans: "Instrument Sans", system-ui, sans-serif; --serif: "Instrument Serif", Georgia, serif;
   --ease: cubic-bezier(.16,1,.3,1);
+}
+:root[data-theme="forest"] {
+  --smoke: #183D32; --smoke-2: #315647; --text: #F5F3E9; --sage: #A9B58A; --sage-hi: #C9D3AA; --ash: #AEBBA8;
+}
+:root[data-theme="navy"] {
+  --smoke: #0B1426; --smoke-2: #142039; --text: #F4F2EC; --sage: #B9A77E; --sage-hi: #D4C49C; --ash: #A3A9B8;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -240,3 +248,10 @@ footer.site a:hover { color: var(--bone); }
   .ev-types li + li { border-left: 0; }
   .ev-types li:nth-child(even) { border-left: 1px solid rgba(217,196,160,.35); }
 }
+
+/* Theme toggle */
+.theme-btn { min-height: 44px; display: inline-flex; align-items: center; gap: 8px; padding: 0 14px; border: 1px solid var(--rail); font-size: 14px; }
+.theme-btn i { width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--rail); background: #183D32; }
+:root[data-theme="forest"] .theme-btn i { background: #0B1426; }
+:root[data-theme="navy"] .theme-btn i { background: #8C8980; }
+header.site .in > .tools { display: flex; align-items: center; gap: 10px; }

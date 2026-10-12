@@ -1,4 +1,4 @@
-// Aliyah Prestige, Riad Grid site: mobile menu, filters (gallery + journal), gallery lightbox, newsletter form.
+// Aliyah Prestige, Riad Grid site: mobile menu, filters (gallery + journal), gallery lightbox, newsletter form, theme toggle.
 (function () {
   // Mobile menu
   const drawer = document.getElementById("drawer");
@@ -77,4 +77,24 @@
       form.reset();
     });
   });
+
+  // Theme toggle: cycles warm grey (default), forest green and navy, remembered per browser
+  const root = document.documentElement;
+  const themeBtn = document.querySelector("[data-theme-toggle]");
+  const THEMES = [["grey", "Grey", "warm grey"], ["forest", "Forest", "forest green"], ["navy", "Navy", "navy"]];
+  if (themeBtn) {
+    const current = () => Math.max(0, THEMES.findIndex(([k]) => k === (root.dataset.theme || "grey")));
+    const sync = () => {
+      const [, label, name] = THEMES[(current() + 1) % THEMES.length];
+      themeBtn.querySelector("span").textContent = label;
+      themeBtn.setAttribute("aria-label", `Switch to ${name} theme`);
+    };
+    sync();
+    themeBtn.addEventListener("click", () => {
+      const [key] = THEMES[(current() + 1) % THEMES.length];
+      if (key === "grey") delete root.dataset.theme; else root.dataset.theme = key;
+      try { localStorage.setItem("theme", key); } catch (e) {}
+      sync();
+    });
+  }
 })();
