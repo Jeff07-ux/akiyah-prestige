@@ -1,4 +1,4 @@
-// Aliyah Prestige, Riad Grid site: mobile menu, filters (gallery + journal), gallery lightbox, newsletter form, theme toggle.
+// Aliyah Prestige, Riad Grid site: mobile menu, filters (gallery + journal), gallery lightbox, newsletter form, theme picker, sticky header.
 (function () {
   // Mobile menu
   const drawer = document.getElementById("drawer");
@@ -78,23 +78,62 @@
     });
   });
 
-  // Theme toggle: cycles warm grey (default), forest green and navy, remembered per browser
+  // Sticky header: solid background once the page leaves the top
+  const head = document.querySelector("header.site");
+  if (head) {
+    const onScroll = () => head.classList.toggle("scrolled", window.scrollY > 10);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+  }
+
+  // Theme picker: 3 dark and 10 light palettes, remembered per browser.
+  // Keys must match site.css and the head script in build.mjs. [key, label, tone, background, accent]
   const root = document.documentElement;
   const themeBtn = document.querySelector("[data-theme-toggle]");
-  const THEMES = [["grey", "Grey", "warm grey"], ["forest", "Forest", "forest green"], ["navy", "Navy", "navy"]];
+  const THEMES = [
+    ["grey", "Warm grey", "dark", "#8C8980", "#B8A889"], ["forest", "Forest", "dark", "#183D32", "#A9B58A"], ["navy", "Navy", "dark", "#0B1426", "#B9A77E"],
+    ["tadelakt", "Tadelakt", "light", "#F0E2CF", "#8A5A35"], ["rose", "Rose City", "light", "#F7DCD0", "#A0533F"],
+    ["majorelle", "Majorelle", "light", "#2D4BA0", "#F2C230"], ["mint", "Mint Tea", "light", "#E3EEDD", "#3F6B4F"],
+    ["saffron", "Saffron Souk", "light", "#FAE8C2", "#E3A21A"], ["atlas", "Atlas Snow", "light", "#E6EEF2", "#4E6470"],
+    ["dune", "Agafay Dune", "light", "#F2DCC0", "#8F4F24"], ["zellige", "Zellige", "light", "#DCEFEA", "#1F6E6B"],
+    ["blossom", "Orange Blossom", "light", "#FDE8D6", "#B0532A"], ["cedar", "Cedar & Brass", "light", "#EDE4D0", "#B08D3A"],
+  ];
+  const swatch = (bg, accent) => `background:linear-gradient(135deg, ${bg} 50%, ${accent} 50%)`;
   if (themeBtn) {
-    const current = () => Math.max(0, THEMES.findIndex(([k]) => k === (root.dataset.theme || "grey")));
+    const menu = document.createElement("div");
+    menu.className = "theme-menu";
+    menu.id = "theme-menu";
+    menu.hidden = true;
+    menu.setAttribute("role", "group");
+    menu.setAttribute("aria-label", "Colour theme");
+    menu.innerHTML = ["dark", "light"].map((tone) => `<p class="lab">${tone === "dark" ? "Dark" : "Light"}</p><div class="opts">` +
+      THEMES.filter((t) => t[2] === tone).map(([k, label, , bg, ac]) =>
+        `<button type="button" data-theme-key="${k}" aria-pressed="false"><i aria-hidden="true" style="${swatch(bg, ac)}"></i>${label}</button>`).join("") + "</div>").join("");
+    themeBtn.after(menu);
+    themeBtn.setAttribute("aria-controls", "theme-menu");
+    themeBtn.setAttribute("aria-expanded", "false");
+
+    const current = () => THEMES.find(([k]) => k === root.dataset.theme) || THEMES[0];
     const sync = () => {
-      const [, label, name] = THEMES[(current() + 1) % THEMES.length];
+      const [key, label, , bg, ac] = current();
       themeBtn.querySelector("span").textContent = label;
-      themeBtn.setAttribute("aria-label", `Switch to ${name} theme`);
+      themeBtn.querySelector("i").setAttribute("style", swatch(bg, ac));
+      themeBtn.setAttribute("aria-label", `Colour theme: ${label}. Change theme`);
+      menu.querySelectorAll("[data-theme-key]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.themeKey === key)));
     };
+    const setOpen = (open) => { menu.hidden = !open; themeBtn.setAttribute("aria-expanded", String(open)); };
     sync();
-    themeBtn.addEventListener("click", () => {
-      const [key] = THEMES[(current() + 1) % THEMES.length];
+    themeBtn.addEventListener("click", () => setOpen(menu.hidden));
+    menu.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-theme-key]");
+      if (!b) return;
+      const [key, , tone] = THEMES.find(([k]) => k === b.dataset.themeKey);
       if (key === "grey") delete root.dataset.theme; else root.dataset.theme = key;
+      if (tone === "light") root.dataset.tone = "light"; else delete root.dataset.tone;
       try { localStorage.setItem("theme", key); } catch (e) {}
       sync();
     });
+    document.addEventListener("click", (e) => { if (!menu.hidden && !e.target.closest(".tools")) setOpen(false); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !menu.hidden) { setOpen(false); themeBtn.focus(); } });
   }
 })();
