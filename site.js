@@ -78,6 +78,19 @@
     });
   });
 
+  // Tabs ("Exclusively for you" variant 11): one promise visible at a time
+  document.querySelectorAll("[data-ex-tabs]").forEach((wrap) => {
+    const tabs = [...wrap.querySelectorAll("[role=tab]")];
+    tabs.forEach((tab) => tab.addEventListener("click", () => {
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.setAttribute("aria-selected", String(on));
+        t.setAttribute("aria-pressed", String(on));
+        document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+      });
+    }));
+  });
+
   // Sticky header: solid background once the page leaves the top
   const head = document.querySelector("header.site");
   if (head) {

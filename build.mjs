@@ -8,7 +8,8 @@ const WA = "+212 6 00 00 00 00";
 const WA_URL = "https://wa.me/212600000000";
 const EMAIL = "concierge@aliyahprestige.ma";
 const im = (k) => `img/${k}.jpg`;
-const rails = `<div class="rails" aria-hidden="true"><i></i><i></i><i></i><i></i></div>`;
+// Vertical guide rails were removed from the design; kept as an empty slot so sections need no edits.
+const rails = "";
 const NAV = [["Stays", "index.html#stays", "home"], ["Events", "index.html#events", "events"], ["Services", "index.html#services", "service"], ["Gallery", "gallery.html", "gallery"], ["Journal", "journal.html", "journal"]];
 
 function header(page) {
@@ -78,6 +79,119 @@ const SERVICES = [
   ["hammam", "Wellness", "2 services", "Hammam rituals at home.", "", "#enquire"],
   ["riad2", "Events &amp; Concierge", "2 services", "Weddings and celebrations by Aliyah Events.", "wide", "#events"],
 ];
+// ---------- "Exclusively for you": three promises, five layout variants ----------
+// Home uses EX_VARIANT; sections.html shows all five for comparison.
+const EX_VARIANT = 5;
+const EX_ICONS = {
+  person: `<circle cx="24" cy="15" r="7"/><path d="M10 41c0-7.7 6.3-13 14-13s14 5.3 14 13"/><path d="M24 28l-2.5 4 2.5 6 2.5-6z"/>`,
+  shield: `<path d="M24 5l15 5v11c0 10-6.5 17.5-15 22C15.5 38.5 9 31 9 21V10z"/><path d="M17 24l5 5 9-10"/>`,
+  clock: `<path d="M40 24a16 16 0 1 1-4.7-11.3"/><path d="M40 7v6.5h-6.5"/><text x="23" y="28.5" text-anchor="middle" font-size="12" font-weight="500" font-family="Instrument Sans, system-ui, sans-serif" fill="currentColor" stroke="none">24</text>`,
+};
+const exIcon = (k) => `<svg class="ex-ic" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${EX_ICONS[k]}</svg>`;
+// [icon, title, short line, description, big figure, figure caption]
+const EXCLUSIVE = [
+  ["person", "Personalised service", "Tailored to you", "Every stay is planned around your wishes, by one concierge who learns your tastes.", "1", "concierge for your whole stay"],
+  ["shield", "Discretion &amp; security", "Private at all times", "Your name, plans and guests stay private. Only vetted drivers, guides and venues.", "0", "names ever shared"],
+  ["clock", "24/7 assistance", "Any hour, any day", "A real person answers within minutes, day or night, in your language.", "24/7", "a real person answers"],
+];
+// Copy as on the original site's section
+const EX_ORIGINAL = [
+  ["person", "Personalised<br>service", "Tailored to your individual needs and desires."],
+  ["shield", "Discretion<br>&amp; security", "Ensuring your privacy and safety at all times."],
+  ["clock", "24/7<br>assistance", "Available around the clock for your convenience."],
+];
+const EX_PICS = ["car", "riad", "villa-dusk"];
+const exHead = (cls = "") => `<div class="sec-head ${cls}"><div><p class="lab">Exclusively for you</p><h2 class="H md" data-masked-reveal>Three promises, <em>kept</em>.</h2></div>
+    <p class="muted">What every guest receives, whatever the size of the stay.</p></div>`;
+function exclusive(v, id = "exclusive") {
+  const at = id ? ` id="${id}"` : "";
+  if (v === 1) return `<section class="sec ex ex-1"${at}>${rails}<div class="inner">
+  ${exHead()}
+  <div class="row3">${EXCLUSIVE.map(([ic, t, , d], i) => `<div class="step" data-reveal style="--d:${i * 0.08}s"><div class="ex-top"><span class="n">0${i + 1}</span>${exIcon(ic)}</div><h3>${t}</h3><p>${d}</p></div>`).join("")}</div>
+</div></section>`;
+  if (v === 2) return `<section class="stage ex ex-2"${at}><img src="${im("lanterns")}" alt="" loading="lazy" data-par>${rails}<div class="in">
+  <div class="copy wide"><p class="lab">Exclusively for you</p><h2 class="H md" data-masked-reveal>Three promises, <em>kept</em>.</h2></div>
+  <div class="ex-cards">${EXCLUSIVE.map(([ic, t, s2, d], i) => `<div class="ex-card" data-reveal style="--d:${i * 0.08}s">${exIcon(ic)}<p class="lab">0${i + 1} · ${s2}</p><h3>${t}</h3><p>${d}</p></div>`).join("")}</div>
+</div></section>`;
+  if (v === 3) return `<section class="sec ex ex-3"${at}>${rails}<div class="inner incl">
+  <div><p class="lab">Exclusively for you</p><h2 class="H md" data-masked-reveal>Three promises, <em>kept</em>.</h2>
+    <p class="muted" style="max-width:38ch;margin:20px 0 0">What every guest receives, whatever the size of the stay.</p>
+    <ul class="ex-list">${EXCLUSIVE.map(([ic, t, , d], i) => `<li data-reveal style="--d:${i * 0.08}s">${exIcon(ic)}<div><h3>${t}</h3><p>${d}</p></div></li>`).join("")}</ul></div>
+  <div class="pic" data-reveal><img src="${im("riad3")}" alt="Quiet riad courtyard with a fountain" loading="lazy"></div>
+</div></section>`;
+  if (v === 4) return `<section class="sec ex ex-4"${at}>${rails}<div class="inner">
+  ${exHead()}
+  <div class="ex-stats">${EXCLUSIVE.map(([ic, t, , d, fig, cap], i) => `<div data-reveal style="--d:${i * 0.08}s"><p class="lab">0${i + 1} · ${t}</p><p class="ex-v">${fig}</p><p class="ex-cap">${cap}</p><p class="muted">${d}</p></div>`).join("")}</div>
+</div></section>`;
+  if (v === 6) return `<section class="sec ex ex-6"${at}>${rails}<div class="inner">
+  ${exHead()}
+  <div class="grid ex-tiles">${EXCLUSIVE.map(([ic, t, s2, d], i) => `<div class="tile" data-reveal style="--d:${i * 0.08}s"><img src="${im(EX_PICS[i])}" alt="" loading="lazy"><span class="lab n">0${i + 1}</span><div class="t ex-glass">${exIcon(ic)}<p class="lab">${s2}</p><h3>${t}</h3><p>${d}</p></div></div>`).join("")}</div>
+</div></section>`;
+  if (v === 7) return `<section class="sec ex ex-7"${at}>${rails}<div class="inner">
+  <p class="lab">Exclusively for you</p>
+  <ol class="ex-rows">${EXCLUSIVE.map(([ic, t, , d], i) => `<li data-reveal style="--d:${i * 0.08}s"><span class="ex-no">0${i + 1}</span><h3 class="H md">${t}</h3><div>${exIcon(ic)}<p class="muted">${d}</p></div></li>`).join("")}</ol>
+</div></section>`;
+  if (v === 8) return `<section class="sec ex ex-8"${at}>${rails}<div class="inner">
+  <p class="lab">Exclusively for you</p>
+  <blockquote class="ex-quote" data-reveal>“We never say no, and we never say <em>who</em>.”</blockquote>
+  <ul class="ex-inline">${EXCLUSIVE.map(([ic, t, s2], i) => `<li data-reveal style="--d:${0.1 + i * 0.08}s">${exIcon(ic)}<span><b>${t}</b>${s2}</span></li>`).join("")}</ul>
+</div></section>`;
+  if (v === 9) return `<section class="sec ex ex-9"${at}>${rails}<div class="inner">
+  ${exHead()}
+  <div class="pn ex-pn" data-panels>${EXCLUSIVE.map(([ic, t, s2, d], i) => `
+    <article class="pnl${i === 0 ? " on" : ""}">
+      <img src="${im(EX_PICS[i])}" alt="" loading="lazy">
+      <button class="pnl-tab" type="button" aria-expanded="${i === 0}" aria-controls="exp-${v}-${i}"><i>0${i + 1}</i>${t}</button>
+      <div class="pnl-d ex-glass" id="exp-${v}-${i}">${exIcon(ic)}<p class="lab">0${i + 1} · ${s2}</p><h3>${t}</h3><p>${d}</p></div>
+    </article>`).join("")}
+  </div>
+</div></section>`;
+  if (v === 10) return `<section class="sec ex ex-10"${at}>${rails}<div class="inner">
+  <div class="ex-card-big" data-reveal>
+    <p class="lab">Exclusively for you</p><h2 class="H md" data-masked-reveal>Three promises, <em>kept</em>.</h2>
+    <div class="ex-cols">${EXCLUSIVE.map(([ic, t, , d]) => `<div>${exIcon(ic)}<h3>${t}</h3><p>${d}</p></div>`).join("")}</div>
+    <p class="ex-sign"><span>Signed,</span> <em>Aliyah</em>, your concierge</p>
+  </div>
+</div></section>`;
+  // 11-15: one promise in focus at a time, kept simple
+  if (v === 11) return `<section class="sec ex ex-11"${at}>${rails}<div class="inner">
+  ${exHead()}
+  <div class="ex-tabs" data-ex-tabs>
+    <div class="chips" role="tablist" aria-label="Promises">${EXCLUSIVE.map(([, t], i) => `<button class="chip" type="button" role="tab" id="ext-${v}-${i}" aria-controls="exq-${v}-${i}" aria-selected="${i === 0}" aria-pressed="${i === 0}">0${i + 1} ${t}</button>`).join("")}</div>
+    ${EXCLUSIVE.map(([ic, t, s2, d], i) => `<div class="ex-pane" role="tabpanel" id="exq-${v}-${i}" aria-labelledby="ext-${v}-${i}"${i ? " hidden" : ""}>${exIcon(ic)}<p class="lab">${s2}</p><h3 class="H md">${t}</h3><p class="muted">${d}</p></div>`).join("")}
+  </div>
+</div></section>`;
+  if (v === 12) return `<section class="sec ex ex-12"${at}>${rails}<div class="inner">
+  <p class="lab ex-c">Exclusively for you</p>
+  ${EXCLUSIVE.map(([ic, t, , d], i) => `<div class="ex-one" data-reveal>${exIcon(ic)}<p class="lab">0${i + 1} / 03</p><h3 class="H md">${t}</h3><p class="muted">${d}</p></div>`).join("")}
+</div></section>`;
+  if (v === 13) return `<section class="sec ex ex-13"${at}>${rails}<div class="inner">
+  ${exHead()}
+  ${EXCLUSIVE.map(([ic, t, s2, d], i) => `<div class="ex-zig${i % 2 ? " flip" : ""}" data-reveal><div class="pic"><img src="${im(EX_PICS[i])}" alt="" loading="lazy"></div><div>${exIcon(ic)}<p class="lab">0${i + 1} · ${s2}</p><h3 class="H md">${t}</h3><p class="muted">${d}</p></div></div>`).join("")}
+</div></section>`;
+  if (v === 14) return `<section class="sec ex ex-14"${at}>${rails}<div class="inner ex-sticky">
+  <div class="ex-aside"><p class="lab">Exclusively for you</p><h2 class="H md" data-masked-reveal>Three promises, <em>kept</em>.</h2></div>
+  <div>${EXCLUSIVE.map(([ic, t, s2, d], i) => `<div class="ex-block" data-reveal><span class="ex-no">0${i + 1}</span>${exIcon(ic)}<h3 class="H md">${t}</h3><p class="lab">${s2}</p><p class="muted">${d}</p></div>`).join("")}</div>
+</div></section>`;
+  if (v === 15) return `<section class="sec ex ex-15"${at}>${rails}<div class="inner">
+  ${exHead()}
+  <div class="ex-snap" tabindex="0" aria-label="Promises, scroll sideways">${EXCLUSIVE.map(([ic, t, s2, d], i) => `<div class="ex-slide">${exIcon(ic)}<p class="lab">0${i + 1} / 03 · ${s2}</p><h3 class="H md">${t}</h3><p class="muted">${d}</p></div>`).join("")}</div>
+</div></section>`;
+  // 16-20: close to the original section: centred title, three adjacent columns, original copy
+  if (v >= 16 && v <= 20) {
+    const cols = EX_ORIGINAL.map(([ic, t, d], i) => `<div data-reveal style="--d:${i * 0.08}s">${v === 20 ? `<span class="ex-dia">${exIcon(ic)}</span>` : exIcon(ic)}<h3>${t}</h3><p>${d}</p>${v === 20 ? `<p class="lab">0${i + 1}</p>` : ""}</div>`).join("");
+    const bg = v === 18 ? `<img class="ex-bg" src="${im("riad2")}" alt="" loading="lazy">` : "";
+    return `<section class="ex ex-orig ex-${v}${v === 18 ? "" : " sec"}"${at}>${bg}${rails}<div class="inner">
+  <p class="lab">Aliyah Prestige</p><h2 class="ex-otitle">Exclusively for you</h2>
+  <div class="ex-three">${cols}</div>
+</div></section>`;
+  }
+  if (v === 5) return `<section class="ex ex-5"${at}>${rails}<div class="ex-5-in">
+  <p class="lab">Exclusively for you</p><h2 class="H md" data-masked-reveal>Three promises, <em>kept</em>.</h2>
+  <div class="ex-cols">${EXCLUSIVE.map(([ic, t, s2, d], i) => `<div data-reveal style="--d:${i * 0.08}s"><span class="ex-ring">${exIcon(ic)}</span><h3>${t}</h3><p>${d}</p></div>`).join("")}</div>
+</div></section>`;
+}
+
 page("index.html", { title: "Aliyah Prestige | Private concierge in Marrakech", page: "home",
   desc: "Bespoke stays, journeys and evenings in Marrakech and across Morocco, arranged with absolute discretion.",
   body: `<section class="stage" id="stays"><img src="${im("medina-arch")}" alt="Medina lane in Marrakech leading to an arch and the Koutoubia minaret" style="object-position:66% 50%" data-par>${rails}<div class="in">
@@ -122,6 +236,7 @@ page("index.html", { title: "Aliyah Prestige | Private concierge in Marrakech", 
   <div class="sec-head"><div><p class="lab">The journal</p><h2 class="H md" data-masked-reveal>Notes from <em>Morocco</em>.</h2></div><a class="chip" href="journal.html">All articles</a></div>
   <div class="posts">${POSTS.slice(0, 3).map(postCard).join("")}</div>
 </div></section>
+${exclusive(EX_VARIANT)}
 ${cta("rooftop", "Tell us the <em>date</em>.", "A message on WhatsApp is enough: where from, when, how many. Two or three options follow within the hour.")}` });
 
 // ---------- Service: Private Jet Charter (simple version) ----------
@@ -238,4 +353,13 @@ page("post.html", { title: "A first evening in the medina | Aliyah Prestige", pa
   <div class="posts">${POSTS.slice(1, 4).map(postCard).join("")}</div></div></section>
 ${cta("rooftop", "An evening like <em>this</em>?", "Tell us the date. We arrange the guide, the rooftop and the table.")}` });
 
-console.log("built: index, service, gallery, journal, post");
+// ---------- Section preview: the five "Exclusively for you" variants ----------
+const EX_NAMES = ["Framed row", "Photo stage with glass cards", "Split with photo", "Big figures", "Accent band",
+  "Photo tiles", "Editorial rows", "Quote with promises", "Expanding photo panels", "Signed promise card",
+  "Tabs, one at a time", "One per row, centred", "Zig-zag with photos", "Sticky heading, scrolling promises", "Side-scrolling cards",
+  "Original: plain", "Original: framed cells", "Original: photo with glass", "Original: zellige pattern", "Original: diamond icons"];
+page("sections.html", { title: "Section variants | Aliyah Prestige", page: "", solid: true,
+  desc: "Design variants of the Exclusively for you section.",
+  body: EX_NAMES.map((n, i) => `<div class="ex-tag"><span class="lab">Variant ${i + 1}</span><span>${n}</span></div>\n${exclusive(i + 1, "")}`).join("\n") });
+
+console.log("built: index, service, gallery, journal, post, sections");
