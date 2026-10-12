@@ -43,7 +43,7 @@ function page(file, { title, desc, page, solid = false, body }) {
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="motion.css">
 <link rel="stylesheet" href="site.css">
-<script>try{var t=localStorage.getItem("theme"),r=document.documentElement,L=["tadelakt","rose","majorelle","mint","saffron","atlas","dune","zellige","blossom","cedar"];if(t==="forest"||t==="navy"||L.indexOf(t)>-1)r.dataset.theme=t;if(L.indexOf(t)>-1)r.dataset.tone="light"}catch(e){}</script>
+<script>try{var t=localStorage.getItem("theme"),r=document.documentElement,L=["tadelakt","rose","majorelle","mint","saffron","atlas","dune","zellige","blossom","cedar","linen","lavender","riviera","peach","matcha","blush","butter","clay","glacier","apricot"];if(t==="forest"||t==="navy"||L.indexOf(t)>-1)r.dataset.theme=t;if(L.indexOf(t)>-1)r.dataset.tone="light"}catch(e){}</script>
 <script src="vendor/gsap.min.js" defer></script>
 <script src="vendor/ScrollTrigger.min.js" defer></script>
 <script src="motion.js" defer></script>

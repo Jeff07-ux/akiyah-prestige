@@ -87,7 +87,7 @@
   }
 
   // Theme picker: 3 dark and 10 light palettes, remembered per browser.
-  // Keys must match site.css and the head script in build.mjs. [key, label, tone, background, accent]
+  // Keys must match site.css and the head script in build.mjs. [key, label, group, background, accent]; every group except "dark" is a light tone
   const root = document.documentElement;
   const themeBtn = document.querySelector("[data-theme-toggle]");
   const THEMES = [
@@ -97,6 +97,11 @@
     ["saffron", "Saffron Souk", "light", "#FAE8C2", "#E3A21A"], ["atlas", "Atlas Snow", "light", "#E6EEF2", "#4E6470"],
     ["dune", "Agafay Dune", "light", "#F2DCC0", "#8F4F24"], ["zellige", "Zellige", "light", "#DCEFEA", "#1F6E6B"],
     ["blossom", "Orange Blossom", "light", "#FDE8D6", "#B0532A"], ["cedar", "Cedar & Brass", "light", "#EDE4D0", "#B08D3A"],
+    ["linen", "Nordic Linen", "modern", "#EEF0EC", "#3E5C55"], ["lavender", "Lavender Haze", "modern", "#EEEAF6", "#5B4A9A"],
+    ["riviera", "Riviera", "modern", "#E4F1F7", "#FF7A59"], ["peach", "Peach Fuzz", "modern", "#FCE9DE", "#B44A2E"],
+    ["matcha", "Matcha Studio", "modern", "#EDF0DF", "#5A6B1E"], ["blush", "Blush Gallery", "modern", "#F8E9EC", "#A23B5C"],
+    ["butter", "Butter & Ink", "modern", "#FBF3D5", "#2F2E8C"], ["clay", "Sage & Clay", "modern", "#ECEDE6", "#A0522D"],
+    ["glacier", "Glacier Mono", "modern", "#F2F4F7", "#111827"], ["apricot", "Apricot & Teal", "modern", "#FFF1E3", "#0E7470"],
   ];
   const swatch = (bg, accent) => `background:linear-gradient(135deg, ${bg} 50%, ${accent} 50%)`;
   if (themeBtn) {
@@ -106,8 +111,8 @@
     menu.hidden = true;
     menu.setAttribute("role", "group");
     menu.setAttribute("aria-label", "Colour theme");
-    menu.innerHTML = ["dark", "light"].map((tone) => `<p class="lab">${tone === "dark" ? "Dark" : "Light"}</p><div class="opts">` +
-      THEMES.filter((t) => t[2] === tone).map(([k, label, , bg, ac]) =>
+    menu.innerHTML = [["dark", "Dark"], ["light", "Light · Marrakech"], ["modern", "Light · Modern"]].map(([group, title]) => `<p class="lab">${title}</p><div class="opts">` +
+      THEMES.filter((t) => t[2] === group).map(([k, label, , bg, ac]) =>
         `<button type="button" data-theme-key="${k}" aria-pressed="false"><i aria-hidden="true" style="${swatch(bg, ac)}"></i>${label}</button>`).join("") + "</div>").join("");
     themeBtn.after(menu);
     themeBtn.setAttribute("aria-controls", "theme-menu");
@@ -127,9 +132,9 @@
     menu.addEventListener("click", (e) => {
       const b = e.target.closest("[data-theme-key]");
       if (!b) return;
-      const [key, , tone] = THEMES.find(([k]) => k === b.dataset.themeKey);
+      const [key, , group] = THEMES.find(([k]) => k === b.dataset.themeKey);
       if (key === "grey") delete root.dataset.theme; else root.dataset.theme = key;
-      if (tone === "light") root.dataset.tone = "light"; else delete root.dataset.tone;
+      if (group !== "dark") root.dataset.tone = "light"; else delete root.dataset.tone;
       try { localStorage.setItem("theme", key); } catch (e) {}
       sync();
     });

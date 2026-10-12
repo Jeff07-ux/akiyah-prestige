@@ -31,6 +31,17 @@
 :root[data-theme="zellige"]   { --smoke: #DCEFEA; --smoke-2: #BEE0D8; --text: #1E2A2B; --ink: 30,42,43;  --sage: #1F6E6B; --sage-hi: #155452; --ash: #52625F; --photo-hi: #8FE0D6; }
 :root[data-theme="blossom"]   { --smoke: #FDE8D6; --smoke-2: #F8CFAE; --text: #2F2A26; --ink: 47,42,38;  --sage: #B0532A; --sage-hi: #8A3E1D; --ash: #6E5F55; --photo-hi: #FFB98F; }
 :root[data-theme="cedar"]     { --smoke: #EDE4D0; --smoke-2: #DCCDAA; --text: #2A241E; --ink: 42,36,30;  --sage: #7A6A3A; --sage-hi: #5C4F28; --ash: #625A4C; --photo-hi: #E3C873; --cta: #B08D3A; --cta-ink: #1F1A10; }
+/* Modern light palettes, not tied to the Marrakech theme. */
+:root[data-theme="linen"]     { --smoke: #EEF0EC; --smoke-2: #DCE1DA; --text: #1E2422; --ink: 30,36,34;  --sage: #3E5C55; --sage-hi: #2B443E; --ash: #5D6763; --photo-hi: #BFD8D0; }
+:root[data-theme="lavender"]  { --smoke: #EEEAF6; --smoke-2: #DCD3EE; --text: #241F33; --ink: 36,31,51;  --sage: #5B4A9A; --sage-hi: #43357A; --ash: #625C74; --photo-hi: #CDBFF5; }
+:root[data-theme="riviera"]   { --smoke: #E4F1F7; --smoke-2: #C6E1EE; --text: #12293A; --ink: 18,41,58;  --sage: #0F6587; --sage-hi: #0A4C66; --ash: #4F6673; --photo-hi: #8FD3F0; --cta: #FF7A59; --cta-ink: #12293A; }
+:root[data-theme="peach"]     { --smoke: #FCE9DE; --smoke-2: #F6D0BB; --text: #3B2620; --ink: 59,38,32;  --sage: #B44A2E; --sage-hi: #8C3620; --ash: #745B51; --photo-hi: #FFBFA0; }
+:root[data-theme="matcha"]    { --smoke: #EDF0DF; --smoke-2: #D8E0BC; --text: #22281A; --ink: 34,40,26;  --sage: #5A6B1E; --sage-hi: #434F14; --ash: #61674F; --photo-hi: #D3E58A; }
+:root[data-theme="blush"]     { --smoke: #F8E9EC; --smoke-2: #EFCFD6; --text: #33202A; --ink: 51,32,42;  --sage: #A23B5C; --sage-hi: #7E2A45; --ash: #735A63; --photo-hi: #F7B3C8; }
+:root[data-theme="butter"]    { --smoke: #FBF3D5; --smoke-2: #F3E3A6; --text: #1D1C1A; --ink: 29,28,26;  --sage: #2F2E8C; --sage-hi: #1F1E66; --ash: #66604A; --photo-hi: #FFE27A; --cta: #2F2E8C; --cta-ink: #FBF3D5; }
+:root[data-theme="clay"]      { --smoke: #ECEDE6; --smoke-2: #D7DBCB; --text: #262A24; --ink: 38,42,36;  --sage: #A0522D; --sage-hi: #7C3E21; --ash: #62665C; --photo-hi: #E8B48F; }
+:root[data-theme="glacier"]   { --smoke: #F2F4F7; --smoke-2: #DFE4EB; --text: #111827; --ink: 17,24,39;  --sage: #334155; --sage-hi: #1E293B; --ash: #5B6576; --photo-hi: #E2E8F0; --cta: #111827; --cta-ink: #F2F4F7; }
+:root[data-theme="apricot"]   { --smoke: #FFF1E3; --smoke-2: #FFDDBD; --text: #20302F; --ink: 32,48,47;  --sage: #0E7470; --sage-hi: #0A5753; --ash: #66625A; --photo-hi: #FFC48A; --cta: #E8833A; --cta-ink: #20302F; }
 :root[data-tone="light"] { color-scheme: light; --cta: var(--sage); --cta-ink: #FFFFFF; --glass: rgba(255,255,255,.4); --panel: rgba(255,255,255,.5); }
 /* Photo-backed areas keep light ink on dark scrims in every light palette. */
 :root[data-tone="light"] :is(.stage, .events, .tile, .g, .pnl, dialog.lb, body:not(.solid-head) > header.site:not(.scrolled)) {
@@ -279,7 +290,7 @@ footer.site a:hover { color: var(--bone); }
 .theme-btn { min-height: 44px; display: inline-flex; align-items: center; gap: 8px; padding: 0 14px; border: 1px solid var(--rail); font-size: 14px; }
 .theme-btn i, .theme-menu i { flex: none; width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--rail); }
 header.site .in > .tools { position: relative; display: flex; align-items: center; gap: 10px; }
-.theme-menu { position: absolute; top: calc(100% + 8px); right: 0; z-index: 30; width: 340px; max-width: calc(100vw - 2 * var(--gut)); padding: 16px; border: 1px solid var(--rail); background: var(--smoke); box-shadow: 0 18px 48px rgba(0,0,0,.28); }
+.theme-menu { position: absolute; top: calc(100% + 8px); right: 0; z-index: 30; width: 340px; max-height: calc(100vh - 110px); overflow-y: auto; overscroll-behavior: contain; max-width: calc(100vw - 2 * var(--gut)); padding: 16px; border: 1px solid var(--rail); background: var(--smoke); box-shadow: 0 18px 48px rgba(0,0,0,.28); }
 .theme-menu .lab { margin: 0 0 8px; }
 .theme-menu .lab + .opts { margin-bottom: 14px; }
 .theme-menu .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
@@ -292,3 +303,12 @@ header.site .in > .tools { position: relative; display: flex; align-items: cente
 ::selection { background: var(--sage); color: var(--smoke); }
 .sec:nth-of-type(even) { background: var(--smoke-2); }
 .sec-head { border-bottom: 2px solid var(--sage); padding-bottom: 20px; }
+
+/* No shading on photos: overlays, darkening filters and the hero header gradient are off.
+   A soft text shadow keeps copy readable on bright images. */
+.stage::after, .feat::after, .tile::after, .pnl::after, .events::after { display: none; }
+.tile img, .tile:hover img, .g img, .g:hover img, .pnl > img, .pnl:not(.on):hover > img { filter: none; }
+body:not(.solid-head) > header.site:not(.scrolled) { background: transparent; }
+.stage .copy, .tile .t, .tile .n, .pnl-tab, .pnl-d, .ev-c, body:not(.solid-head) > header.site:not(.scrolled) {
+  text-shadow: 0 1px 18px rgba(0,0,0,.55), 0 1px 2px rgba(0,0,0,.35);
+}
