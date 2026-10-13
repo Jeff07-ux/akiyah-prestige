@@ -926,6 +926,9 @@ main:has(> #stays) .sec-head { margin-bottom: 32px; }
 [data-theme="atelier"] .pill b { background: var(--pale); }
 [data-theme="atelier"] .pnl-d .btn { border-color: var(--pale); color: var(--pale); }
 [data-theme="atelier"] .pnl-d .btn:hover { background: var(--pale); border-color: var(--pale); color: var(--pale-ink); }
+/* Hero CTA: a solid pale button on the photo, turning vermilion on hover. */
+[data-theme="atelier"] .stage .copy > .btn { background: var(--pale); border-color: var(--pale); color: var(--pale-ink); backdrop-filter: none; -webkit-backdrop-filter: none; }
+[data-theme="atelier"] .stage .copy > .btn:hover { background: var(--cta); border-color: var(--cta); color: var(--cta-ink); }
 /* Atelier: the "Exclusively for you" band shares the services mint, with dark ink and vermilion accents. */
 :root[data-theme="atelier"] .ex-5 { background: #F5FFFB; --bi: #151414; }
 [data-theme="atelier"] .ex-5 .lab, [data-theme="atelier"] .ex-5 .H em { color: var(--sage); }
