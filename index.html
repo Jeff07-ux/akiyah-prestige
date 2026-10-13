@@ -7,6 +7,10 @@
 <meta name="description" content="Bespoke stays, journeys and evenings in Marrakech and across Morocco, arranged with absolute discretion.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<script>/* Before first paint: hide entrance targets only when motion will run, and show everything if motion.js fails. */
+(function(d){var still=location.hash==="#static"||matchMedia("(prefers-reduced-motion: reduce)").matches;d.classList.add(still?"still":"js");
+try{if(sessionStorage.getItem("keyDrawn"))d.classList.add("key-drawn");sessionStorage.setItem("keyDrawn","1")}catch(e){}
+addEventListener("load",function(){if(!d.classList.contains("motion-ready"))d.classList.remove("js")})})(document.documentElement)</script>
 <link rel="stylesheet" href="motion.css">
 <link rel="stylesheet" href="site.css">
 <script src="vendor/gsap.min.js" defer></script>
@@ -16,7 +20,7 @@
 </head>
 <body data-page="home">
 <a class="skip" href="#main">Skip to content</a>
-<header class="site"><div class="in"><a class="logo" href="index.html" aria-label="Aliyah Prestige, home"><span class="logo-word">Aliyah</span><svg class="logo-key" viewBox="0 0 48 96" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+<header class="site"><div class="in"><span class="nav-shape" aria-hidden="true"></span><a class="logo" href="index.html" aria-label="Aliyah Prestige, home"><span class="logo-word">Aliyah</span><svg class="logo-key" viewBox="0 0 48 96" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
 <circle pathLength="1" cx="24" cy="8" r="4.5"/><path pathLength="1" d="M24 12.5V16"/>
 <path pathLength="1" d="M16.44 26.61A8 8 0 1 1 31.56 26.61A9.5 9.5 0 1 1 24 39.04A9.5 9.5 0 1 1 16.44 26.61Z"/>
 <path pathLength="1" d="M24 19Q28.2 24.6 24 30.2Q19.8 24.6 24 19Z"/>

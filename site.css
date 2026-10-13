@@ -52,10 +52,10 @@
 :root[data-tone="light"][data-theme="aubergine"] { --smoke: #FAF8F7; --smoke-2: #F0EAEC; --text: #1D1519; --ink: 29,21,25;  --sage: #5B2148; --sage-hi: #5B2148; --ash: #675A61; --photo-hi: #EAC1DA; --cta: #5B2148; --cta-ink: #FFFFFF; --rail: rgba(var(--ink),.13); --soft: rgba(var(--ink),.78); }
 :root[data-tone="light"][data-theme="champagne"] { --smoke: #FBF8F1; --smoke-2: #F1E9DA; --text: #1A1712; --ink: 26,23,18;  --sage: #86651C; --sage-hi: #86651C; --ash: #685F50; --photo-hi: #E9CF8F; --cta: #1A1712; --cta-ink: #FBF8F1; --rail: rgba(var(--ink),.13); --soft: rgba(var(--ink),.78); }
 :root[data-tone="light"][data-theme="harbour"]   { --smoke: #F8F9FA; --smoke-2: #EAEEF2; --text: #0E1A2B; --ink: 14,26,43;  --sage: #1B365D; --sage-hi: #8A6A2E; --ash: #56606E; --photo-hi: #E6CF9C; --cta: #1B365D; --cta-ink: #FFFFFF; --rail: rgba(var(--ink),.13); --soft: rgba(var(--ink),.78); }
-:root[data-tone="light"][data-theme="atelier"]   { --smoke: #FFFFFF; --smoke-2: #F4F2EF; --text: #151414; --ink: 21,20,20;  --sage: #C2410C; --sage-hi: #B53A0A; --ash: #5F5B57; --photo-hi: #FFB48A; --cta: #C2410C; --cta-ink: #FFFFFF; --rail: rgba(var(--ink),.13); --soft: rgba(var(--ink),.78); }
+:root[data-tone="light"][data-theme="atelier"]   { --smoke: #FFFFFF; --smoke-2: #F4F2EF; --text: #151414; --ink: 21,20,20;  --sage: #6B4226; --sage-hi: #5A3720; --ash: #5F5B57; --photo-hi: #E3C4A8; --cta: #6B4226; --cta-ink: #FFFFFF; --rail: rgba(var(--ink),.13); --soft: rgba(var(--ink),.78); }
 :root[data-tone="light"] { color-scheme: light; --cta: var(--sage); --cta-ink: #FFFFFF; --glass: rgba(255,255,255,.4); --panel: rgba(255,255,255,.5); }
 /* Photo-backed areas keep light ink on dark scrims in every light palette. */
-:root[data-tone="light"] :is(.stage, .events, .tile, .g, .pnl, dialog.lb, .ex-18, body:not(.solid-head) > header.site:not(.scrolled)) {
+:root[data-tone="light"] :is(.stage, .events, .tile, .g, .pnl, dialog.lb, .ex-18) {
   --text: #F5F2EB; --bone: #F5F2EB; --ink: 245,242,235; --smoke: #171612; --smoke-2: #23211B;
   --rail: rgba(245,242,235,.18); --soft: rgba(245,242,235,.75); --glass: rgba(var(--scrim),.4);
   --ash: #CFC8BA; --sage-hi: var(--photo-hi);
@@ -119,8 +119,8 @@ header.site nav a[aria-current] { text-decoration: underline; text-underline-off
 
 /* Buttons and chips */
 .btn { position: relative; isolation: isolate; overflow: hidden; display: inline-flex; align-items: center; gap: 10px; min-height: 50px; padding: 0 24px; margin-top: 32px; border: 1px solid rgba(var(--ink),.35); background: var(--glass); font: 500 14px var(--sans); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
-.btn::after { content: ""; position: absolute; inset: 0 auto 0 -60%; width: 50%; z-index: -1; background: linear-gradient(90deg, transparent, rgba(196,200,176,.35), transparent); transform: skewX(-20deg); transition: left .8s var(--ease); }
-.btn:hover::after { left: 120%; }
+.btn::after { content: ""; position: absolute; inset: 0 auto 0 -60%; width: 50%; z-index: -1; background: linear-gradient(90deg, transparent, rgba(196,200,176,.35), transparent); transform: skewX(-20deg); transition: translate .8s var(--ease); }
+.btn:hover::after { translate: 360% 0; }
 .btn.solid { background: var(--cta, var(--bone)); color: var(--cta-ink, var(--smoke)); border-color: var(--cta, var(--bone)); }
 .btn.flat { margin-top: 0; }
 .chips { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -314,7 +314,7 @@ header.site .in > .tools { position: relative; display: flex; align-items: cente
 .events::after { background: radial-gradient(55% 45% at 50% 42%, rgba(var(--scrim),.3), rgba(var(--scrim),.1)), linear-gradient(rgba(var(--scrim),.3), transparent 35%); }
 .tile img, .tile:hover img, .g img, .g:hover img, .pnl > img, .pnl:not(.on):hover > img { filter: none; }
 body:not(.solid-head) > header.site:not(.scrolled) { background: transparent; }
-.stage .copy, .tile .t, .tile .n, .pnl-tab, .pnl-d, .ev-c, body:not(.solid-head) > header.site:not(.scrolled) {
+.stage .copy, .tile .t, .tile .n, .pnl-tab, .pnl-d, .ev-c {
   text-shadow: 0 1px 18px rgba(0,0,0,.55), 0 1px 2px rgba(0,0,0,.35);
 }
 /* Buttons draw their own edge, so their text stays crisp. */
@@ -757,6 +757,7 @@ main:has(.av-switch) > :is(.v1-voices, .v3-philo, .v4-voices) { background: var(
 .v3-vals li { padding: clamp(28px, 3.6vw, 52px) 16px; font: 400 clamp(30px, 3.4vw, 52px)/1 var(--serif); }
 .v3-vals li:nth-child(odd) { border-right: 1px solid var(--rail); }
 .v3-vals li:nth-child(-n+2) { border-bottom: 1px solid var(--rail); }
+@media (max-width: 640px) { .v3-vals { grid-template-columns: minmax(0, 1fr); } .v3-vals li { border-right: 0 !important; border-bottom: 1px solid var(--rail); } .v3-vals li:last-child { border-bottom: 0; } }
 .v3-voices { display: grid; grid-template-columns: 7fr 5fr; gap: 0 clamp(32px, 5vw, 88px); }
 .v3-voices figure { margin: 0; }
 .v3-voices figure:first-child { grid-row: span 2; }
@@ -885,14 +886,13 @@ main:has(> #stays) > :is(.sec, .ex-5) { padding-block: clamp(28px, 3vw, 44px); }
 main:has(> #stays) > .sec.flush { padding-top: 0; }
 main:has(> #stays) .sec-head { margin-bottom: 32px; }
 
-/* Atelier: vermilion is the brand voice. It carries every action, link state, label and accent,
+/* Atelier: brown is the brand voice. It carries every action, link state, label and accent,
    including photo-backed and dark bands, where a brighter step keeps contrast on the scrim. */
-:root[data-tone="light"][data-theme="atelier"] { --photo-hi: #F2582C; --cta-hover: #9A330A; }
+:root[data-tone="light"][data-theme="atelier"] { --photo-hi: #D9A97E; --cta-hover: #4A2C19; }
 [data-theme="atelier"] .lab, [data-theme="atelier"] .meta { color: var(--sage-hi); }
 [data-theme="atelier"] .btn { border-color: var(--sage-hi); color: var(--sage-hi); transition: background .35s var(--ease), color .35s var(--ease), border-color .35s var(--ease); }
-[data-theme="atelier"] .btn:hover { background: var(--cta); border-color: var(--cta); color: var(--cta-ink); }
-[data-theme="atelier"] .btn.solid { color: var(--cta-ink); }
-[data-theme="atelier"] .btn.solid:hover { background: var(--cta-hover); border-color: var(--cta-hover); }
+[data-theme="atelier"] .btn, [data-theme="atelier"] .btn.solid { background: var(--cta); border-color: var(--cta); color: var(--cta-ink); }
+[data-theme="atelier"] .btn:hover, [data-theme="atelier"] .btn.solid:hover { background: transparent; border-color: var(--sage-hi); color: var(--sage-hi); }
 [data-theme="atelier"] .btn::after { background: linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent); }
 [data-theme="atelier"] :is(header.site nav a, footer.site a, .crumb a, .art aside .toc a, .v2-nav a, .av-tabs-list button):hover,
 [data-theme="atelier"] header.site nav a[aria-current],
@@ -908,28 +908,24 @@ main:has(> #stays) .sec-head { margin-bottom: 32px; }
 [data-theme="atelier"] :is(.ev-types, .ev-types li + li) { border-color: rgba(242,88,44,.45); }
 [data-theme="atelier"] .v2-quotes, [data-theme="atelier"] .v2-quotes figure { border-color: rgba(242,88,44,.35); }
 [data-theme="atelier"] .theme-btn i { border-color: var(--sage-hi); }
-/* Atelier: kicker tags are outlined in vermilion on a clear ground. */
+/* Atelier: kicker tags are outlined in brown on a clear ground. */
 [data-theme="atelier"] :is(.stage .copy > .lab, .pnl-d .lab, .ex-card .lab, .ex-stats .lab, .ex-zig .lab, .ex-slide .lab) {
   display: inline-block; width: fit-content; padding: 6px 12px 5px; background: transparent; border: 1px solid var(--sage-hi); color: var(--sage-hi);
 }
 [data-theme="atelier"] .pill { background: transparent; border-color: var(--sage-hi); color: var(--sage-hi); }
 [data-theme="atelier"] .pill b { background: var(--sage-hi); }
-/* Service panel CTA ("Ask about this") sits on the photo with no fill. */
-[data-theme="atelier"] .pnl-d .btn:not(:hover) { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; }
 /* Service tiles keep their neutral count and number. */
 [data-theme="atelier"] .tile .lab { color: var(--ash); }
-/* Atelier, photo-backed controls: the pale ground of the services band (#F4F2EF) instead of vermilion,
+/* Atelier, photo-backed controls: the pale ground of the services band (#F4F2EF) instead of brown,
    hardcoded because --smoke-2 is remapped to dark inside photo areas. */
 [data-theme="atelier"] { --pale: #F4F2EF; --pale-ink: #151414; }
 [data-theme="atelier"] :is(.stage .copy > .lab, .pnl-d .lab) { border-color: var(--pale); color: var(--pale); }
 [data-theme="atelier"] .pill { border-color: var(--pale); color: var(--pale); }
 [data-theme="atelier"] .pill b { background: var(--pale); }
-[data-theme="atelier"] .pnl-d .btn { border-color: var(--pale); color: var(--pale); }
-[data-theme="atelier"] .pnl-d .btn:hover { background: var(--pale); border-color: var(--pale); color: var(--pale-ink); }
-/* Hero CTA: a solid pale button on the photo, turning vermilion on hover. */
-[data-theme="atelier"] .stage .copy > .btn { background: var(--pale); border-color: var(--pale); color: var(--pale-ink); backdrop-filter: none; -webkit-backdrop-filter: none; }
-[data-theme="atelier"] .stage .copy > .btn:hover { background: var(--cta); border-color: var(--cta); color: var(--cta-ink); }
-/* Atelier: the "Exclusively for you" band shares the services mint, with dark ink and vermilion accents. */
+/* Photo-backed CTAs (hero, signature experiences): solid brown, turning pale on hover. */
+[data-theme="atelier"] :is(.stage .copy > .btn, .pnl-d .btn) { background: var(--cta); border-color: var(--cta); color: var(--cta-ink); backdrop-filter: none; -webkit-backdrop-filter: none; }
+[data-theme="atelier"] :is(.stage .copy > .btn, .pnl-d .btn):hover { background: var(--pale); border-color: var(--pale); color: var(--pale-ink); }
+/* Atelier: the "Exclusively for you" band shares the services mint, with dark ink and brown accents. */
 :root[data-theme="atelier"] .ex-5 { background: #F5FFFB; --bi: #151414; }
 [data-theme="atelier"] .ex-5 .lab, [data-theme="atelier"] .ex-5 .H em { color: var(--sage); }
 /* Hero and enquiry tags: plain pale text, no outline. */
@@ -999,6 +995,7 @@ header.site .in > .nav-l { justify-self: end; gap: 30px; }
 header.site .in > .tools { justify-self: stretch; }
 header.site .tools > .nav-r { gap: 30px; margin-right: auto; }
 @media (max-width: 1100px) { header.site .in > .tools { justify-self: end; } }
+@media (max-width: 640px) { header.site .in { gap: 12px; } }
 
 /* Brand key in the header: the key stands between the two words of the name. It draws itself in on load,
    swings a few degrees from its ring on hover, and the whole mark tightens once the header turns solid. */
@@ -1010,11 +1007,11 @@ header.site .in > .logo { display: flex; align-items: center; gap: 16px; color: 
 .logo-word:last-child { margin-right: -.26em; }
 header.site .logo:hover .logo-key { transform: rotate(-9deg); }
 header.site.scrolled .logo-key { width: 25px; height: 50px; }
-html.js .logo-key :is(path, circle) { stroke-dasharray: 1; stroke-dashoffset: 1; animation: key-draw 4.5s cubic-bezier(.45,0,.2,1) .2s infinite both; }
+html.js .logo-key :is(path, circle) { stroke-dasharray: 1; stroke-dashoffset: 1; animation: key-in 2.4s cubic-bezier(.45,0,.2,1) .2s both; }
 html.js .logo-key :is(path, circle):nth-child(n+3) { animation-delay: .45s; }
 html.js .logo-key :is(path, circle):nth-child(n+7) { animation-delay: .7s; }
-/* Draw in, hold, then the line runs on and off, and the key draws itself again. */
-@keyframes key-draw { 0% { stroke-dashoffset: 1; } 30%, 78% { stroke-dashoffset: 0; } 96%, 100% { stroke-dashoffset: -1; } }
+/* The key draws itself once per visit; later pages in the same session show it already drawn (head script in build.mjs). */
+html.key-drawn .logo-key :is(path, circle) { animation: none; stroke-dashoffset: 0; }
 @media (prefers-reduced-motion: reduce) { html.js .logo-key :is(path, circle) { stroke-dashoffset: 0; } }
 /* Phones: a smaller mark on the left. */
 @media (max-width: 640px) {
@@ -1035,6 +1032,53 @@ header.site.nav-float .in > :is(.nav-l, .tools) { opacity: 0; transform: transla
 header.site.nav-float .in > .logo { pointer-events: auto; gap: 10px; padding: 10px 22px; background: var(--smoke); border-color: var(--rail); box-shadow: 0 4px 12px rgba(0,0,0,.06); }
 header.site.nav-float .logo-key { width: 12px; height: 24px; }
 header.site.nav-float .logo-word { font-size: 11px; color: var(--text); }
+/* Stacked brand mark: the key on top, the name on one line beneath it, both centred. */
+header.site .in > .logo { display: grid; grid-template-columns: auto auto; justify-content: center; justify-items: center; align-items: center; column-gap: .55em; row-gap: 6px; }
+header.site .in > .logo > .logo-key { grid-column: 1 / -1; grid-row: 1; }
+header.site .in > .logo > .logo-word { grid-row: 2; }
+header.site .in > .logo > .logo-word:first-child { justify-self: end; }
+header.site .in > .logo > .logo-word:last-child { justify-self: start; }
+/* Larger key: a taller header gives the stacked mark room. */
+header.site .in { height: 116px; }
+header.site.scrolled .in { height: 96px; }
+.logo-key { width: 32px; height: 64px; }
+header.site.scrolled .logo-key { width: 26px; height: 52px; }
+/* Floating capsule: the key returns between the two words on a single line. */
+header.site.nav-float .in > .logo { grid-template-columns: auto auto auto; column-gap: 10px; padding: 10px 22px; border-radius: 999px; }
+header.site.nav-float .in > .logo > .logo-word:first-child { grid-column: 1; grid-row: 1; }
+header.site.nav-float .in > .logo > .logo-key { grid-column: 2; grid-row: 1; }
+header.site.nav-float .in > .logo > .logo-word:last-child { grid-column: 3; grid-row: 1; }
+header.site.nav-float .logo-key { width: 14px; height: 28px; }
+@media (max-width: 640px) {
+  header.site .in, header.site.scrolled .in { height: 84px; }
+  header.site .in > .logo { row-gap: 4px; justify-self: start; }
+  .logo-key, header.site.scrolled .logo-key { width: 20px; height: 40px; }
+  header.site.nav-float .logo-key { width: 12px; height: 24px; }
+}
+/* Notched navbar: a compact floating bar whose top edge dips into a smooth semicircular notch at the centre,
+   cradling the round key emblem, with the name beneath it inside the bar. The bar is a masked layer (.nav-shape):
+   two plain strips either side plus a 98x68 SVG centre piece holding the notch (radius 34, centred 4px below the
+   top edge) and its two 14px fillets, so the curve meets the edge with no corner. The emblem (56px, centred on the
+   notch centre) leaves an even 6px ring. Change the geometry together: --bar-h, the SVG, the emblem size and offset. */
+header.site, .solid-head header.site, header.site.scrolled { background: transparent; border-bottom-color: transparent; padding-top: calc(env(safe-area-inset-top, 0px) + 30px); text-shadow: none; }
+header.site .in, header.site.scrolled .in { --bar-h: 68px; position: relative; isolation: isolate; height: var(--bar-h); padding-inline: clamp(16px, 2vw, 32px); }
+.nav-shape { position: absolute; inset: 0; z-index: -1; pointer-events: none; filter: drop-shadow(0 10px 28px rgba(0,0,0,.10)) drop-shadow(0 1px 2px rgba(0,0,0,.08)); transition: opacity .35s var(--ease), transform .45s var(--ease); }
+.nav-shape::before { content: ""; position: absolute; inset: 0; border-radius: 18px; background: var(--smoke);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='98' height='68'%3E%3Cpath d='M0 0H2.05A14 14 0 0 1 15.75 11.08A34 34 0 0 0 82.25 11.08A14 14 0 0 1 95.95 0H98V68H0Z'/%3E%3C/svg%3E") 50% 0 / 98px 68px no-repeat, linear-gradient(#000 0 0) 0 0 / calc(50% - 48px) 100% no-repeat, linear-gradient(#000 0 0) 100% 0 / calc(50% - 48px) 100% no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='98' height='68'%3E%3Cpath d='M0 0H2.05A14 14 0 0 1 15.75 11.08A34 34 0 0 0 82.25 11.08A14 14 0 0 1 95.95 0H98V68H0Z'/%3E%3C/svg%3E") 50% 0 / 98px 68px no-repeat, linear-gradient(#000 0 0) 0 0 / calc(50% - 48px) 100% no-repeat, linear-gradient(#000 0 0) 100% 0 / calc(50% - 48px) 100% no-repeat; }
+header.site .in > .logo { align-self: start; margin-top: -24px; row-gap: 10px; }
+header.site .in > .logo > .logo-key, header.site.scrolled .in > .logo > .logo-key { box-sizing: border-box; width: 56px; height: 56px; padding: 6px; border-radius: 50%; background: var(--smoke); transform-origin: 50% 50%; box-shadow: 0 6px 18px rgba(0,0,0,.10); }
+/* Floating capsule (scrolled down): the bar and its notch fold away with the links; the capsule is unchanged. */
+header.site.nav-float .nav-shape { opacity: 0; transform: translateY(-14px); }
+header.site.nav-float .in > .logo { margin-top: 0; align-self: center; }
+header.site.nav-float .in > .logo > .logo-key { width: 14px; height: 28px; padding: 0; border-radius: 0; background: none; box-shadow: none; }
+@media (max-width: 640px) {
+  header.site .in, header.site.scrolled .in { grid-template-columns: 1fr auto 1fr; padding-inline: 12px; }
+  header.site .in > .logo { grid-column: 2; justify-self: center; }
+  header.site .in > .tools { grid-column: 3; }
+  header.site .in > .logo > .logo-word { font-size: 13px; letter-spacing: .2em; }
+  header.site.nav-float .in > .logo > .logo-key { width: 12px; height: 24px; }
+}
 /* About hero matches the journal's featured hero height. */
 .stage.v2-hero { min-height: calc(78svh / var(--vz)); }
 /* Journal listing page shares the services mint ground (the article page keeps white). */
@@ -1078,11 +1122,11 @@ html:not(.js) .intro-key :is(path, circle) { stroke-dashoffset: 0; }
 .isc-3 { grid-column: 1; grid-row: 2; }
 .isc-5 { grid-column: 2; grid-row: 2; }
 .isc-4 { grid-column: 1; grid-row: 3; }
-/* Gallery card: a desert-caravan photo under a vermilion veil, framed by an inset hairline.
+/* Gallery card: a desert-caravan photo under a brown veil, framed by an inset hairline.
    On hover the veil thins, the photo drifts, the frame draws in and the arrow travels. */
 .isc-go { position: relative; isolation: isolate; overflow: hidden; grid-column: 2 / 4; grid-row: 3; display: grid; align-content: center; gap: 6px; padding: 18px 76px 18px 28px; color: #fff; }
 .isc-go > img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; transform: scale(1.04); transition: transform 1.6s var(--ease); }
-.isc-go::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(100deg, rgba(154,51,10,.94) 0%, rgba(194,65,12,.86) 55%, rgba(194,65,12,.55) 100%); transition: opacity .7s var(--ease); }
+.isc-go::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(100deg, rgba(74,44,25,.94) 0%, rgba(107,66,38,.86) 55%, rgba(107,66,38,.55) 100%); transition: opacity .7s var(--ease); }
 .isc-go::after { content: ""; position: absolute; inset: 10px; border: 1px solid rgba(255,255,255,.45); pointer-events: none; transition: inset .7s var(--ease), border-color .7s var(--ease); }
 .isc-k { display: flex; align-items: center; gap: 10px; font: 500 11px var(--sans); letter-spacing: .3em; text-transform: uppercase; color: rgba(255,255,255,.85); }
 .isc-k::before { content: ""; width: 5px; height: 5px; background: currentColor; transform: rotate(45deg); }
@@ -1104,4 +1148,4 @@ html:not(.js) .intro-key :is(path, circle) { stroke-dashoffset: 0; }
 [data-page="home"] .ex-5-in > .lab { display: flex; align-items: center; justify-content: center; gap: 18px; margin: 0 0 4px;
   font-size: 15px; font-weight: 600; letter-spacing: .22em; }
 [data-page="home"] .ex-5-in > .lab::before, [data-page="home"] .ex-5-in > .lab::after { content: ""; width: clamp(32px, 6vw, 88px); height: 1px; background: currentColor; opacity: .45; }
-:root[data-tone="light"][data-theme="atelier"] .ex-5 .lab { color: #B53A0A; }
+:root[data-tone="light"][data-theme="atelier"] .ex-5 .lab { color: #5A3720; }

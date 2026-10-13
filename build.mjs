@@ -29,7 +29,7 @@ function header(page) {
   const left = NAV.slice(0, 3).map(link).join("");
   const right = NAV.slice(3).map(link).join("") + `<a href="#enquire">Enquire</a>`;
   return `<a class="skip" href="#main">Skip to content</a>
-<header class="site"><div class="in"><a class="logo" href="index.html" aria-label="Aliyah Prestige, home"><span class="logo-word">Aliyah</span>${KEY}<span class="logo-word">Prestige</span></a>
+<header class="site"><div class="in"><span class="nav-shape" aria-hidden="true"></span><a class="logo" href="index.html" aria-label="Aliyah Prestige, home"><span class="logo-word">Aliyah</span>${KEY}<span class="logo-word">Prestige</span></a>
   <nav class="nav-l" aria-label="Main">${left}</nav>
   <div class="tools"><nav class="nav-r" aria-label="More">${right}</nav>
   <button class="menu-btn" type="button" data-menu-open aria-controls="drawer" aria-expanded="false">Menu</button></div></div></header>
@@ -56,6 +56,10 @@ function page(file, { title, desc, page, solid = false, body }) {
 <meta name="description" content="${desc}">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@400;500${page === "about" ? ";700" : ""}&display=swap" rel="stylesheet">
+<script>/* Before first paint: hide entrance targets only when motion will run, and show everything if motion.js fails. */
+(function(d){var still=location.hash==="#static"||matchMedia("(prefers-reduced-motion: reduce)").matches;d.classList.add(still?"still":"js");
+try{if(sessionStorage.getItem("keyDrawn"))d.classList.add("key-drawn");sessionStorage.setItem("keyDrawn","1")}catch(e){}
+addEventListener("load",function(){if(!d.classList.contains("motion-ready"))d.classList.remove("js")})})(document.documentElement)</script>
 <link rel="stylesheet" href="motion.css">
 <link rel="stylesheet" href="site.css">
 <script src="vendor/gsap.min.js" defer></script>
@@ -570,7 +574,7 @@ const ABOUT_2 = `<section class="stage v2-hero">${abImg("riad2", "Riad courtyard
 
 <section class="sec"><div class="inner v2-chap">
   <nav class="v2-nav" aria-label="Chapters" data-chapters><h2 class="H md" data-masked-reveal>Our <em>story</em>.</h2>
-    <ol>${["The family", "The philosophy", "The artisans", "The archive"].map((t, i) => `<li><a href="#ch${i + 1}">${t}</a></li>`).join("")}</ol></nav>
+    <ol>${["The family", "The philosophy", "The partnerships", "The archive"].map((t, i) => `<li><a href="#ch${i + 1}">${t}</a></li>`).join("")}</ol></nav>
   <div>
     <article class="v2-ch" id="ch1"><h2>Born from a family tradition.</h2>${abBody()}<div class="pic" data-reveal>${abImg("riad", "Garden inside a medina riad", true)}</div></article>
     <article class="v2-ch" id="ch2"><blockquote class="av-quote" data-reveal>${AB_PHILO}</blockquote><ul class="v2-values">${AB_VALUES.map((v) => `<li>${v}</li>`).join("")}</ul></article>

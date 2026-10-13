@@ -193,7 +193,7 @@
     ["grey", "Warm grey", "dark", "#4A4842", "#DCD3B6"], ["forest", "Forest", "dark", "#183D32", "#A9B58A"], ["navy", "Navy", "dark", "#0B1426", "#B9A77E"],
     ["gallery", "Gallery Oxblood", "clean", "#FAF9F6", "#7B2232"], ["porcelain", "Porcelain Cobalt", "clean", "#FBFBF9", "#2442B8"],
     ["aubergine", "Pearl Aubergine", "clean", "#FAF8F7", "#5B2148"], ["champagne", "Champagne Ink", "clean", "#FBF8F1", "#86651C"],
-    ["harbour", "Harbour Navy", "clean", "#F8F9FA", "#1B365D"], ["atelier", "Atelier Vermilion", "clean", "#FFFFFF", "#C2410C"],
+    ["harbour", "Harbour Navy", "clean", "#F8F9FA", "#1B365D"], ["atelier", "Atelier Brown", "clean", "#FFFFFF", "#6B4226"],
     ["tadelakt", "Tadelakt", "light", "#F0E2CF", "#8A5A35"], ["rose", "Rose City", "light", "#F7DCD0", "#A0533F"],
     ["majorelle", "Majorelle", "light", "#2D4BA0", "#F2C230"], ["mint", "Mint Tea", "light", "#E3EEDD", "#3F6B4F"],
     ["saffron", "Saffron Souk", "light", "#FAE8C2", "#E3A21A"], ["atlas", "Atlas Snow", "light", "#E6EEF2", "#4E6470"],

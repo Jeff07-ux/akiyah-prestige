@@ -7,6 +7,10 @@
 <meta name="description" content="Founded in 1986, a private concierge service in Marrakech born from a family tradition of excellence.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+<script>/* Before first paint: hide entrance targets only when motion will run, and show everything if motion.js fails. */
+(function(d){var still=location.hash==="#static"||matchMedia("(prefers-reduced-motion: reduce)").matches;d.classList.add(still?"still":"js");
+try{if(sessionStorage.getItem("keyDrawn"))d.classList.add("key-drawn");sessionStorage.setItem("keyDrawn","1")}catch(e){}
+addEventListener("load",function(){if(!d.classList.contains("motion-ready"))d.classList.remove("js")})})(document.documentElement)</script>
 <link rel="stylesheet" href="motion.css">
 <link rel="stylesheet" href="site.css">
 <script src="vendor/gsap.min.js" defer></script>
@@ -16,7 +20,7 @@
 </head>
 <body data-page="about">
 <a class="skip" href="#main">Skip to content</a>
-<header class="site"><div class="in"><a class="logo" href="index.html" aria-label="Aliyah Prestige, home"><span class="logo-word">Aliyah</span><svg class="logo-key" viewBox="0 0 48 96" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+<header class="site"><div class="in"><span class="nav-shape" aria-hidden="true"></span><a class="logo" href="index.html" aria-label="Aliyah Prestige, home"><span class="logo-word">Aliyah</span><svg class="logo-key" viewBox="0 0 48 96" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
 <circle pathLength="1" cx="24" cy="8" r="4.5"/><path pathLength="1" d="M24 12.5V16"/>
 <path pathLength="1" d="M16.44 26.61A8 8 0 1 1 31.56 26.61A9.5 9.5 0 1 1 24 39.04A9.5 9.5 0 1 1 16.44 26.61Z"/>
 <path pathLength="1" d="M24 19Q28.2 24.6 24 30.2Q19.8 24.6 24 19Z"/>
@@ -40,7 +44,7 @@
 
 <section class="sec"><div class="inner v2-chap">
   <nav class="v2-nav" aria-label="Chapters" data-chapters><h2 class="H md" data-masked-reveal>Our <em>story</em>.</h2>
-    <ol><li><a href="#ch1">The family</a></li><li><a href="#ch2">The philosophy</a></li><li><a href="#ch3">The artisans</a></li><li><a href="#ch4">The archive</a></li></ol></nav>
+    <ol><li><a href="#ch1">The family</a></li><li><a href="#ch2">The philosophy</a></li><li><a href="#ch3">The partnerships</a></li><li><a href="#ch4">The archive</a></li></ol></nav>
   <div>
     <article class="v2-ch" id="ch1"><h2>Born from a family tradition.</h2><div class="av-body"><p>Founded in 1986, our exclusive private concierge service is born from a family tradition of excellence.</p><p>For generations, we have opened the doors to Marrakech's hidden treasures, offering unparalleled expertise and personalisation.</p><p>Today, we continue to honour our heritage, crafting extraordinary experiences marked by sophistication and elegance.</p></div><div class="pic" data-reveal><img src="img/riad.jpg" alt="Garden inside a medina riad" loading="lazy" data-par></div></article>
     <article class="v2-ch" id="ch2"><blockquote class="av-quote" data-reveal>True luxury is found in <em>authenticity</em> and <em>exclusivity</em>, crafting unforgettable moments for the most discerning travellers.</blockquote><ul class="v2-values"><li>Authenticity</li><li>Exclusivity</li><li>Expertise</li><li>Personalisation</li></ul></article>
