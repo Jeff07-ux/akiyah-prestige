@@ -214,6 +214,13 @@ function miniGallery(total) {
 </div></section>`;
 }
 
+// Photos cut from the gallery collages on aliyahprestige.com (guests' faces left out for discretion).
+const AP = {
+  "agafay-dinner": "A long dinner table laid in the Agafay desert at dusk", "riad-salon": "A riad salon framed by white drapes and blue columns",
+  "candle-dinner": "A candlelit table with crystal glasses", "corridor": "A lantern-lit corridor in a palace riad", "majorelle": "A cobalt fountain in the Majorelle garden",
+};
+const apFig = (k, i) => `<figure class="isc-ph isc-${i + 1}" data-reveal style="--d:${(i * 0.09).toFixed(2)}s"><img src="img/ap/${k}.jpg" alt="${AP[k]}" loading="lazy"></figure>`;
+
 const HOME = { title: "Aliyah Prestige | Private concierge in Marrakech", page: "home",
   desc: "Bespoke stays, journeys and evenings in Marrakech and across Morocco, arranged with absolute discretion.",
   body: `<section class="stage" id="stays"><img src="img/hero-jemaa.jpg" alt="Jemaa el-Fna square at dusk with market stalls lit below the Koutoubia minaret, Marrakech" style="object-position:40% 50%" data-par>${rails}<div class="in">
@@ -222,6 +229,18 @@ const HOME = { title: "Aliyah Prestige | Private concierge in Marrakech", page: 
     <a class="btn" href="#enquire" data-reveal style="--d:.1s">Plan a stay</a></div>
   <div class="side" data-reveal style="--d:.2s"><p class="lab">Since 1989</p><p class="v">Two generations</p><p>One family, welcoming guests at home in the medina.</p></div></div></section>
 
+
+<div class="sec intro" id="welcome" role="region" aria-labelledby="intro-h"><div class="inner intro-split">
+  <div class="intro-copy">
+    <span class="intro-mark" data-reveal>${KEY.replace('class="logo-key"', 'class="intro-key"')}</span>
+    <h2 class="intro-h" id="intro-h" data-reveal style="--d:.15s">A world of privilege, rooted in excellence</h2>
+    <p class="intro-p" data-word-reveal>At Aliyah Prestige, we craft bespoke experiences of rare elegance in Marrakech and beyond. Since 1986, discerning visionaries, global tastemakers, and loyal connoisseurs have entrusted us with their most exclusive moments, delivered with absolute discretion and timeless sophistication.</p>
+    <p class="intro-sig" data-reveal style="--d:.3s">Marrakech <i aria-hidden="true"></i> Since 1986</p>
+  </div>
+  <div class="intro-scatter">${Object.keys(AP).map(apFig).join("")}
+    <a class="isc-go" href="gallery.html" data-reveal style="--d:.5s"><img src="img/ap/caravan.jpg" alt="" loading="lazy"><span class="isc-k">The gallery</span><b>See every place we open</b><i aria-hidden="true"></i></a>
+  </div>
+</div></div>
 <section class="events" id="events" aria-labelledby="events-h">
   <!-- Photo: Unsplash (free licence), photo-1766393524464. Replace with the client's own event photography. -->
   <img src="${im("wedding-reception")}" alt="Wedding reception tables under palm trees at night" data-par>
@@ -254,7 +273,6 @@ const HOME = { title: "Aliyah Prestige | Private concierge in Marrakech", page: 
   <div class="grid">${SERVICES.map(([img, h, n, p, cls, href], i) => `<a class="tile ${cls}" href="${href}" data-reveal style="--d:${(i % 3) * 0.06}s"><img src="${im(img)}" alt="" loading="lazy"><span class="lab n">0${i + 1}</span><div class="t"><p class="lab">${n}</p><h3>${h}</h3><p>${p}</p></div></a>`).join("")}</div>
 </div></section>
 
-${miniGallery(18)}
 
 <section class="sec flush" id="journal-preview">${rails}<div class="inner">
   <div class="sec-head"><div><p class="lab">The journal</p><h2 class="H md" data-masked-reveal>Notes from <em>Morocco</em>.</h2></div><a class="chip" href="journal.html">All articles</a></div>
