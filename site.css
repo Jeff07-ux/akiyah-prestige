@@ -926,8 +926,9 @@ main:has(> #stays) .sec-head { margin-bottom: 32px; }
 [data-theme="atelier"] .pill b { background: var(--pale); }
 [data-theme="atelier"] .pnl-d .btn { border-color: var(--pale); color: var(--pale); }
 [data-theme="atelier"] .pnl-d .btn:hover { background: var(--pale); border-color: var(--pale); color: var(--pale-ink); }
-/* The vermilion band keeps its label in the band's ink, not vermilion on vermilion. */
-[data-theme="atelier"] .ex-5 .lab { color: var(--bi); }
+/* Atelier: the "Exclusively for you" band shares the services mint, with dark ink and vermilion accents. */
+:root[data-theme="atelier"] .ex-5 { background: #F5FFFB; --bi: #151414; }
+[data-theme="atelier"] .ex-5 .lab, [data-theme="atelier"] .ex-5 .H em { color: var(--sage); }
 /* Hero and enquiry tags: plain pale text, no outline. */
 [data-theme="atelier"] .stage .copy > .lab { border: 0; padding: 0; }
 /* Atelier: the services band sits on a white mint. */
@@ -1096,3 +1097,8 @@ html:not(.js) .intro-key :is(path, circle) { stroke-dashoffset: 0; }
   .intro .inner.intro-split { grid-template-columns: 1fr; }
   .intro-scatter { grid-template-rows: repeat(3, 110px); }
 }
+/* Home "Exclusively for you" label: same centred, hairline-flanked treatment and colour as the other home section labels. */
+[data-page="home"] .ex-5-in > .lab { display: flex; align-items: center; justify-content: center; gap: 18px; margin: 0 0 4px;
+  font-size: 15px; font-weight: 600; letter-spacing: .22em; }
+[data-page="home"] .ex-5-in > .lab::before, [data-page="home"] .ex-5-in > .lab::after { content: ""; width: clamp(32px, 6vw, 88px); height: 1px; background: currentColor; opacity: .45; }
+:root[data-tone="light"][data-theme="atelier"] .ex-5 .lab { color: #B53A0A; }
