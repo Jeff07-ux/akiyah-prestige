@@ -14,6 +14,38 @@
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !drawer.hidden) close(); });
   }
 
+  // Testimonial tabs (about layouts): click or arrow keys switch the quote
+  document.querySelectorAll("[data-qtabs]").forEach((wrap) => {
+    const tabs = [...wrap.querySelectorAll('[role="tab"]')];
+    const show = (t) => tabs.forEach((x) => {
+      const on = x === t;
+      x.setAttribute("aria-selected", String(on));
+      x.tabIndex = on ? 0 : -1;
+      document.getElementById(x.getAttribute("aria-controls")).hidden = !on;
+    });
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => show(t));
+      t.addEventListener("keydown", (e) => {
+        const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+        if (!step) return;
+        e.preventDefault();
+        const next = tabs[(i + step + tabs.length) % tabs.length];
+        next.focus();
+        show(next);
+      });
+    });
+  });
+
+  // Chapter index (about layout 2): mark the chapter in the middle of the screen
+  document.querySelectorAll("[data-chapters]").forEach((nav) => {
+    const links = [...nav.querySelectorAll('a[href^="#"]')];
+    const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      links.forEach((a) => a.setAttribute("aria-current", String(a.getAttribute("href") === "#" + e.target.id)));
+    }), { rootMargin: "-45% 0px -50% 0px" });
+    links.forEach((a) => { const t = document.querySelector(a.getAttribute("href")); if (t) io.observe(t); });
+  });
+
   // Signature panels: open on click/focus, and on hover for mouse users
   document.querySelectorAll("[data-panels]").forEach((wrap) => {
     const panels = [...wrap.querySelectorAll(".pnl")];
@@ -99,12 +131,15 @@
     window.addEventListener("scroll", onScroll, { passive: true });
   }
 
-  // Theme picker: 3 dark and 10 light palettes, remembered per browser.
+  // Theme picker: 3 dark and 26 light palettes, remembered per browser.
   // Keys must match site.css and the head script in build.mjs. [key, label, group, background, accent]; every group except "dark" is a light tone
   const root = document.documentElement;
   const themeBtn = document.querySelector("[data-theme-toggle]");
   const THEMES = [
-    ["grey", "Warm grey", "dark", "#8C8980", "#B8A889"], ["forest", "Forest", "dark", "#183D32", "#A9B58A"], ["navy", "Navy", "dark", "#0B1426", "#B9A77E"],
+    ["grey", "Warm grey", "dark", "#4A4842", "#DCD3B6"], ["forest", "Forest", "dark", "#183D32", "#A9B58A"], ["navy", "Navy", "dark", "#0B1426", "#B9A77E"],
+    ["gallery", "Gallery Oxblood", "clean", "#FAF9F6", "#7B2232"], ["porcelain", "Porcelain Cobalt", "clean", "#FBFBF9", "#2442B8"],
+    ["aubergine", "Pearl Aubergine", "clean", "#FAF8F7", "#5B2148"], ["champagne", "Champagne Ink", "clean", "#FBF8F1", "#86651C"],
+    ["harbour", "Harbour Navy", "clean", "#F8F9FA", "#1B365D"], ["atelier", "Atelier Vermilion", "clean", "#FFFFFF", "#C2410C"],
     ["tadelakt", "Tadelakt", "light", "#F0E2CF", "#8A5A35"], ["rose", "Rose City", "light", "#F7DCD0", "#A0533F"],
     ["majorelle", "Majorelle", "light", "#2D4BA0", "#F2C230"], ["mint", "Mint Tea", "light", "#E3EEDD", "#3F6B4F"],
     ["saffron", "Saffron Souk", "light", "#FAE8C2", "#E3A21A"], ["atlas", "Atlas Snow", "light", "#E6EEF2", "#4E6470"],
@@ -124,7 +159,7 @@
     menu.hidden = true;
     menu.setAttribute("role", "group");
     menu.setAttribute("aria-label", "Colour theme");
-    menu.innerHTML = [["dark", "Dark"], ["light", "Light · Marrakech"], ["modern", "Light · Modern"]].map(([group, title]) => `<p class="lab">${title}</p><div class="opts">` +
+    menu.innerHTML = [["dark", "Dark"], ["clean", "Light · Clean"], ["light", "Light · Marrakech"], ["modern", "Light · Modern"]].map(([group, title]) => `<p class="lab">${title}</p><div class="opts">` +
       THEMES.filter((t) => t[2] === group).map(([k, label, , bg, ac]) =>
         `<button type="button" data-theme-key="${k}" aria-pressed="false"><i aria-hidden="true" style="${swatch(bg, ac)}"></i>${label}</button>`).join("") + "</div>").join("");
     themeBtn.after(menu);

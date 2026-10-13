@@ -10,7 +10,7 @@ const EMAIL = "concierge@aliyahprestige.ma";
 const im = (k) => `img/${k}.jpg`;
 // Vertical guide rails were removed from the design; kept as an empty slot so sections need no edits.
 const rails = "";
-const NAV = [["Stays", "index.html#stays", "home"], ["Events", "index.html#events", "events"], ["Services", "index.html#services", "service"], ["Gallery", "gallery.html", "gallery"], ["Journal", "journal.html", "journal"]];
+const NAV = [["Stays", "index.html#stays", "home"], ["Events", "index.html#events", "events"], ["Services", "index.html#services", "service"], ["Gallery", "gallery.html", "gallery"], ["Journal", "journal.html", "journal"], ["About", "about.html", "about"]];
 
 function header(page) {
   const links = NAV.map(([t, h, k]) => `<a href="${h}"${k === page ? ' aria-current="page"' : ""}>${t}</a>`).join("");
@@ -41,10 +41,10 @@ function page(file, { title, desc, page, solid = false, body }) {
 <title>${title}</title>
 <meta name="description" content="${desc}">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="motion.css">
 <link rel="stylesheet" href="site.css">
-<script>try{var t=localStorage.getItem("theme"),r=document.documentElement,L=["tadelakt","rose","majorelle","mint","saffron","atlas","dune","zellige","blossom","cedar","linen","lavender","riviera","peach","matcha","blush","butter","clay","glacier","apricot"];if(t==="forest"||t==="navy"||L.indexOf(t)>-1)r.dataset.theme=t;if(L.indexOf(t)>-1)r.dataset.tone="light"}catch(e){}</script>
+<script>try{var t=localStorage.getItem("theme"),r=document.documentElement,L=["tadelakt","rose","majorelle","mint","saffron","atlas","dune","zellige","blossom","cedar","linen","lavender","riviera","peach","matcha","blush","butter","clay","glacier","apricot","gallery","porcelain","aubergine","champagne","harbour","atelier"];if(t==="forest"||t==="navy"||L.indexOf(t)>-1)r.dataset.theme=t;if(L.indexOf(t)>-1)r.dataset.tone="light"}catch(e){}</script>
 <script src="vendor/gsap.min.js" defer></script>
 <script src="vendor/ScrollTrigger.min.js" defer></script>
 <script src="motion.js" defer></script>
@@ -85,7 +85,7 @@ const EX_VARIANT = 5;
 const EX_ICONS = {
   person: `<circle cx="24" cy="15" r="7"/><path d="M10 41c0-7.7 6.3-13 14-13s14 5.3 14 13"/><path d="M24 28l-2.5 4 2.5 6 2.5-6z"/>`,
   shield: `<path d="M24 5l15 5v11c0 10-6.5 17.5-15 22C15.5 38.5 9 31 9 21V10z"/><path d="M17 24l5 5 9-10"/>`,
-  clock: `<path d="M40 24a16 16 0 1 1-4.7-11.3"/><path d="M40 7v6.5h-6.5"/><text x="23" y="28.5" text-anchor="middle" font-size="12" font-weight="500" font-family="Instrument Sans, system-ui, sans-serif" fill="currentColor" stroke="none">24</text>`,
+  clock: `<path d="M40 24a16 16 0 1 1-4.7-11.3"/><path d="M40 7v6.5h-6.5"/><text x="23" y="28.5" text-anchor="middle" font-size="12" font-weight="500" font-family="Poppins, system-ui, sans-serif" fill="currentColor" stroke="none">24</text>`,
 };
 const exIcon = (k) => `<svg class="ex-ic" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${EX_ICONS[k]}</svg>`;
 // [icon, title, short line, description, big figure, figure caption]
@@ -192,6 +192,15 @@ function exclusive(v, id = "exclusive") {
 </div></section>`;
 }
 
+// ---------- Mini gallery (home): a 3-row mosaic that leads to gallery.html ----------
+const MINI_GAL = [["riad", "Medina riad", "t"], ["desertcamp", "Agafay camp", "w"], ["atlas", "High Atlas", ""], ["tajines", "The souk", ""], ["rooftop", "Rooftop, medina", "w"], ["lanterns", "Lantern workshop", ""], ["hammam", "Private hammam", ""], ["bahia", "Bahia palace", ""]];
+function miniGallery(total) {
+  return `<section class="sec mg" id="gallery-preview"><div class="inner">
+  <div class="sec-head"><div><p class="lab">Gallery</p><h2 class="H md" data-masked-reveal>Seen by our <em>guests</em>.</h2></div><a class="chip" href="gallery.html">Full gallery</a></div>
+  <div class="gal mg-grid">${MINI_GAL.map(([k, t, sz], i) => `<a class="g ${sz}" href="gallery.html" data-reveal style="--d:${(i % 4) * 0.06}s"><img src="${im(k)}" alt="${t}" loading="lazy"><span class="cap">${t}</span></a>`).join("")}<a class="g mg-more" href="gallery.html" data-reveal style="--d:.18s"><span class="lab">${total} photos</span><span class="mg-go">View the full gallery <i aria-hidden="true">→</i></span></a></div>
+</div></section>`;
+}
+
 page("index.html", { title: "Aliyah Prestige | Private concierge in Marrakech", page: "home",
   desc: "Bespoke stays, journeys and evenings in Marrakech and across Morocco, arranged with absolute discretion.",
   body: `<section class="stage" id="stays"><img src="${im("medina-arch")}" alt="Medina lane in Marrakech leading to an arch and the Koutoubia minaret" style="object-position:66% 50%" data-par>${rails}<div class="in">
@@ -231,6 +240,8 @@ page("index.html", { title: "Aliyah Prestige | Private concierge in Marrakech", 
     <p class="muted">One concierge for the whole stay. A real person answers at any hour, in your language.</p></div>
   <div class="grid">${SERVICES.map(([img, h, n, p, cls, href], i) => `<a class="tile ${cls}" href="${href}" data-reveal style="--d:${(i % 3) * 0.06}s"><img src="${im(img)}" alt="" loading="lazy"><span class="lab n">0${i + 1}</span><div class="t"><p class="lab">${n}</p><h3>${h}</h3><p>${p}</p></div></a>`).join("")}</div>
 </div></section>
+
+${miniGallery(18)}
 
 <section class="sec flush">${rails}<div class="inner">
   <div class="sec-head"><div><p class="lab">The journal</p><h2 class="H md" data-masked-reveal>Notes from <em>Morocco</em>.</h2></div><a class="chip" href="journal.html">All articles</a></div>
@@ -326,7 +337,7 @@ page("journal.html", { title: "Journal | Aliyah Prestige", page: "journal",
   <div class="posts">${rest.map(postCard).join("")}</div>
 </div></section>
 <section class="sec flush">${rails}<div class="inner"><div class="news">
-  <div><p class="lab">The letter</p><h2 class="H" style="font-size:clamp(32px,3.6vw,52px)">One letter a <em>season</em>.</h2><p class="muted" style="margin:14px 0 0">New places, quiet dates and openings, four times a year. Nothing else.</p></div>
+  <div><p class="lab">The letter</p><h2 class="H plain" style="font-size:clamp(32px,3.6vw,52px)">One letter a <em>season</em>.</h2><p class="muted" style="margin:14px 0 0">New places, quiet dates and openings, four times a year. Nothing else.</p></div>
   <div><form data-newsletter><label class="lab" for="nl" style="position:absolute;left:-9999px">Email</label><input id="nl" type="email" required placeholder="Your email" autocomplete="email"><button type="submit">Subscribe</button></form><p class="ok" hidden aria-live="polite"></p></div>
 </div></div></section>
 ${cta("desertcamp", "Read it, then <em>live</em> it.", "Every article is a stay we can arrange. Tell us which one.")}` });
@@ -353,6 +364,295 @@ page("post.html", { title: "A first evening in the medina | Aliyah Prestige", pa
   <div class="posts">${POSTS.slice(1, 4).map(postCard).join("")}</div></div></section>
 ${cta("rooftop", "An evening like <em>this</em>?", "Tell us the date. We arrange the guide, the rooftop and the table.")}` });
 
+// ---------- Social proof: three templates (preview only, not on the home page yet) ----------
+// PLACEHOLDER copy: replace with real guest reviews, used with the guests' permission, before publishing.
+const REVIEWS = [
+  ["The concierge thought of things we had not. Every day felt arranged around us, and no one else.", "Guest from London", "Family stay, 7 nights"],
+  ["Our wedding weekend ran without a single question from us. Discreet, warm, and always one step ahead.", "Guest from Paris", "Wedding, 120 guests"],
+  ["We messaged at two in the morning about a flight change. Ten minutes later it was solved.", "Guest from Dubai", "Private jet and riad"],
+];
+const STATS = [["Since 1989", "one family, two generations"], ["24/7", "a real person answers"], ["5/5", "placeholder rating"]];
+const stars = `<span class="sp-stars" role="img" aria-label="5 out of 5">★★★★★</span>`;
+function socialProof(v) {
+  if (v === 1) return `<section class="sec sp sp-1"><div class="inner">
+  <p class="lab">What guests say</p>
+  ${stars}
+  <blockquote class="sp-quote" data-reveal>“${REVIEWS[0][0]}”</blockquote>
+  <p class="sp-who">${REVIEWS[0][1]} <span>· ${REVIEWS[0][2]}</span></p>
+  <ul class="sp-stats">${STATS.map(([fig, cap]) => `<li><b>${fig}</b><span>${cap}</span></li>`).join("")}</ul>
+</div></section>`;
+  if (v === 2) return `<section class="sec sp sp-2"><div class="inner">
+  <div class="sec-head"><div><p class="lab">What guests say</p><h2 class="H md" data-masked-reveal>In their <em>words</em>.</h2></div>
+    <p class="muted">Every review comes from a guest we hosted. Names stay private.</p></div>
+  <div class="sp-cards">${REVIEWS.map(([q, who, trip], i) => `<figure data-reveal style="--d:${i * 0.08}s">${stars}<blockquote>“${q}”</blockquote><figcaption><b>${who}</b>${trip}</figcaption></figure>`).join("")}</div>
+</div></section>`;
+  const line = REVIEWS.map(([q, who]) => `<span>“${q}” <b>${who}</b></span>`).join("");
+  return `<section class="sec sp sp-3"><div class="inner">
+  <p class="lab sp-c">Trusted by guests from many countries</p>
+  <ul class="sp-press">${Array(5).fill("Press logo").map((t) => `<li>${t}</li>`).join("")}</ul>
+</div>
+<div class="sp-marquee" aria-label="Guest reviews"><div class="sp-track">${line}${line.replace(/<span>/g, '<span aria-hidden="true">')}</div></div>
+</section>`;
+}
+
+// Five-star mark for testimonials, drawn in SVG.
+const STARS = `<span class="stars" role="img" aria-label="Rated 5 out of 5">${'<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.5l2.6 5.5 6 .8-4.4 4.1 1.1 5.9L10 15l-5.3 2.8 1.1-5.9L1.4 7.8l6-.8z"/></svg>'.repeat(5)}</span>`;
+
+// ---------- About: copy from aliyahprestige.com/about-us, laid out in the Riad Grid style ----------
+const TESTIMONIALS = [
+  ["Thank you for this wonderful discovery of Morocco. We have gained a new respect for the country and its people. You have always been generous and professional.", "Rosa Luisa DeLauro", "Member of Congress, United States House of Representatives"],
+  ["Morocco remains an unforgettable memory. It was a wonderful trip, largely thanks to the generosity with which you helped us discover your country. Your wit and erudition made this trip unforgettable for all of us.", "Michael Whiteman", "Chairman, Baum and Whiteman"],
+  ["Our cup is overflowing with joy. Our hearts and souls have allowed us to enjoy the richest and most memorable vacation of our lives. We can't wait to return to Morocco one day.", "Rozanne Gold", "Chef and journalist, four-time James Beard Award winner"],
+];
+// Moments listed under "Photos" on the current site. Archive photos can be added later.
+const ARCHIVE = [
+  ["1986", "Founded", "A private concierge service, born from a family tradition."],
+  ["1989", "Koutoubia Gardens tour", "Marrakech"],
+  ["1998", "Menara Gardens tour", "Marrakech"],
+  ["2002", "Bahia Palace private tour", "Marrakech"],
+  ["2023", "US First Lady Jill Biden visits Madrasa Ben Youssef", "Marrakech"],
+];
+// Archive photos and guest portraits, taken from the About page of aliyahprestige.com.
+const AB_ARCH_PICS = { 1989: "arch-koutoubia", 1998: "arch-menara", 2002: "arch-bahia", 2023: "arch-biden" };
+const AB_ARCH_ALT = {
+  1989: "Guests walking through the Koutoubia Gardens, 1989",
+  1998: "Guests at the Menara Gardens, 1998",
+  2002: "A private tour in a courtyard of the Bahia Palace, 2002",
+  2023: "US First Lady Jill Biden with her hosts at Madrasa Ben Youssef, 2023",
+};
+const AB_T_PICS = ["t-delauro", "t-whiteman", "t-gold"];
+const AB_STORY = [
+  "Founded in 1986, our exclusive private concierge service is born from a family tradition of excellence.",
+  "For generations, we have opened the doors to Marrakech's hidden treasures, offering unparalleled expertise and personalisation.",
+  "Today, we continue to honour our heritage, crafting extraordinary experiences marked by sophistication and elegance.",
+];
+const AB_VALUES = ["Authenticity", "Exclusivity", "Expertise", "Personalisation"];
+const AB_ART = "Guided by excellence, we work hand in hand with Marrakech's most esteemed artisans to unveil the city's rarest and most refined treasures.";
+// Hero hang: archive year and its slot on the wall.
+const AW_HANG = [["1989", "a"], ["1998", "b"], ["2002", "c"], ["2023", "d"]];
+// Archive Wall layout, kept as an alternate; about.html now uses layout 2 (Chapters).
+page("about-wall.html", { title: "About us | Aliyah Prestige", page: "about", solid: true,
+  desc: "Founded in 1986, a private concierge service in Marrakech born from a family tradition of excellence.",
+  body: `<section class="aw-hero"><div class="aw-in">
+  <div class="aw-copy">
+    <div><h1 class="aw-h">A bespoke experience in <em>Marrakech</em>.</h1>
+      <p class="aw-lede">A refined concierge service, opening the doors to Marrakech's hidden treasures since 1986.</p>
+      <a class="btn solid" href="${WA_URL}">WhatsApp the concierge</a></div>
+    <p class="aw-since"><span>1986</span>A private concierge service, born from a family tradition.</p>
+  </div>
+  <div class="aw-wall">${AW_HANG.map(([y, cls], i) => `<figure class="aw-ph ${cls}" style="--i:${i}"><div class="aw-f"><img src="${im(AB_ARCH_PICS[y])}" alt="${AB_ARCH_ALT[y]}"></div><figcaption><em>${y}</em>${ARCHIVE.find((a) => a[0] === y)[1]}</figcaption></figure>`).join("")}
+    <figure class="aw-note" style="--i:4"><blockquote>“${TESTIMONIALS[0][0].split(". ").pop()}”</blockquote><figcaption>${TESTIMONIALS[0][1]}</figcaption></figure>
+  </div>
+</div></section>
+
+<section class="aw-sec aw-story"><div class="aw-in">
+  <h2 class="aw-h2">Born from a family <em>tradition</em>.</h2>
+  <div class="aw-prose">${AB_STORY.map((p) => `<p>${p}</p>`).join("")}</div>
+</div>
+<figure class="aw-wide"><img src="${im("riad")}" alt="Garden inside a medina riad, seen from the gallery above" loading="lazy"></figure></section>
+
+<section class="aw-sec aw-philo"><div class="aw-in">
+  <blockquote class="aw-quote">True luxury is found in <em>authenticity</em> and <em>exclusivity</em>, crafting unforgettable moments for the most discerning travellers.</blockquote>
+  <p class="aw-values">${AB_VALUES.map((v) => `<span>${v}</span>`).join("")}</p>
+</div></section>
+
+<section class="aw-art"><figure class="aw-art-ph"><img src="${im("lanterns")}" alt="Lanterns in a metalworker's workshop in the medina" loading="lazy"></figure>
+  <div class="aw-art-copy"><h2 class="aw-h2">Hand in hand with <em>artisans</em>.</h2>
+    <p>${AB_ART}</p>
+    <a class="btn" href="index.html#services">Our services</a></div></section>
+
+<section class="aw-sec aw-words"><div class="aw-in">
+  <h2 class="aw-h2">In their <em>words</em>.</h2>
+  <div class="aw-tl">${TESTIMONIALS.map(([q, who, role], i) => `<figure><figcaption><img src="${im(AB_T_PICS[i])}" alt="" width="72" height="72" loading="lazy"><span><b>${who}</b>${role}</span></figcaption><blockquote>“${q}”</blockquote></figure>`).join("")}</div>
+</div></section>
+<section class="aw-close" id="enquire"><div class="aw-close-copy">
+  <h2 class="aw-h2">Begin your <em>story</em>.</h2>
+  <p>Tell us where you are coming from and when. A concierge replies within the hour, day or night.</p>
+  <a class="btn solid" href="${WA_URL}">WhatsApp the concierge</a>
+  <p class="aw-contact"><span>Concierge</span>${WA}<br>${EMAIL}</p></div>
+  <figure class="aw-close-ph"><img src="${im("villa-dusk")}" alt="A private villa in Marrakech at dusk" loading="lazy"></figure></section>` });
+
+// ---------- About: five layout proposals (about-1.html ... about-5.html) ----------
+// Same copy as about.html, five compositions. Only the two site fonts are used. A fixed bar switches between them.
+const AB_PHILO = `True luxury is found in <em>authenticity</em> and <em>exclusivity</em>, crafting unforgettable moments for the most discerning travellers.`;
+const abBody = (list = AB_STORY) => `<div class="av-body">${list.map((p) => `<p>${p}</p>`).join("")}</div>`;
+const abImg = (k, alt = "", par = false) => `<img src="${im(k)}" alt="${alt}" loading="lazy"${par ? " data-par" : ""}>`;
+const abSwitch = (n) => `<nav class="av-switch" aria-label="About page layouts"><span>About layout</span>${[1, 2, 3, 4, 5].map((i) => `<a href="about-${i}.html"${i === n ? ' aria-current="page"' : ""}>${i}</a>`).join("")}<a href="about.html">Current</a></nav><div class="av-space" aria-hidden="true"></div>`;
+// Testimonials as tabs: one quote at a time, guest names as the tab labels.
+function abTabs(id, cls = "") {
+  return `<div class="av-tabs ${cls}" data-qtabs>
+    <div class="av-tabs-panels">${TESTIMONIALS.map(([q, who, role], i) => `<figure role="tabpanel" id="${id}-q${i}" aria-labelledby="${id}-t${i}"${i ? " hidden" : ""}><blockquote>“${q}”</blockquote><figcaption><b>${who}</b><span>${role}</span></figcaption></figure>`).join("")}</div>
+    <div class="av-tabs-list" role="tablist" aria-label="Testimonials">${TESTIMONIALS.map(([, who], i) => `<button type="button" role="tab" id="${id}-t${i}" aria-controls="${id}-q${i}" aria-selected="${i === 0}" tabindex="${i ? -1 : 0}">${who}</button>`).join("")}</div>
+  </div>`;
+}
+function abCta(cls) {
+  return `<section class="sec ${cls}" id="enquire"><div class="inner">
+  <h2 class="H md" data-masked-reveal>Begin your <em>story</em>.</h2>
+  <div class="av-cta-r" data-reveal><p class="muted">Tell us where you are coming from and when. A concierge replies within the hour.</p>
+    <a class="btn solid" href="${WA_URL}">Enquire now</a><p class="av-contact">${WA}<br>${EMAIL}</p></div>
+</div></section>`;
+}
+const AB_PAGE = { title: "About us | Aliyah Prestige", page: "about",
+  desc: "Founded in 1986, a private concierge service in Marrakech born from a family tradition of excellence." };
+
+// 1. Monograph: editorial book layout, drop cap, full-bleed band, overlapping artisan card.
+page("about-1.html", { ...AB_PAGE, solid: true, body: `<section class="sec v1-hero"><div class="inner">
+  <div class="v1-hero-t"><p class="lab">About us</p><h1 class="H" data-masked-reveal>A bespoke experience in <em>Marrakech</em>.</h1>
+    <p class="av-lead" data-reveal>A refined concierge service, opening the doors to Marrakech's hidden treasures since 1986.</p></div>
+  <figure class="v1-hero-pic" data-reveal style="--d:.15s"><div class="pic">${abImg("riad2", "Riad courtyard in Marrakech", true)}</div><figcaption>A family tradition since 1986</figcaption></figure>
+</div></section>
+
+<section class="sec"><div class="inner v1-story">
+  <h2 class="H md" data-masked-reveal>Born from a family <em>tradition</em>.</h2>
+  <div data-reveal>${abBody()}</div>
+</div></section>
+
+<div class="v1-band">${abImg("rooftop", "Marrakech rooftops at dusk", true)}</div>
+
+<section class="sec"><div class="inner">
+  <blockquote class="av-quote v1-quote" data-reveal>${AB_PHILO}</blockquote>
+  <ul class="v1-values">${AB_VALUES.map((v, i) => `<li data-reveal style="--d:${i * 0.08}s">${v}</li>`).join("")}</ul>
+</div></section>
+
+<section class="sec"><div class="inner v1-art">
+  <div class="pic" data-reveal>${abImg("lanterns", "A lantern maker's workshop in the medina", true)}</div>
+  <div class="v1-card" data-reveal style="--d:.15s"><h2 class="H md">Hand in hand with <em>artisans</em>.</h2>${abBody([AB_ART])}<a class="btn" href="index.html#services">Our services</a></div>
+</div></section>
+
+<section class="sec v1-voices"><div class="inner">${abTabs("v1")}</div></section>
+
+<section class="sec flush"><div class="inner">
+  <h2 class="H md" data-masked-reveal>Four decades in <em>Marrakech</em>.</h2>
+  <ol class="v1-time">${ARCHIVE.map(([y, t, d], i) => `<li data-reveal style="--d:${i * 0.05}s"><span class="av-y">${y}</span><h3>${t}</h3><p>${d}</p></li>`).join("")}</ol>
+</div></section>
+${abCta("av-cta")}
+${abSwitch(1)}` });
+
+// 2. Chapters: full-bleed photo hero, sticky chapter index beside scrolling chapters, quotes over a photo.
+const ABOUT_2 = `<section class="stage v2-hero">${abImg("riad2", "Riad courtyard in Marrakech", true)}<div class="in">
+  <div class="copy wide"><h1 class="H" data-masked-reveal>A bespoke experience in <em>Marrakech</em>.</h1>
+    <p data-reveal>A refined concierge service, opening the doors to Marrakech's hidden treasures.</p></div>
+  <p class="v2-meta" data-reveal style="--d:.2s">Since <em>1986</em></p></div></section>
+
+<section class="sec"><div class="inner v2-chap">
+  <nav class="v2-nav" aria-label="Chapters" data-chapters><h2 class="H md">Our <em>story</em>.</h2>
+    <ol>${["The family", "The philosophy", "The artisans", "The archive"].map((t, i) => `<li><a href="#ch${i + 1}">${t}</a></li>`).join("")}</ol></nav>
+  <div>
+    <article class="v2-ch" id="ch1"><h2>Born from a family tradition.</h2>${abBody()}<div class="pic" data-reveal>${abImg("riad", "Garden inside a medina riad", true)}</div></article>
+    <article class="v2-ch" id="ch2"><blockquote class="av-quote" data-reveal>${AB_PHILO}</blockquote><ul class="v2-values">${AB_VALUES.map((v) => `<li>${v}</li>`).join("")}</ul></article>
+    <article class="v2-ch" id="ch3"><h2>Hand in hand with artisans.</h2>${abBody([AB_ART])}<div class="pic" data-reveal>${abImg("lanterns", "A lantern maker's workshop in the medina", true)}</div><a class="btn" href="index.html#services">Our services</a></article>
+    <article class="v2-ch" id="ch4"><h2>Four decades in Marrakech.</h2>
+      <p class="v2-founded" data-reveal><span>1986</span>${ARCHIVE[0][2]}</p>
+      <div class="v2-arch">${ARCHIVE.slice(1).map(([y, t, d], i) => `<figure data-reveal style="--d:${(i % 2) * 0.1}s"><div class="pic">${abImg(AB_ARCH_PICS[y], `${t}, ${d}, ${y}`)}</div><figcaption><span class="av-y">${y}</span><b>${t}</b>${d}</figcaption></figure>`).join("")}</div></article>
+  </div>
+</div></section>
+
+<section class="sec v2-voices av-dark"><div class="inner">
+  <h2 class="H md" data-masked-reveal>In their <em>words</em>.</h2>
+  <div class="v2-quotes">${TESTIMONIALS.map(([q, who, role], i) => `<figure data-reveal><div class="who"><img src="${im(AB_T_PICS[i])}" alt="${who}" loading="lazy"><figcaption><b>${who}</b>${role}</figcaption></div><div class="q">${STARS}<blockquote>“${q}”</blockquote></div></figure>`).join("")}</div>
+</div></section>
+${cta("rooftop", "Begin your <em>story</em>.", "Tell us where you are coming from and when. A concierge replies within the hour.", "Enquire now")}
+`;
+page("about-2.html", { ...AB_PAGE, body: ABOUT_2 + abSwitch(2) });
+// The default About page uses layout 2.
+page("about.html", { ...AB_PAGE, body: ABOUT_2 });
+
+// 3. Exhibition: museum-style matted frames, a hung picture wall, values as a 2 x 2 plaque.
+page("about-3.html", { ...AB_PAGE, solid: true, body: `<section class="sec v3-hero"><div class="inner">
+  <h1 class="H" data-masked-reveal>A bespoke experience in <em>Marrakech</em>.</h1>
+  <p class="av-lead" data-reveal>A refined concierge service, opening the doors to Marrakech's hidden treasures since 1986.</p>
+  <div class="v3-mat v3-hero-pic" data-reveal style="--d:.15s"><div class="pic">${abImg("villa-dusk", "A private villa in Marrakech at dusk", true)}</div></div>
+</div></section>
+
+<section class="sec"><div class="inner v3-story">
+  <h2 class="H md" data-masked-reveal>Born from a family <em>tradition</em>.</h2>
+  <div class="v3-cols" data-reveal>${abBody()}</div>
+</div></section>
+
+<section class="sec flush"><div class="inner v3-wall">
+  ${[["riad", "Garden inside a medina riad"], ["tajines", "Tagines in a medina workshop"], ["medina-arch", "An arch in the old medina"]].map(([k, a], i) => `<figure data-reveal style="--d:${i * 0.1}s"><div class="v3-mat"><div class="pic">${abImg(k, a)}</div></div><figcaption>${a}</figcaption></figure>`).join("")}
+</div></section>
+
+<section class="sec v3-philo"><div class="inner">
+  <blockquote class="av-quote" data-reveal>${AB_PHILO}</blockquote>
+  <ul class="v3-vals">${AB_VALUES.map((v, i) => `<li data-reveal style="--d:${i * 0.08}s">${v}</li>`).join("")}</ul>
+</div></section>
+
+<section class="sec"><div class="inner incl">
+  <div><h2 class="H md" data-masked-reveal>Hand in hand with <em>artisans</em>.</h2><div data-reveal>${abBody([AB_ART])}</div><a class="btn" href="index.html#services">Our services</a></div>
+  <div class="v3-mat" data-reveal><div class="pic">${abImg("lanterns", "A lantern maker's workshop in the medina")}</div></div>
+</div></section>
+
+<section class="sec"><div class="inner v3-voices">${TESTIMONIALS.map(([q, who, role], i) => `<figure data-reveal style="--d:${i * 0.08}s"><blockquote>“${q}”</blockquote><figcaption><b>${who}</b><span>${role}</span></figcaption></figure>`).join("")}</div></section>
+
+<section class="sec flush"><div class="inner">
+  <h2 class="H md" data-masked-reveal>Four decades in <em>Marrakech</em>.</h2>
+  <ol class="v3-time">${ARCHIVE.map(([y, t, d]) => `<li><span class="av-y">${y}</span><h3>${t}</h3><p>${d}</p></li>`).join("")}</ol>
+</div></section>
+
+<section class="sec" id="enquire"><div class="inner"><div class="v3-cta" data-reveal>
+  <h2 class="H md">Begin your <em>story</em>.</h2><p class="muted">Tell us where you are coming from and when. A concierge replies within the hour.</p>
+  <a class="btn solid" href="${WA_URL}">Enquire now</a><p class="av-contact">${WA}<br>${EMAIL}</p></div></div></section>
+${abSwitch(3)}` });
+
+// 4. Heritage: the page told along the years, with a sticky year beside each era.
+page("about-4.html", { ...AB_PAGE, solid: true, body: `<section class="v4-hero">
+  <div class="v4-hero-t"><p class="v4-year" data-reveal>1986</p><h1 class="H md" data-masked-reveal>A bespoke experience in <em>Marrakech</em>.</h1>
+    <p class="av-lead" data-reveal>A refined concierge service, opening the doors to Marrakech's hidden treasures.</p></div>
+  <div class="v4-hero-pic">${abImg("riad2", "Riad courtyard in Marrakech", true)}</div>
+</section>
+
+<section class="sec v4-eras"><div class="inner">
+  <div class="v4-era"><p class="v4-y">1986<span>Founded</span></p>
+    <div class="v4-split"><div><h2 class="H md" data-masked-reveal>Born from a family <em>tradition</em>.</h2><div data-reveal>${abBody()}</div></div>
+      <div class="pic" data-reveal>${abImg("riad", "Garden inside a medina riad")}</div></div></div>
+  <div class="v4-era"><p class="v4-y">1989-2002<span>Private tours</span></p>
+    <div class="v4-split"><ul class="v4-tours">${ARCHIVE.slice(1, 4).map(([y, t]) => `<li data-reveal><span>${t}</span><span>${y}</span></li>`).join("")}</ul>
+      <figure class="pic" data-reveal>${abImg("bahia", "Bahia Palace, Marrakech")}</figure></div></div>
+  <div class="v4-era"><p class="v4-y">2023<span>Madrasa Ben Youssef</span></p>
+    <p class="v4-big" data-reveal>US First Lady Jill Biden visits Madrasa Ben Youssef, <em>Marrakech</em>.</p></div>
+  <div class="v4-era"><p class="v4-y">Today<span>Our philosophy</span></p>
+    <div><blockquote class="av-quote" data-reveal>${AB_PHILO}</blockquote><ul class="v2-values">${AB_VALUES.map((v) => `<li>${v}</li>`).join("")}</ul>
+      <div class="v4-split v4-art"><div class="pic" data-reveal>${abImg("lanterns", "A lantern maker's workshop in the medina")}</div>
+        <div><h2 class="H md" data-masked-reveal>Hand in hand with <em>artisans</em>.</h2><div data-reveal>${abBody([AB_ART])}</div><a class="btn" href="index.html#services">Our services</a></div></div></div></div>
+</div></section>
+
+<section class="sec v4-voices"><div class="inner"><h2 class="H md" data-masked-reveal>In their <em>words</em>.</h2>${abTabs("v4", "v4-tabs")}</div></section>
+
+<section class="v4-cta av-dark" id="enquire">${abImg("rooftop", "", true)}<div class="inner" data-reveal>
+  <h2 class="H md">Begin your <em>story</em>.</h2><p>Tell us where you are coming from and when. A concierge replies within the hour.</p>
+  <a class="btn solid" href="${WA_URL}">Enquire now</a></div></section>
+${abSwitch(4)}` });
+
+// 5. Mosaic: split hero with layered photos, then a seven-cell bento and a side-scrolling archive.
+page("about-5.html", { ...AB_PAGE, solid: true, body: `<section class="sec v5-hero"><div class="inner">
+  <div><h1 class="H" data-masked-reveal>A bespoke experience in <em>Marrakech</em>.</h1>
+    <p class="av-lead" data-reveal>A refined concierge service, opening the doors to Marrakech's hidden treasures since 1986.</p></div>
+  <div class="v5-stack" data-reveal style="--d:.15s"><div class="a">${abImg("riad2", "Riad courtyard in Marrakech", true)}</div><div class="b">${abImg("riad3", "Quiet riad courtyard with a fountain")}</div></div>
+</div></section>
+
+<section class="sec flush"><div class="inner v5-bento">
+  <div class="c story" data-reveal><h2 class="H md">Born from a family <em>tradition</em>.</h2>${abBody()}</div>
+  <div class="c pic" data-reveal style="--d:.08s">${abImg("riad", "Garden inside a medina riad")}</div>
+  <div class="c quote" data-reveal><blockquote class="av-quote">${AB_PHILO}</blockquote></div>
+  <div class="c vals" data-reveal style="--d:.08s"><ul>${AB_VALUES.map((v) => `<li>${v}</li>`).join("")}</ul></div>
+  <div class="c art av-dark" data-reveal>${abImg("lanterns", "A lantern maker's workshop in the medina")}<div class="t"><h2>Hand in hand with artisans.</h2><p>${AB_ART}</p><a class="btn" href="index.html#services">Our services</a></div></div>
+  <div class="c year" data-reveal style="--d:.08s"><p class="v5-num">1986</p><p>A family tradition of expertise and personalisation, passed down through generations.</p></div>
+  <div class="c voice" data-reveal>${abTabs("v5", "v4-tabs")}</div>
+</div></section>
+
+<section class="sec"><div class="inner">
+  <h2 class="H md" data-masked-reveal>Four decades in <em>Marrakech</em>.</h2>
+  <ol class="v5-time">${ARCHIVE.map(([y, t, d]) => `<li><span class="av-y">${y}</span><h3>${t}</h3><p>${d}</p></li>`).join("")}</ol>
+</div></section>
+
+<section class="sec flush" id="enquire"><div class="inner v5-cta">
+  <div class="t" data-reveal><h2 class="H md">Begin your <em>story</em>.</h2><p class="muted">Tell us where you are coming from and when. A concierge replies within the hour.</p>
+    <a class="btn solid" href="${WA_URL}">Enquire now</a><p class="av-contact">${WA}<br>${EMAIL}</p></div>
+  <div class="pic" data-reveal style="--d:.1s">${abImg("villa-dusk", "A private villa in Marrakech at dusk", true)}</div>
+</div></section>
+${abSwitch(5)}` });
+
 // ---------- Section preview: the five "Exclusively for you" variants ----------
 const EX_NAMES = ["Framed row", "Photo stage with glass cards", "Split with photo", "Big figures", "Accent band",
   "Photo tiles", "Editorial rows", "Quote with promises", "Expanding photo panels", "Signed promise card",
@@ -360,6 +660,7 @@ const EX_NAMES = ["Framed row", "Photo stage with glass cards", "Split with phot
   "Original: plain", "Original: framed cells", "Original: photo with glass", "Original: zellige pattern", "Original: diamond icons"];
 page("sections.html", { title: "Section variants | Aliyah Prestige", page: "", solid: true,
   desc: "Design variants of the Exclusively for you section.",
-  body: EX_NAMES.map((n, i) => `<div class="ex-tag"><span class="lab">Variant ${i + 1}</span><span>${n}</span></div>\n${exclusive(i + 1, "")}`).join("\n") });
+  body: EX_NAMES.map((n, i) => `<div class="ex-tag"><span class="lab">Variant ${i + 1}</span><span>${n}</span></div>\n${exclusive(i + 1, "")}`).join("\n") +
+    ["Featured quote", "Review cards", "Press row and moving reviews"].map((n, i) => `\n<div class="ex-tag"><span class="lab">Social proof ${i + 1}</span><span>${n}</span></div>\n${socialProof(i + 1)}`).join("") });
 
-console.log("built: index, service, gallery, journal, post, sections");
+console.log("built: index, service, gallery, journal, post, about (layout 2), about-wall, about-1..5, sections");
