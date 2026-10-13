@@ -36,14 +36,56 @@
     });
   });
 
-  // Chapter index (about layout 2): mark the chapter in the middle of the screen
+  // Chapter index (about layout 2): rails draw in and labels rise when the index enters view,
+  // a thread fills with reading progress, links glide to their chapter, and the chapter
+  // in the middle of the screen is marked current.
   document.querySelectorAll("[data-chapters]").forEach((nav) => {
     const links = [...nav.querySelectorAll('a[href^="#"]')];
+    const list = nav.querySelector("ol");
+    const body = nav.nextElementSibling;
+    const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    links.forEach((a, i) => {
+      a.parentElement.style.setProperty("--i", i);
+      a.innerHTML = `<span>${a.innerHTML}</span>`;
+    });
+    if (list) {
+      const thread = document.createElement("i");
+      thread.className = "v2-thread";
+      thread.setAttribute("aria-hidden", "true");
+      list.prepend(thread);
+    }
+    nav.classList.add("is-ready");
+    new IntersectionObserver((entries, obs) => entries.forEach((e) => {
+      if (e.isIntersecting) { nav.classList.add("is-in"); obs.disconnect(); }
+    }), { threshold: 0.2 }).observe(nav);
+
     const io = new IntersectionObserver((entries) => entries.forEach((e) => {
       if (!e.isIntersecting) return;
       links.forEach((a) => a.setAttribute("aria-current", String(a.getAttribute("href") === "#" + e.target.id)));
     }), { rootMargin: "-45% 0px -50% 0px" });
-    links.forEach((a) => { const t = document.querySelector(a.getAttribute("href")); if (t) io.observe(t); });
+    links.forEach((a) => {
+      const t = document.querySelector(a.getAttribute("href"));
+      if (!t) return;
+      io.observe(t);
+      a.addEventListener("click", (ev) => {
+        ev.preventDefault();
+        t.scrollIntoView({ behavior: still ? "auto" : "smooth", block: "start" });
+        history.replaceState(null, "", a.getAttribute("href"));
+      });
+    });
+
+    if (body) {
+      let queued = false;
+      const update = () => {
+        queued = false;
+        const r = body.getBoundingClientRect();
+        const p = Math.min(1, Math.max(0, (innerHeight * 0.5 - r.top) / r.height));
+        nav.style.setProperty("--prog", p.toFixed(4));
+      };
+      addEventListener("scroll", () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
+      addEventListener("resize", update);
+      update();
+    }
   });
 
   // Signature panels: open on click/focus, and on hover for mouse users
@@ -123,12 +165,24 @@
     }));
   });
 
-  // Sticky header: solid background once the page leaves the top
+  // Sticky header: solid once the page leaves the top. Scrolling down folds it to a floating capsule
+  // holding only the wordmark; scrolling up, pointing near the top or tabbing into it brings the full header back.
   const head = document.querySelector("header.site");
   if (head) {
-    const onScroll = () => head.classList.toggle("scrolled", window.scrollY > 10);
+    let last = window.scrollY;
+    const float = (on) => head.classList.toggle("nav-float", on && !head.contains(document.activeElement));
+    const onScroll = () => {
+      const y = window.scrollY;
+      head.classList.toggle("scrolled", y > 10);
+      if (y <= 160) float(false);
+      else if (y > last + 4) float(true);
+      else if (y < last - 4) float(false);
+      last = y;
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("mousemove", (e) => { if (e.clientY < 90 && window.scrollY > 160) float(false); });
+    head.addEventListener("focusin", () => float(false));
   }
 
   // Theme picker: 3 dark and 26 light palettes, remembered per browser.

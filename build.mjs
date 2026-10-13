@@ -10,14 +10,28 @@ const EMAIL = "concierge@aliyahprestige.ma";
 const im = (k) => `img/${k}.jpg`;
 // Vertical guide rails were removed from the design; kept as an empty slot so sections need no edits.
 const rails = "";
-const NAV = [["Stays", "index.html#stays", "home"], ["Events", "index.html#events", "events"], ["Services", "index.html#services", "service"], ["Gallery", "gallery.html", "gallery"], ["Journal", "journal.html", "journal"], ["About", "about.html", "about"]];
+const NAV = [["Gallery", "gallery.html", "gallery"], ["Events", "index.html#events", "events"], ["Services", "index.html#services", "service"], ["Journal", "journal.html", "journal"], ["About", "about.html", "about"]];
+
+// Brand key, traced from the company logo (img/IMG_9832.PNG) as line art so it stays crisp and takes the theme colour.
+const KEY = `<svg class="logo-key" viewBox="0 0 48 96" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+<circle pathLength="1" cx="24" cy="8" r="4.5"/><path pathLength="1" d="M24 12.5V16"/>
+<path pathLength="1" d="M16.44 26.61A8 8 0 1 1 31.56 26.61A9.5 9.5 0 1 1 24 39.04A9.5 9.5 0 1 1 16.44 26.61Z"/>
+<path pathLength="1" d="M24 19Q28.2 24.6 24 30.2Q19.8 24.6 24 19Z"/>
+<path pathLength="1" d="M24 34.5C21 31 15.6 31.4 15.2 35.4C14.9 38.6 18.8 39.6 19.7 37C20.3 35.3 18.4 34.3 17.4 35.6"/>
+<path pathLength="1" d="M24 34.5C27 31 32.4 31.4 32.8 35.4C33.1 38.6 29.2 39.6 28.3 37C27.7 35.3 29.6 34.3 30.6 35.6"/>
+<path pathLength="1" d="M24 30.2V92"/><path pathLength="1" d="M20.5 45H27.5M21.5 48.5H26.5"/>
+<path pathLength="1" d="M24 73H16.5V77.5H20V80.5H16.5V85H24"/>
+</svg>`;
 
 function header(page) {
-  const links = NAV.map(([t, h, k]) => `<a href="${h}"${k === page ? ' aria-current="page"' : ""}>${t}</a>`).join("");
+  const link = ([t, h, k]) => `<a href="${h}"${k === page ? ' aria-current="page"' : ""}>${t}</a>`;
+  // Links split either side of the centred logo: three on the left, the rest plus Enquire on the right.
+  const left = NAV.slice(0, 3).map(link).join("");
+  const right = NAV.slice(3).map(link).join("") + `<a href="#enquire">Enquire</a>`;
   return `<a class="skip" href="#main">Skip to content</a>
-<header class="site"><div class="in"><a class="logo" href="index.html">Aliyah Prestige</a>
-  <nav aria-label="Main">${links}<a href="#enquire">Enquire</a></nav>
-  <div class="tools"><button class="theme-btn" type="button" data-theme-toggle aria-label="Change colour theme"><i aria-hidden="true"></i><span>Theme</span></button>
+<header class="site"><div class="in"><a class="logo" href="index.html" aria-label="Aliyah Prestige, home"><span class="logo-word">Aliyah</span>${KEY}<span class="logo-word">Prestige</span></a>
+  <nav class="nav-l" aria-label="Main">${left}</nav>
+  <div class="tools"><nav class="nav-r" aria-label="More">${right}</nav>
   <button class="menu-btn" type="button" data-menu-open aria-controls="drawer" aria-expanded="false">Menu</button></div></div></header>
 <div class="drawer" id="drawer" hidden role="dialog" aria-modal="true" aria-label="Menu">
   <div class="top"><span class="logo">Aliyah Prestige</span><button class="chip" type="button" data-menu-close>Close</button></div>
@@ -34,23 +48,22 @@ function cta(img, h, p, label = "WhatsApp the concierge") {
 
 function page(file, { title, desc, page, solid = false, body }) {
   const html = `<!doctype html>
-<html lang="en">
+<html lang="en" data-theme="atelier" data-tone="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${title}</title>
 <meta name="description" content="${desc}">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@400;500${page === "about" ? ";700" : ""}&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="motion.css">
 <link rel="stylesheet" href="site.css">
-<script>try{var t=localStorage.getItem("theme"),r=document.documentElement,L=["tadelakt","rose","majorelle","mint","saffron","atlas","dune","zellige","blossom","cedar","linen","lavender","riviera","peach","matcha","blush","butter","clay","glacier","apricot","gallery","porcelain","aubergine","champagne","harbour","atelier"];if(t==="forest"||t==="navy"||L.indexOf(t)>-1)r.dataset.theme=t;if(L.indexOf(t)>-1)r.dataset.tone="light"}catch(e){}</script>
 <script src="vendor/gsap.min.js" defer></script>
 <script src="vendor/ScrollTrigger.min.js" defer></script>
 <script src="motion.js" defer></script>
 <script src="site.js" defer></script>
 </head>
-<body${solid ? ' class="solid-head"' : ""}>
+<body data-page="${page}"${solid ? ' class="solid-head"' : ""}>
 ${header(page)}
 <main id="main">
 ${body}
@@ -201,9 +214,9 @@ function miniGallery(total) {
 </div></section>`;
 }
 
-page("index.html", { title: "Aliyah Prestige | Private concierge in Marrakech", page: "home",
+const HOME = { title: "Aliyah Prestige | Private concierge in Marrakech", page: "home",
   desc: "Bespoke stays, journeys and evenings in Marrakech and across Morocco, arranged with absolute discretion.",
-  body: `<section class="stage" id="stays"><img src="${im("medina-arch")}" alt="Medina lane in Marrakech leading to an arch and the Koutoubia minaret" style="object-position:66% 50%" data-par>${rails}<div class="in">
+  body: `<section class="stage" id="stays"><img src="img/hero-jemaa.jpg" alt="Jemaa el-Fna square at dusk with market stalls lit below the Koutoubia minaret, Marrakech" style="object-position:40% 50%" data-par>${rails}<div class="in">
   <div class="copy"><p class="lab">Private concierge · Marrakech</p><h1 class="H" data-masked-reveal>A whole riad, opened for <em>you</em>.</h1>
     <p data-reveal>Bespoke stays, journeys and evenings in Marrakech and across Morocco, arranged with absolute discretion.</p>
     <a class="btn" href="#enquire" data-reveal style="--d:.1s">Plan a stay</a></div>
@@ -243,12 +256,15 @@ page("index.html", { title: "Aliyah Prestige | Private concierge in Marrakech", 
 
 ${miniGallery(18)}
 
-<section class="sec flush">${rails}<div class="inner">
+<section class="sec flush" id="journal-preview">${rails}<div class="inner">
   <div class="sec-head"><div><p class="lab">The journal</p><h2 class="H md" data-masked-reveal>Notes from <em>Morocco</em>.</h2></div><a class="chip" href="journal.html">All articles</a></div>
   <div class="posts">${POSTS.slice(0, 3).map(postCard).join("")}</div>
 </div></section>
 ${exclusive(EX_VARIANT)}
-${cta("rooftop", "Tell us the <em>date</em>.", "A message on WhatsApp is enough: where from, when, how many. Two or three options follow within the hour.")}` });
+${cta("riad3", "Tell us the <em>date</em>.", "A message on WhatsApp is enough: where from, when, how many. Two or three options follow within the hour.")}` };
+page("index.html", HOME);
+
+
 
 // ---------- Service: Private Jet Charter (simple version) ----------
 page("service.html", { title: "Private Jet Charter | Aliyah Prestige", page: "service",
@@ -278,7 +294,7 @@ page("service.html", { title: "Private Jet Charter | Aliyah Prestige", page: "se
     <div class="step" data-reveal style="--d:.12s"><span class="n">03</span><h3>Fly</h3><p>We handle the rest, until you land and after.</p></div>
   </div>
 </div></section>
-${cta("rooftop", "Where are you flying <em>from</em>?", "Send one message. Options and prices follow within the hour.")}` });
+${cta("riad3", "Where are you flying <em>from</em>?", "Send one message. Options and prices follow within the hour.")}` });
 
 // ---------- Gallery ----------
 const GAL = [
@@ -304,7 +320,7 @@ const GAL = [
 const CATS = [["all", "All"], ["stays", "Stays"], ["desert", "Desert"], ["atlas", "Atlas"], ["medina", "Medina"], ["table", "At the table"], ["arrivals", "Arrivals"]];
 page("gallery.html", { title: "Gallery | Aliyah Prestige", page: "gallery", solid: true,
   desc: "Riads, desert camps, valleys and tables we arrange for our guests in Marrakech and across Morocco.",
-  body: `<section class="sec" style="padding-top:clamp(56px,7vw,96px)">${rails}<div class="inner">
+  body: `<section class="sec" style="padding-top:clamp(20px,2.4vw,32px)">${rails}<div class="inner">
   <div class="sec-head"><div><p class="lab">Gallery</p><h1 class="H md" data-masked-reveal>Places we <em>open</em> for you.</h1></div>
     <p class="muted">Riads, desert camps, valleys and tables from recent stays. Every photo is a place we can arrange.</p></div>
   <div class="chips" data-filters=".g" role="group" aria-label="Filter photos" style="margin-bottom:12px">${CATS.map(([k, t], i) => `<button class="chip" type="button" data-filter="${k}" aria-pressed="${i === 0}">${t}</button>`).join("")}</div>
@@ -316,7 +332,7 @@ page("gallery.html", { title: "Gallery | Aliyah Prestige", page: "gallery", soli
   <div class="view"><button type="button" class="chip nav-btn" data-lb-prev aria-label="Previous photo">←</button><img alt=""><button type="button" class="chip nav-btn" data-lb-next aria-label="Next photo">→</button></div>
   <div class="foot"><p class="muted" data-lb-text></p><a class="btn solid flat" href="${WA_URL}" data-lb-cta>Arrange this</a></div>
 </dialog>
-${cta("desertcamp", "Want to be <em>here</em>?", "Send us a photo from the gallery. We will build a stay around it.")}` });
+${cta("riad3", "Want to be <em>here</em>?", "Send us a photo from the gallery. We will build a stay around it.")}` });
 
 // ---------- Journal ----------
 const ALL_POSTS = [...POSTS, { title: "A day in Essaouira, by road or by air", cat: "Places", date: "30 May 2026", read: "6 min", img: "essaouira", excerpt: "The Atlantic in two hours by car, or forty minutes by helicopter." }];
@@ -340,7 +356,7 @@ page("journal.html", { title: "Journal | Aliyah Prestige", page: "journal",
   <div><p class="lab">The letter</p><h2 class="H plain" style="font-size:clamp(32px,3.6vw,52px)">One letter a <em>season</em>.</h2><p class="muted" style="margin:14px 0 0">New places, quiet dates and openings, four times a year. Nothing else.</p></div>
   <div><form data-newsletter><label class="lab" for="nl" style="position:absolute;left:-9999px">Email</label><input id="nl" type="email" required placeholder="Your email" autocomplete="email"><button type="submit">Subscribe</button></form><p class="ok" hidden aria-live="polite"></p></div>
 </div></div></section>
-${cta("desertcamp", "Read it, then <em>live</em> it.", "Every article is a stay we can arrange. Tell us which one.")}` });
+${cta("riad3", "Read it, then <em>live</em> it.", "Every article is a stay we can arrange. Tell us which one.")}` });
 
 // ---------- Article ----------
 const slug = (s) => s.toLowerCase().replace(/[^a-z]+/g, "-").replace(/^-|-$/g, "");
@@ -362,7 +378,7 @@ page("post.html", { title: "A first evening in the medina | Aliyah Prestige", pa
 </div></section>
 <section class="sec flush">${rails}<div class="inner"><div class="sec-head"><h2 class="H md">Keep <em>reading</em>.</h2><a class="chip" href="journal.html">All articles</a></div>
   <div class="posts">${POSTS.slice(1, 4).map(postCard).join("")}</div></div></section>
-${cta("rooftop", "An evening like <em>this</em>?", "Tell us the date. We arrange the guide, the rooftop and the table.")}` });
+${cta("riad3", "An evening like <em>this</em>?", "Tell us the date. We arrange the guide, the rooftop and the table.")}` });
 
 // ---------- Social proof: three templates (preview only, not on the home page yet) ----------
 // PLACEHOLDER copy: replace with real guest reviews, used with the guests' permission, before publishing.
@@ -535,7 +551,7 @@ const ABOUT_2 = `<section class="stage v2-hero">${abImg("riad2", "Riad courtyard
   <p class="v2-meta" data-reveal style="--d:.2s">Since <em>1986</em></p></div></section>
 
 <section class="sec"><div class="inner v2-chap">
-  <nav class="v2-nav" aria-label="Chapters" data-chapters><h2 class="H md">Our <em>story</em>.</h2>
+  <nav class="v2-nav" aria-label="Chapters" data-chapters><h2 class="H md" data-masked-reveal>Our <em>story</em>.</h2>
     <ol>${["The family", "The philosophy", "The artisans", "The archive"].map((t, i) => `<li><a href="#ch${i + 1}">${t}</a></li>`).join("")}</ol></nav>
   <div>
     <article class="v2-ch" id="ch1"><h2>Born from a family tradition.</h2>${abBody()}<div class="pic" data-reveal>${abImg("riad", "Garden inside a medina riad", true)}</div></article>
@@ -551,7 +567,7 @@ const ABOUT_2 = `<section class="stage v2-hero">${abImg("riad2", "Riad courtyard
   <h2 class="H md" data-masked-reveal>In their <em>words</em>.</h2>
   <div class="v2-quotes">${TESTIMONIALS.map(([q, who, role], i) => `<figure data-reveal><div class="who"><img src="${im(AB_T_PICS[i])}" alt="${who}" loading="lazy"><figcaption><b>${who}</b>${role}</figcaption></div><div class="q">${STARS}<blockquote>“${q}”</blockquote></div></figure>`).join("")}</div>
 </div></section>
-${cta("rooftop", "Begin your <em>story</em>.", "Tell us where you are coming from and when. A concierge replies within the hour.", "Enquire now")}
+${cta("riad3", "Begin your <em>story</em>.", "Tell us where you are coming from and when. A concierge replies within the hour.", "Enquire now")}
 `;
 page("about-2.html", { ...AB_PAGE, body: ABOUT_2 + abSwitch(2) });
 // The default About page uses layout 2.

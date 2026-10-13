@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="atelier" data-tone="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -9,24 +9,31 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="motion.css">
 <link rel="stylesheet" href="site.css">
-<script>try{var t=localStorage.getItem("theme"),r=document.documentElement,L=["tadelakt","rose","majorelle","mint","saffron","atlas","dune","zellige","blossom","cedar","linen","lavender","riviera","peach","matcha","blush","butter","clay","glacier","apricot","gallery","porcelain","aubergine","champagne","harbour","atelier"];if(t==="forest"||t==="navy"||L.indexOf(t)>-1)r.dataset.theme=t;if(L.indexOf(t)>-1)r.dataset.tone="light"}catch(e){}</script>
 <script src="vendor/gsap.min.js" defer></script>
 <script src="vendor/ScrollTrigger.min.js" defer></script>
 <script src="motion.js" defer></script>
 <script src="site.js" defer></script>
 </head>
-<body>
+<body data-page="home">
 <a class="skip" href="#main">Skip to content</a>
-<header class="site"><div class="in"><a class="logo" href="index.html">Aliyah Prestige</a>
-  <nav aria-label="Main"><a href="index.html#stays" aria-current="page">Stays</a><a href="index.html#events">Events</a><a href="index.html#services">Services</a><a href="gallery.html">Gallery</a><a href="journal.html">Journal</a><a href="about.html">About</a><a href="#enquire">Enquire</a></nav>
-  <div class="tools"><button class="theme-btn" type="button" data-theme-toggle aria-label="Change colour theme"><i aria-hidden="true"></i><span>Theme</span></button>
+<header class="site"><div class="in"><a class="logo" href="index.html" aria-label="Aliyah Prestige, home"><span class="logo-word">Aliyah</span><svg class="logo-key" viewBox="0 0 48 96" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+<circle pathLength="1" cx="24" cy="8" r="4.5"/><path pathLength="1" d="M24 12.5V16"/>
+<path pathLength="1" d="M16.44 26.61A8 8 0 1 1 31.56 26.61A9.5 9.5 0 1 1 24 39.04A9.5 9.5 0 1 1 16.44 26.61Z"/>
+<path pathLength="1" d="M24 19Q28.2 24.6 24 30.2Q19.8 24.6 24 19Z"/>
+<path pathLength="1" d="M24 34.5C21 31 15.6 31.4 15.2 35.4C14.9 38.6 18.8 39.6 19.7 37C20.3 35.3 18.4 34.3 17.4 35.6"/>
+<path pathLength="1" d="M24 34.5C27 31 32.4 31.4 32.8 35.4C33.1 38.6 29.2 39.6 28.3 37C27.7 35.3 29.6 34.3 30.6 35.6"/>
+<path pathLength="1" d="M24 30.2V92"/><path pathLength="1" d="M20.5 45H27.5M21.5 48.5H26.5"/>
+<path pathLength="1" d="M24 73H16.5V77.5H20V80.5H16.5V85H24"/>
+</svg><span class="logo-word">Prestige</span></a>
+  <nav class="nav-l" aria-label="Main"><a href="gallery.html">Gallery</a><a href="index.html#events">Events</a><a href="index.html#services">Services</a></nav>
+  <div class="tools"><nav class="nav-r" aria-label="More"><a href="journal.html">Journal</a><a href="about.html">About</a><a href="#enquire">Enquire</a></nav>
   <button class="menu-btn" type="button" data-menu-open aria-controls="drawer" aria-expanded="false">Menu</button></div></div></header>
 <div class="drawer" id="drawer" hidden role="dialog" aria-modal="true" aria-label="Menu">
   <div class="top"><span class="logo">Aliyah Prestige</span><button class="chip" type="button" data-menu-close>Close</button></div>
-  <nav aria-label="Mobile"><a href="index.html#stays">Stays</a><a href="index.html#events">Events</a><a href="index.html#services">Services</a><a href="gallery.html">Gallery</a><a href="journal.html">Journal</a><a href="about.html">About</a><a href="#enquire">Enquire</a></nav>
+  <nav aria-label="Mobile"><a href="gallery.html">Gallery</a><a href="index.html#events">Events</a><a href="index.html#services">Services</a><a href="journal.html">Journal</a><a href="about.html">About</a><a href="#enquire">Enquire</a></nav>
   <a class="btn solid" href="https://wa.me/212600000000">WhatsApp the concierge</a></div>
 <main id="main">
-<section class="stage" id="stays"><img src="img/medina-arch.jpg" alt="Medina lane in Marrakech leading to an arch and the Koutoubia minaret" style="object-position:66% 50%" data-par><div class="in">
+<section class="stage" id="stays"><img src="img/hero-jemaa.jpg" alt="Jemaa el-Fna square at dusk with market stalls lit below the Koutoubia minaret, Marrakech" style="object-position:40% 50%" data-par><div class="in">
   <div class="copy"><p class="lab">Private concierge · Marrakech</p><h1 class="H" data-masked-reveal>A whole riad, opened for <em>you</em>.</h1>
     <p data-reveal>Bespoke stays, journeys and evenings in Marrakech and across Morocco, arranged with absolute discretion.</p>
     <a class="btn" href="#enquire" data-reveal style="--d:.1s">Plan a stay</a></div>
@@ -99,7 +106,7 @@
   <div class="gal mg-grid"><a class="g t" href="gallery.html" data-reveal style="--d:0s"><img src="img/riad.jpg" alt="Medina riad" loading="lazy"><span class="cap">Medina riad</span></a><a class="g w" href="gallery.html" data-reveal style="--d:0.06s"><img src="img/desertcamp.jpg" alt="Agafay camp" loading="lazy"><span class="cap">Agafay camp</span></a><a class="g " href="gallery.html" data-reveal style="--d:0.12s"><img src="img/atlas.jpg" alt="High Atlas" loading="lazy"><span class="cap">High Atlas</span></a><a class="g " href="gallery.html" data-reveal style="--d:0.18s"><img src="img/tajines.jpg" alt="The souk" loading="lazy"><span class="cap">The souk</span></a><a class="g w" href="gallery.html" data-reveal style="--d:0s"><img src="img/rooftop.jpg" alt="Rooftop, medina" loading="lazy"><span class="cap">Rooftop, medina</span></a><a class="g " href="gallery.html" data-reveal style="--d:0.06s"><img src="img/lanterns.jpg" alt="Lantern workshop" loading="lazy"><span class="cap">Lantern workshop</span></a><a class="g " href="gallery.html" data-reveal style="--d:0.12s"><img src="img/hammam.jpg" alt="Private hammam" loading="lazy"><span class="cap">Private hammam</span></a><a class="g " href="gallery.html" data-reveal style="--d:0.18s"><img src="img/bahia.jpg" alt="Bahia palace" loading="lazy"><span class="cap">Bahia palace</span></a><a class="g mg-more" href="gallery.html" data-reveal style="--d:.18s"><span class="lab">18 photos</span><span class="mg-go">View the full gallery <i aria-hidden="true">→</i></span></a></div>
 </div></section>
 
-<section class="sec flush"><div class="inner">
+<section class="sec flush" id="journal-preview"><div class="inner">
   <div class="sec-head"><div><p class="lab">The journal</p><h2 class="H md" data-masked-reveal>Notes from <em>Morocco</em>.</h2></div><a class="chip" href="journal.html">All articles</a></div>
   <div class="posts"><a class="post" href="post.html" data-cat="guides" data-reveal><div class="img"><img src="img/riad2.jpg" alt="" loading="lazy"></div><div class="meta"><b>Guides</b><span>6 min</span><span>12 Sep 2026</span></div><h3>A first evening in the medina</h3><p>Where to begin, when to arrive, and why the best rooftops are not on any map.</p></a><a class="post" href="post.html" data-cat="travel" data-reveal><div class="img"><img src="img/jet.jpg" alt="" loading="lazy"></div><div class="meta"><b>Travel</b><span>5 min</span><span>28 Aug 2026</span></div><h3>Flying privately into Marrakech: what to expect</h3><p>From the private terminal to your riad door in under forty minutes.</p></a><a class="post" href="post.html" data-cat="places" data-reveal><div class="img"><img src="img/agafay.jpg" alt="" loading="lazy"></div><div class="meta"><b>Places</b><span>4 min</span><span>9 Aug 2026</span></div><h3>The Agafay after rain</h3><p>The stone desert turns green for a few days a year. We know when.</p></a></div>
 </div></section>
@@ -107,7 +114,7 @@
   <p class="lab">Exclusively for you</p><h2 class="H md" data-masked-reveal>Three promises, <em>kept</em>.</h2>
   <div class="ex-cols"><div data-reveal style="--d:0s"><span class="ex-ring"><svg class="ex-ic" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="15" r="7"/><path d="M10 41c0-7.7 6.3-13 14-13s14 5.3 14 13"/><path d="M24 28l-2.5 4 2.5 6 2.5-6z"/></svg></span><h3>Personalised service</h3><p>Every stay is planned around your wishes, by one concierge who learns your tastes.</p></div><div data-reveal style="--d:0.08s"><span class="ex-ring"><svg class="ex-ic" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 5l15 5v11c0 10-6.5 17.5-15 22C15.5 38.5 9 31 9 21V10z"/><path d="M17 24l5 5 9-10"/></svg></span><h3>Discretion &amp; security</h3><p>Your name, plans and guests stay private. Only vetted drivers, guides and venues.</p></div><div data-reveal style="--d:0.16s"><span class="ex-ring"><svg class="ex-ic" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M40 24a16 16 0 1 1-4.7-11.3"/><path d="M40 7v6.5h-6.5"/><text x="23" y="28.5" text-anchor="middle" font-size="12" font-weight="500" font-family="Poppins, system-ui, sans-serif" fill="currentColor" stroke="none">24</text></svg></span><h3>24/7 assistance</h3><p>A real person answers within minutes, day or night, in your language.</p></div></div>
 </div></section>
-<section class="stage short" id="enquire"><img src="img/rooftop.jpg" alt="" data-par><div class="in">
+<section class="stage short" id="enquire"><img src="img/riad3.jpg" alt="" data-par><div class="in">
   <div class="copy"><p class="lab">24/7 · Within the hour</p><h2 class="H" data-masked-reveal>Tell us the <em>date</em>.</h2><p data-reveal>A message on WhatsApp is enough: where from, when, how many. Two or three options follow within the hour.</p><a class="btn solid" href="https://wa.me/212600000000" data-reveal style="--d:.1s">WhatsApp the concierge</a></div>
   <div class="side" data-reveal style="--d:.2s"><p class="lab">Concierge</p><p style="margin-top:10px;color:var(--bone)">+212 6 00 00 00 00<br>concierge@aliyahprestige.ma</p></div></div></section>
 </main>
