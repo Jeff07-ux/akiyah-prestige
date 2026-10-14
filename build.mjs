@@ -1,16 +1,126 @@
 // Builds the Aliyah Prestige "Riad Grid" site: home, service, gallery, journal, article.
 // Shared copy lives in ./collection/content.mjs. Edit this file or site.css, then run: node build.mjs
 // Phone, email, WhatsApp link, dates and figures are placeholders until the client confirms them.
-import { writeFileSync } from "node:fs";
+import { writeFileSync, readFileSync, existsSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { POSTS, ARTICLE } from "./collection/content.mjs";
 
 const WA = "+212 6 00 00 00 00";
 const WA_URL = "https://wa.me/212600000000";
 const EMAIL = "concierge@aliyahprestige.ma";
 const im = (k) => `img/${k}.jpg`;
+
+// ---------- SEO ----------
+// Production origin, no trailing slash. Build for deployment with: SITE_URL=https://your-domain node build.mjs
+// Until the domain is confirmed this placeholder is used, and the build prints a warning: canonical URLs,
+// og:url/og:image, the sitemap and robots.txt all depend on it, so never deploy a placeholder build.
+const SITE_URL_PLACEHOLDER = "https://YOUR-DOMAIN.com";
+const SITE_URL = (process.env.SITE_URL || SITE_URL_PLACEHOLDER).replace(/\/+$/, "");
+// A placeholder build must never be indexed: its canonicals and sitemap point at a domain that does not exist.
+// So without SITE_URL every page is noindex (the Vercel preview stays out of search); with it, INDEXABLE applies.
+const PREVIEW = SITE_URL === SITE_URL_PLACEHOLDER;
+const SITE_NAME = "Aliyah Prestige";
+// Pages meant for search. Everything else (About layout variants, the section comparison page, 404) is noindex
+// and stays out of the sitemap.
+const INDEXABLE = ["index.html", "service.html", "gallery.html", "journal.html", "post.html", "about.html"];
+const urlFor = (file) => `${SITE_URL}/${file === "index.html" ? "" : file}`;
+const attr = (s) => String(s).replace(/<[^>]+>/g, "").replace(/&(?!amp;|lt;|gt;|quot;|#)/g, "&amp;").replace(/"/g, "&quot;");
+const isoDate = (d) => { const t = new Date(d + " UTC"); return isNaN(t) ? undefined : t.toISOString().slice(0, 10); };
+const sha = (s) => createHash("sha256").update(s).digest();
+// Cache-busting: local assets are linked as file?v=<content hash>, so vercel.json can cache them for a year
+// and a changed file still reaches visitors at once.
+const VER = {};
+const asset = (p) => (VER[p] ??= `${p}?v=${existsSync(p) ? sha(readFileSync(p)).toString("hex").slice(0, 8) : "0"}`);
+// Logo for structured data: the brand key from the header, rasterised to a square PNG by tools/optimize-images.mjs.
+const LOGO = "img/logo-512.png";
+const ORG = { "@type": "Organization", "@id": `${SITE_URL}/#organization`, name: SITE_NAME, url: `${SITE_URL}/`,
+  description: "Private concierge in Marrakech: bespoke stays, journeys and evenings across Morocco.", areaServed: "Marrakech, Morocco",
+  ...(existsSync(LOGO) && { logo: { "@type": "ImageObject", "@id": `${SITE_URL}/#logo`, url: `${SITE_URL}/${LOGO}`, width: 512, height: 512, caption: SITE_NAME } }) };
+const WEBSITE = { "@type": "WebSite", "@id": `${SITE_URL}/#website`, name: SITE_NAME, url: `${SITE_URL}/`, publisher: { "@id": ORG["@id"] }, inLanguage: "en" };
+// Every indexable page describes itself as a WebPage (or a subtype) inside the site, with a breadcrumb trail
+// below the home page. `crumbs` lists the trail after Home, ending with the page itself: [[name, file], ...].
+function pageSchema(file, { title, desc, pageType = "WebPage", crumbs, schema = [] }) {
+  const id = `${urlFor(file)}#webpage`;
+  const trail = crumbs && { "@type": "BreadcrumbList", "@id": `${urlFor(file)}#breadcrumb`,
+    itemListElement: [["Home", "index.html"], ...crumbs].map(([name, f], i) => ({ "@type": "ListItem", position: i + 1, name, item: urlFor(f) })) };
+  const webPage = { "@type": pageType, "@id": id, url: urlFor(file), name: attr(title), description: attr(desc), inLanguage: "en",
+    isPartOf: { "@id": WEBSITE["@id"] }, ...((file === "index.html" || pageType === "AboutPage") && { about: { "@id": ORG["@id"] } }),
+    ...(trail && { breadcrumb: { "@id": trail["@id"] } }) };
+  return [ORG, WEBSITE, webPage, ...(trail ? [trail] : []), ...schema];
+}
+// Sitemap <lastmod>: a page's date moves only when its title, description or body actually change,
+// tracked by content hash in collection/lastmod.json (commit it with the pages).
+const LASTMOD_FILE = "collection/lastmod.json";
+const LASTMOD = existsSync(LASTMOD_FILE) ? JSON.parse(readFileSync(LASTMOD_FILE, "utf8")) : {};
+const TODAY = new Date().toISOString().slice(0, 10);
+function touch(file, content) {
+  const hash = sha(content).toString("hex").slice(0, 16);
+  if (LASTMOD[file]?.hash !== hash) LASTMOD[file] = { hash, date: TODAY };
+}
+function seoHead(file, { title, desc, body, type = "website", schema }) {
+  const index = INDEXABLE.includes(file) && !PREVIEW;
+  const hero = (body.match(/<img [^>]*src="([^"]+)"/) || [])[1];
+  const tags = [
+    index ? `<link rel="canonical" href="${urlFor(file)}">` : `<meta name="robots" content="noindex, follow">`,
+    `<meta property="og:type" content="${type}">`, `<meta property="og:site_name" content="${SITE_NAME}">`,
+    `<meta property="og:title" content="${attr(title)}">`, `<meta property="og:description" content="${attr(desc)}">`,
+    `<meta property="og:url" content="${urlFor(file)}">`, `<meta property="og:locale" content="en_GB">`,
+    hero && `<meta property="og:image" content="${SITE_URL}/${hero}">`,
+    `<meta name="twitter:card" content="${hero ? "summary_large_image" : "summary"}">`,
+    `<link rel="icon" href="favicon.svg" type="image/svg+xml">`, `<meta name="theme-color" content="#FFFFFF">`,
+    INDEXABLE.includes(file) && schema && `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@graph": schema }).replace(/</g, "\\u003c")}</script>`,
+  ];
+  return tags.filter(Boolean).join("\n");
+}
+// The first image on a page is its hero, above the fold: load it eagerly and early for LCP.
+const heroFirst = (body) => body.replace(/<img ([^>]*)>/, (m, a) => `<img ${a.replace(/\s*loading="lazy"/, "")} fetchpriority="high">`);
+// The page's main heading and the paragraph right after it are its largest text and often its LCP element:
+// they paint at once instead of waiting for motion.js to reveal them. Entrances further down are unchanged.
+const heroVisible = (body) => body.replace(/<h1([^>]*?) data-masked-reveal/, "<h1$1").replace(/(<\/h1>\s*<p[^>]*?) data-reveal/, "$1");
+
+// Responsive images. tools/optimize-images.mjs writes WebP variants and img/opt/manifest.json; each <img> whose src is
+// listed gets the variants as srcset, a sizes hint, and its intrinsic width/height so the browser reserves the space.
+// Images other than the hero load lazily. Lazy images use sizes="auto" (the browser measures the slot),
+// with a fallback for browsers that do not support it yet; full-bleed photos get FULL_BLEED. An explicit sizes="" in the markup wins.
+const IMGS = existsSync("img/opt/manifest.json") ? JSON.parse(readFileSync("img/opt/manifest.json", "utf8")) : {};
+// Full-bleed photos (first child of a .stage or .events section) are cropped with object-fit: cover, so on a portrait
+// screen they are drawn far wider than the viewport: ask for about twice the viewport width there.
+const FULL_BLEED = "(max-aspect-ratio: 3/4) 200vw, 100vw";
+const isFullBleed = (before) => /<section class="(?:stage|events)\b[^"]*"[^>]*>\s*(?:<!--(?:(?!-->)[\s\S])*-->\s*)?$/.test(before);
+function responsive(body) {
+  return body.replace(/<img ([^>]*)>/g, (m, a, at) => {
+    const src = (a.match(/\bsrc="([^"]+)"/) || [])[1];
+    if (!src) return m;
+    if (!/\b(loading|fetchpriority)=/.test(a)) a += ` loading="lazy"`;
+    const lazy = /\bloading="lazy"/.test(a);
+    if (lazy) a += ` decoding="async"`;
+    const v = IMGS[src];
+    if (!v) return `<img ${a}>`;
+    const file = (w) => asset(`${v.base}-${w}.webp`);
+    const fallback = v.widths.filter((w) => w <= 1600).pop() || v.widths[0];
+    a = a.replace(/\bsrc="[^"]+"/, `src="${file(fallback)}"`);
+    const given = (a.match(/\bsizes="([^"]+)"/) || [])[1];
+    a = a.replace(/\s*\bsizes="[^"]*"/, "");
+    if (v.widths.length > 1) {
+      const sizes = given || (isFullBleed(body.slice(Math.max(0, at - 300), at)) ? FULL_BLEED
+        : lazy ? "auto, (max-width: 900px) 100vw, 50vw" : "100vw");
+      a += ` srcset="${v.widths.map((w) => `${file(w)} ${w}w`).join(", ")}" sizes="${sizes}"`;
+    }
+    if (!/\bwidth=/.test(a)) a += ` width="${v.w}" height="${v.h}"`;
+    return `<img ${a}>`;
+  });
+}
+// Head script, also hashed into the Content-Security-Policy in vercel.json. Before first paint: hide entrance targets
+// only when motion will run, and show everything if motion.js fails.
+const HEAD_SCRIPT = `(function(d){var still=location.hash==="#static"||matchMedia("(prefers-reduced-motion: reduce)").matches;d.classList.add(still?"still":"js");
+try{if(sessionStorage.getItem("keyDrawn"))d.classList.add("key-drawn");sessionStorage.setItem("keyDrawn","1")}catch(e){}
+addEventListener("load",function(){if(!d.classList.contains("motion-ready"))d.classList.remove("js")})})(document.documentElement)`;
+const FONT_PRELOAD = ["fonts/playfair-latin.woff2", "fonts/poppins-400-latin.woff2", "fonts/poppins-500-latin.woff2"]
+  .map((f) => `<link rel="preload" href="${f}" as="font" type="font/woff2" crossorigin>`).join("");
+const BUILT = [];
 // Vertical guide rails were removed from the design; kept as an empty slot so sections need no edits.
 const rails = "";
-const NAV = [["Gallery", "gallery.html", "gallery"], ["Events", "index.html#events", "events"], ["Services", "index.html#services", "service"], ["Journal", "journal.html", "journal"], ["About", "about.html", "about"]];
+const NAV = [["Gallery", "gallery.html", "gallery"], ["Events", "./#events", "events"], ["Services", "./#services", "service"], ["Journal", "journal.html", "journal"], ["About", "about.html", "about"]];
 
 // Brand key, traced from the company logo (img/IMG_9832.PNG) as line art so it stays crisp and takes the theme colour.
 const KEY = `<svg class="logo-key" viewBox="0 0 48 96" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
@@ -29,7 +139,7 @@ function header(page) {
   const left = NAV.slice(0, 3).map(link).join("");
   const right = NAV.slice(3).map(link).join("") + `<a href="#enquire">Enquire</a>`;
   return `<a class="skip" href="#main">Skip to content</a>
-<header class="site"><div class="in"><span class="nav-shape" aria-hidden="true"></span><a class="logo" href="index.html" aria-label="Aliyah Prestige, home"><span class="logo-word">Aliyah</span>${KEY}<span class="logo-word">Prestige</span></a>
+<header class="site"><div class="in"><span class="nav-shape" aria-hidden="true"></span><a class="logo" href="./" aria-label="Aliyah Prestige, home"><span class="logo-word">Aliyah</span>${KEY}<span class="logo-word">Prestige</span></a>
   <nav class="nav-l" aria-label="Main">${left}</nav>
   <div class="tools"><nav class="nav-r" aria-label="More">${right}</nav>
   <button class="menu-btn" type="button" data-menu-open aria-controls="drawer" aria-expanded="false">Menu</button></div></div></header>
@@ -46,26 +156,30 @@ function cta(img, h, p, label = "WhatsApp the concierge") {
   <div class="side" data-reveal style="--d:.2s"><p class="lab">Concierge</p><p style="margin-top:10px;color:var(--bone)">${WA}<br>${EMAIL}</p></div></div></section>`;
 }
 
-function page(file, { title, desc, page, solid = false, body }) {
-  const html = `<!doctype html>
+function page(file, { title, desc, page, solid = false, body, type, schema, pageType, crumbs }) {
+  body = heroVisible(heroFirst(body));
+  BUILT.push(file);
+  if (INDEXABLE.includes(file)) schema = pageSchema(file, { title, desc, pageType, crumbs, schema });
+  // og:image keeps the original JPEG (widest support among link-preview scrapers); the page itself gets WebP.
+  const head = seoHead(file, { title, desc, body, type, schema });
+  body = responsive(body);
+  if (INDEXABLE.includes(file)) touch(file, title + desc + body);
+  let html = `<!doctype html>
 <html lang="en" data-theme="atelier" data-tone="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${title}</title>
-<meta name="description" content="${desc}">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@400;500${page === "about" ? ";700" : ""}&display=swap" rel="stylesheet">
-<script>/* Before first paint: hide entrance targets only when motion will run, and show everything if motion.js fails. */
-(function(d){var still=location.hash==="#static"||matchMedia("(prefers-reduced-motion: reduce)").matches;d.classList.add(still?"still":"js");
-try{if(sessionStorage.getItem("keyDrawn"))d.classList.add("key-drawn");sessionStorage.setItem("keyDrawn","1")}catch(e){}
-addEventListener("load",function(){if(!d.classList.contains("motion-ready"))d.classList.remove("js")})})(document.documentElement)</script>
-<link rel="stylesheet" href="motion.css">
-<link rel="stylesheet" href="site.css">
-<script src="vendor/gsap.min.js" defer></script>
-<script src="vendor/ScrollTrigger.min.js" defer></script>
-<script src="motion.js" defer></script>
-<script src="site.js" defer></script>
+<meta name="description" content="${attr(desc)}">
+${head}
+${FONT_PRELOAD}
+<script>${HEAD_SCRIPT}</script>
+<link rel="stylesheet" href="${asset("motion.css")}">
+<link rel="stylesheet" href="${asset("site.css")}">
+<script src="${asset("vendor/gsap.min.js")}" defer></script>
+<script src="${asset("vendor/ScrollTrigger.min.js")}" defer></script>
+<script src="${asset("motion.js")}" defer></script>
+<script src="${asset("site.js")}" defer></script>
 </head>
 <body data-page="${page}"${solid ? ' class="solid-head"' : ""}>
 ${header(page)}
@@ -76,6 +190,8 @@ ${footer}
 </body>
 </html>
 `;
+  // The host serves 404.html at whatever path was missing (/a/b/c), so its links and assets must be root-absolute.
+  if (file === "404.html") html = html.replace(/(\s(?:href|src)=")\.\//g, "$1/").replace(/(\s(?:href|src)=")(?![a-z]+:|#|\/)/g, "$1/");
   writeFileSync(file, html);
 }
 
@@ -289,10 +405,14 @@ page("index.html", HOME);
 
 
 // ---------- Service: Private Jet Charter (simple version) ----------
+const SERVICE_DESC = "Private jet charter to Marrakech: the right aircraft within the hour, fast arrival and a chauffeur at the door.";
 page("service.html", { title: "Private Jet Charter | Aliyah Prestige", page: "service",
-  desc: "Private jet charter to Marrakech: the right aircraft within the hour, fast arrival and a chauffeur at the door.",
+  desc: SERVICE_DESC, crumbs: [["Private Jet Charter", "service.html"]],
+  schema: [{ "@type": "Service", "@id": `${urlFor("service.html")}#service`, name: "Private Jet Charter", serviceType: "Private jet charter",
+    description: SERVICE_DESC, url: urlFor("service.html"), provider: { "@id": ORG["@id"] }, areaServed: "Marrakech, Morocco",
+    mainEntityOfPage: { "@id": `${urlFor("service.html")}#webpage` } }],
   body: `<section class="stage short"><img src="${im("jet")}" alt="Private jet cabin" data-par>${rails}<div class="in"><div class="copy">
-  <p class="crumb"><a href="index.html#services">Services</a> / <b>Private Jet Charter</b></p>
+  <p class="crumb"><a href="./#services">Services</a> / <b>Private Jet Charter</b></p>
   <h1 class="H" data-masked-reveal>Private jet <em>charter</em>.</h1>
   <p data-reveal>Tell us where and when. We find the aircraft, handle every detail, and meet you at the door in Marrakech.</p>
   <a class="btn solid" href="${WA_URL}" data-reveal style="--d:.1s">Request a flight</a></div></div></section>
@@ -340,14 +460,14 @@ const GAL = [
   ["ouzoud", "Ouzoud falls", "atlas", "w", "A day trip to the falls, privately guided."],
 ];
 const CATS = [["all", "All"], ["stays", "Stays"], ["desert", "Desert"], ["atlas", "Atlas"], ["medina", "Medina"], ["table", "At the table"], ["arrivals", "Arrivals"]];
-page("gallery.html", { title: "Gallery | Aliyah Prestige", page: "gallery", solid: true,
+page("gallery.html", { title: "Gallery | Aliyah Prestige", page: "gallery", solid: true, pageType: "CollectionPage", crumbs: [["Gallery", "gallery.html"]],
   desc: "Riads, desert camps, valleys and tables we arrange for our guests in Marrakech and across Morocco.",
   body: `<section class="sec" style="padding-top:clamp(20px,2.4vw,32px)">${rails}<div class="inner">
   <div class="sec-head"><div><p class="lab">Gallery</p><h1 class="H md" data-masked-reveal>Places we <em>open</em> for you.</h1></div>
     <p class="muted">Riads, desert camps, valleys and tables from recent stays. Every photo is a place we can arrange.</p></div>
   <div class="chips" data-filters=".g" role="group" aria-label="Filter photos" style="margin-bottom:12px">${CATS.map(([k, t], i) => `<button class="chip" type="button" data-filter="${k}" aria-pressed="${i === 0}">${t}</button>`).join("")}</div>
   <p class="lab" data-filter-count aria-live="polite" style="margin:0 0 20px">${GAL.length} items</p>
-  <div class="gal">${GAL.map(([k, t, c, s, d], i) => `<figure class="g ${s}" data-cat="${c}" data-title="${t}" data-text="${d}" style="margin:0"><img src="${im(k)}" alt="${t}" loading="lazy"><button type="button" aria-label="Open photo: ${t}"></button><span class="n">${String(i + 1).padStart(2, "0")}</span><figcaption class="cap">${t}</figcaption></figure>`).join("")}</div>
+  <div class="gal">${GAL.map(([k, t, c, s, d], i) => `<figure class="g ${s}" data-cat="${c}" data-title="${t}" data-text="${d}" style="margin:0"><img src="${im(k)}" alt="${t}" loading="lazy" sizes="${s ? "(max-width: 900px) 100vw, 50vw" : "(max-width: 900px) 50vw, 25vw"}"><button type="button" aria-label="Open photo: ${t}"></button><span class="n">${String(i + 1).padStart(2, "0")}</span><figcaption class="cap">${t}</figcaption></figure>`).join("")}</div>
 </div></section>
 <dialog class="lb" id="lightbox" aria-label="Photo viewer">
   <div class="bar"><span class="lab" data-lb-pos></span><button type="button" class="lab" data-lb-close>Close ✕</button></div>
@@ -363,7 +483,7 @@ function postCard(p) {
 }
 const [feat, ...rest] = ALL_POSTS;
 const JCATS = ["All", ...new Set(rest.map((p) => p.cat))];
-page("journal.html", { title: "Journal | Aliyah Prestige", page: "journal",
+page("journal.html", { title: "Journal | Aliyah Prestige", page: "journal", pageType: "CollectionPage", crumbs: [["Journal", "journal.html"]],
   desc: "Guides, places and tables in Marrakech and Morocco, from the Aliyah Prestige concierge.",
   body: `<section class="stage feat"><img src="${im(feat.img)}" alt="Riad courtyard at dusk" data-par>${rails}
   <div class="in">
@@ -387,7 +507,14 @@ const body = ARTICLE.map(([t, v], i) => t === "p" ? `<p class="${i === 0 ? "lead
   : t === "h2" ? `<h2 id="${slug(v)}">${v}</h2>`
   : t === "quote" ? `<blockquote>${v}</blockquote>`
   : `<figure><img src="${im(v)}" alt="Pottery in the souk" loading="lazy"><figcaption>Workshops in the souk open early for our guests.</figcaption></figure>`).join("\n");
-page("post.html", { title: "A first evening in the medina | Aliyah Prestige", page: "journal",
+// dateModified equals datePublished until the copy is revised: then add modified: "<date>" to the post in collection/content.mjs.
+page("post.html", { title: "A first evening in the medina | Aliyah Prestige", page: "journal", type: "article",
+  crumbs: [["Journal", "journal.html"], [POSTS[0].title, "post.html"]],
+  schema: [{ "@type": "Article", "@id": `${urlFor("post.html")}#article`, headline: POSTS[0].title, description: POSTS[0].excerpt,
+    datePublished: isoDate(POSTS[0].date), dateModified: isoDate(POSTS[0].modified || POSTS[0].date),
+    image: `${SITE_URL}/${im(POSTS[0].img)}`, mainEntityOfPage: { "@id": `${urlFor("post.html")}#webpage` },
+    isPartOf: { "@id": `${urlFor("post.html")}#webpage` }, articleSection: POSTS[0].cat, inLanguage: "en",
+    author: { "@id": ORG["@id"] }, publisher: { "@id": ORG["@id"] } }],
   desc: POSTS[0].excerpt,
   body: `<section class="stage short"><img src="${im("riad2")}" alt="Riad courtyard" data-par>${rails}<div class="in"><div class="copy wide">
   <p class="crumb"><a href="journal.html">Journal</a> / <b>Guides</b></p>
@@ -497,7 +624,7 @@ page("about-wall.html", { title: "About us | Aliyah Prestige", page: "about", so
 <section class="aw-art"><figure class="aw-art-ph"><img src="${im("lanterns")}" alt="Lanterns in a metalworker's workshop in the medina" loading="lazy"></figure>
   <div class="aw-art-copy"><h2 class="aw-h2">Hand in hand with <em>artisans</em>.</h2>
     <p>${AB_ART}</p>
-    <a class="btn" href="index.html#services">Our services</a></div></section>
+    <a class="btn" href="./#services">Our services</a></div></section>
 
 <section class="aw-sec aw-words"><div class="aw-in">
   <h2 class="aw-h2">In their <em>words</em>.</h2>
@@ -530,7 +657,7 @@ function abCta(cls) {
     <a class="btn solid" href="${WA_URL}">Enquire now</a><p class="av-contact">${WA}<br>${EMAIL}</p></div>
 </div></section>`;
 }
-const AB_PAGE = { title: "About us | Aliyah Prestige", page: "about",
+const AB_PAGE = { title: "About us | Aliyah Prestige", page: "about", pageType: "AboutPage", crumbs: [["About us", "about.html"]],
   desc: "Founded in 1986, a private concierge service in Marrakech born from a family tradition of excellence." };
 
 // 1. Monograph: editorial book layout, drop cap, full-bleed band, overlapping artisan card.
@@ -554,7 +681,7 @@ page("about-1.html", { ...AB_PAGE, solid: true, body: `<section class="sec v1-he
 
 <section class="sec"><div class="inner v1-art">
   <div class="pic" data-reveal>${abImg("lanterns", "A lantern maker's workshop in the medina", true)}</div>
-  <div class="v1-card" data-reveal style="--d:.15s"><h2 class="H md">Hand in hand with <em>artisans</em>.</h2>${abBody([AB_ART])}<a class="btn" href="index.html#services">Our services</a></div>
+  <div class="v1-card" data-reveal style="--d:.15s"><h2 class="H md">Hand in hand with <em>artisans</em>.</h2>${abBody([AB_ART])}<a class="btn" href="./#services">Our services</a></div>
 </div></section>
 
 <section class="sec v1-voices"><div class="inner">${abTabs("v1")}</div></section>
@@ -578,7 +705,7 @@ const ABOUT_2 = `<section class="stage v2-hero">${abImg("riad2", "Riad courtyard
   <div>
     <article class="v2-ch" id="ch1"><h2>Born from a family tradition.</h2>${abBody()}<div class="pic" data-reveal>${abImg("riad", "Garden inside a medina riad", true)}</div></article>
     <article class="v2-ch" id="ch2"><blockquote class="av-quote" data-reveal>${AB_PHILO}</blockquote><ul class="v2-values">${AB_VALUES.map((v) => `<li>${v}</li>`).join("")}</ul></article>
-    <article class="v2-ch" id="ch3"><h2>Hand in hand with artisans.</h2>${abBody([AB_ART])}<div class="pic" data-reveal>${abImg("lanterns", "A lantern maker's workshop in the medina", true)}</div><a class="btn" href="index.html#services">Our services</a></article>
+    <article class="v2-ch" id="ch3"><h2>Hand in hand with artisans.</h2>${abBody([AB_ART])}<div class="pic" data-reveal>${abImg("lanterns", "A lantern maker's workshop in the medina", true)}</div><a class="btn" href="./#services">Our services</a></article>
     <article class="v2-ch" id="ch4"><h2>Four decades in Marrakech.</h2>
       <p class="v2-founded" data-reveal><span>1986</span>${ARCHIVE[0][2]}</p>
       <div class="v2-arch">${ARCHIVE.slice(1).map(([y, t, d], i) => `<figure data-reveal style="--d:${(i % 2) * 0.1}s"><div class="pic">${abImg(AB_ARCH_PICS[y], `${t}, ${d}, ${y}`)}</div><figcaption><span class="av-y">${y}</span><b>${t}</b>${d}</figcaption></figure>`).join("")}</div></article>
@@ -617,7 +744,7 @@ page("about-3.html", { ...AB_PAGE, solid: true, body: `<section class="sec v3-he
 </div></section>
 
 <section class="sec"><div class="inner incl">
-  <div><h2 class="H md" data-masked-reveal>Hand in hand with <em>artisans</em>.</h2><div data-reveal>${abBody([AB_ART])}</div><a class="btn" href="index.html#services">Our services</a></div>
+  <div><h2 class="H md" data-masked-reveal>Hand in hand with <em>artisans</em>.</h2><div data-reveal>${abBody([AB_ART])}</div><a class="btn" href="./#services">Our services</a></div>
   <div class="v3-mat" data-reveal><div class="pic">${abImg("lanterns", "A lantern maker's workshop in the medina")}</div></div>
 </div></section>
 
@@ -652,7 +779,7 @@ page("about-4.html", { ...AB_PAGE, solid: true, body: `<section class="v4-hero">
   <div class="v4-era"><p class="v4-y">Today<span>Our philosophy</span></p>
     <div><blockquote class="av-quote" data-reveal>${AB_PHILO}</blockquote><ul class="v2-values">${AB_VALUES.map((v) => `<li>${v}</li>`).join("")}</ul>
       <div class="v4-split v4-art"><div class="pic" data-reveal>${abImg("lanterns", "A lantern maker's workshop in the medina")}</div>
-        <div><h2 class="H md" data-masked-reveal>Hand in hand with <em>artisans</em>.</h2><div data-reveal>${abBody([AB_ART])}</div><a class="btn" href="index.html#services">Our services</a></div></div></div></div>
+        <div><h2 class="H md" data-masked-reveal>Hand in hand with <em>artisans</em>.</h2><div data-reveal>${abBody([AB_ART])}</div><a class="btn" href="./#services">Our services</a></div></div></div></div>
 </div></section>
 
 <section class="sec v4-voices"><div class="inner"><h2 class="H md" data-masked-reveal>In their <em>words</em>.</h2>${abTabs("v4", "v4-tabs")}</div></section>
@@ -674,7 +801,7 @@ page("about-5.html", { ...AB_PAGE, solid: true, body: `<section class="sec v5-he
   <div class="c pic" data-reveal style="--d:.08s">${abImg("riad", "Garden inside a medina riad")}</div>
   <div class="c quote" data-reveal><blockquote class="av-quote">${AB_PHILO}</blockquote></div>
   <div class="c vals" data-reveal style="--d:.08s"><ul>${AB_VALUES.map((v) => `<li>${v}</li>`).join("")}</ul></div>
-  <div class="c art av-dark" data-reveal>${abImg("lanterns", "A lantern maker's workshop in the medina")}<div class="t"><h2>Hand in hand with artisans.</h2><p>${AB_ART}</p><a class="btn" href="index.html#services">Our services</a></div></div>
+  <div class="c art av-dark" data-reveal>${abImg("lanterns", "A lantern maker's workshop in the medina")}<div class="t"><h2>Hand in hand with artisans.</h2><p>${AB_ART}</p><a class="btn" href="./#services">Our services</a></div></div>
   <div class="c year" data-reveal style="--d:.08s"><p class="v5-num">1986</p><p>A family tradition of expertise and personalisation, passed down through generations.</p></div>
   <div class="c voice" data-reveal>${abTabs("v5", "v4-tabs")}</div>
 </div></section>
@@ -701,4 +828,55 @@ page("sections.html", { title: "Section variants | Aliyah Prestige", page: "", s
   body: EX_NAMES.map((n, i) => `<div class="ex-tag"><span class="lab">Variant ${i + 1}</span><span>${n}</span></div>\n${exclusive(i + 1, "")}`).join("\n") +
     ["Featured quote", "Review cards", "Press row and moving reviews"].map((n, i) => `\n<div class="ex-tag"><span class="lab">Social proof ${i + 1}</span><span>${n}</span></div>\n${socialProof(i + 1)}`).join("") });
 
-console.log("built: index, service, gallery, journal, post, about (layout 2), about-wall, about-1..5, sections");
+// ---------- 404 ----------
+page("404.html", { title: "Page not found | Aliyah Prestige", page: "", solid: true,
+  desc: "This page could not be found. Return to Aliyah Prestige, private concierge in Marrakech.",
+  body: `<section class="sec"><div class="inner"><p class="lab">404</p><h1 class="H">This door is <em>closed</em>.</h1>
+  <p class="muted">The page you asked for has moved or never existed. Everything else is still open.</p>
+  <a class="btn solid" href="./">Return home</a></div></section>` });
+
+// ---------- Crawl files and icon ----------
+writeFileSync("robots.txt", `User-agent: *
+Allow: /
+
+Sitemap: ${SITE_URL}/sitemap.xml
+`);
+writeFileSync("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+` +
+  INDEXABLE.filter((f) => BUILT.includes(f)).map((f) => `  <url><loc>${urlFor(f)}</loc><lastmod>${LASTMOD[f].date}</lastmod></url>`).join("\n") + "\n</urlset>\n");
+writeFileSync(LASTMOD_FILE, JSON.stringify(LASTMOD, null, 1) + "\n");
+
+// ---------- Hosting: Vercel (static files from the repository root, no build step on Vercel) ----------
+// /index.html redirects to / so the home page has one URL. Assets linked with ?v=<hash> (see asset()) and the fonts are
+// cached for a year; photos for a week; HTML is always revalidated. The CSP allows only same-origin files, the hashed
+// head script and inline style attributes (used for animation delays). Vercel adds HSTS itself.
+const CSP = ["default-src 'self'", `script-src 'self' 'sha256-${sha(HEAD_SCRIPT).toString("base64")}'`, "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data:", "font-src 'self'", "connect-src 'self'", "object-src 'none'", "base-uri 'self'", "form-action 'self'",
+  "frame-ancestors 'self'", "upgrade-insecure-requests"].join("; ");
+const cache = (source, value) => ({ source, headers: [{ key: "Cache-Control", value }] });
+const YEAR = "public, max-age=31536000, immutable";
+writeFileSync("vercel.json", JSON.stringify({
+  redirects: [{ source: "/index.html", destination: "/", permanent: true }],
+  headers: [
+    { source: "/(.*)", headers: [
+      { key: "Content-Security-Policy", value: CSP },
+      { key: "X-Content-Type-Options", value: "nosniff" },
+      { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+      { key: "X-Frame-Options", value: "SAMEORIGIN" },
+      { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=()" },
+    ] },
+    ...["/site.css", "/motion.css", "/site.js", "/motion.js", "/vendor/(.*)", "/fonts/(.*)", "/img/opt/(.*)"].map((s) => cache(s, YEAR)),
+    cache("/img/:file", "public, max-age=604800, stale-while-revalidate=86400"), cache("/img/ap/:file", "public, max-age=604800, stale-while-revalidate=86400"),
+  ],
+}, null, 2) + "\n");
+// Favicon: the brand key from the header, brown on white, square.
+writeFileSync("favicon.svg", `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-24 0 96 96"><rect x="-24" width="96" height="96" rx="20" fill="#fff"/>${KEY.replace(/^<svg[^>]*>/, `<g fill="none" stroke="#6B4226" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round">`).replace("</svg>", "</g>").replace(/ pathLength="1"/g, "")}</svg>
+`);
+
+console.log("built: index, service, gallery, journal, post, about (layout 2), about-wall, about-1..5, sections, 404, robots.txt, sitemap.xml, favicon.svg, vercel.json");
+if (!Object.keys(IMGS).length) console.warn("WARNING: img/opt/manifest.json is missing, so pages use the full-size JPEGs. Run: node tools/optimize-images.mjs");
+if (PREVIEW) console.warn(`
+WARNING: SITE_URL is not set, so this is a preview build: every page is noindex, and og:url, og:image, robots.txt and
+sitemap.xml use the placeholder ${SITE_URL_PLACEHOLDER}. For the production build run: SITE_URL=https://your-domain node build.mjs
+`);

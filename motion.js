@@ -22,8 +22,9 @@
     const words = text.split(" ");
     // Long passages compress their stagger so the last word lands within ~16 steps, not seconds later.
     const k = Math.min(1, 16 / words.length);
-    el.setAttribute("aria-label", text);
-    el.innerHTML = words.map((w, i) =>
+    // The words are hidden from assistive tech and the full text is kept once in a visually hidden span,
+    // which works on any element (aria-label is not allowed on paragraphs).
+    el.innerHTML = `<span class="vh">${esc(text)}</span>` + words.map((w, i) =>
       `<span class="${maskCls}" aria-hidden="true"><span class="${wordCls}" style="--i:${+(i * k).toFixed(2)}">${esc(w)}</span></span>`).join(" ");
   }
 

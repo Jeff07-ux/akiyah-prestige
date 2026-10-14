@@ -1,0 +1,503 @@
+{
+ "img/agafay.jpg": {
+  "w": 1920,
+  "h": 1281,
+  "base": "img/opt/agafay",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/arch-bahia.jpg": {
+  "w": 1392,
+  "h": 1232,
+  "base": "img/opt/arch-bahia",
+  "widths": [
+   480,
+   800,
+   1200,
+   1392
+  ]
+ },
+ "img/arch-biden.jpg": {
+  "w": 900,
+  "h": 600,
+  "base": "img/opt/arch-biden",
+  "widths": [
+   480,
+   800,
+   900
+  ]
+ },
+ "img/arch-koutoubia.jpg": {
+  "w": 726,
+  "h": 1232,
+  "base": "img/opt/arch-koutoubia",
+  "widths": [
+   480,
+   726
+  ]
+ },
+ "img/arch-menara.jpg": {
+  "w": 816,
+  "h": 1230,
+  "base": "img/opt/arch-menara",
+  "widths": [
+   480,
+   800,
+   816
+  ]
+ },
+ "img/atlas.jpg": {
+  "w": 1920,
+  "h": 1280,
+  "base": "img/opt/atlas",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/atlas2.jpg": {
+  "w": 1920,
+  "h": 1280,
+  "base": "img/opt/atlas2",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/bahia.jpg": {
+  "w": 1920,
+  "h": 1428,
+  "base": "img/opt/bahia",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/balloon.jpg": {
+  "w": 1920,
+  "h": 1440,
+  "base": "img/opt/balloon",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/benhaddou.jpg": {
+  "w": 1920,
+  "h": 1188,
+  "base": "img/opt/benhaddou",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/camels.jpg": {
+  "w": 1920,
+  "h": 1282,
+  "base": "img/opt/camels",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/car.jpg": {
+  "w": 1920,
+  "h": 1281,
+  "base": "img/opt/car",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/desertcamp.jpg": {
+  "w": 1024,
+  "h": 576,
+  "base": "img/opt/desertcamp",
+  "widths": [
+   480,
+   800,
+   1024
+  ]
+ },
+ "img/essaouira.jpg": {
+  "w": 1920,
+  "h": 1440,
+  "base": "img/opt/essaouira",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/hammam.jpg": {
+  "w": 1920,
+  "h": 1440,
+  "base": "img/opt/hammam",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/hero-jemaa.jpg": {
+  "w": 1920,
+  "h": 1277,
+  "base": "img/opt/hero-jemaa",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/imlil.jpg": {
+  "w": 1920,
+  "h": 1020,
+  "base": "img/opt/imlil",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/jemaa.jpg": {
+  "w": 1920,
+  "h": 1285,
+  "base": "img/opt/jemaa",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/jet.jpg": {
+  "w": 1920,
+  "h": 1440,
+  "base": "img/opt/jet",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/jetseat.jpg": {
+  "w": 1920,
+  "h": 2560,
+  "base": "img/opt/jetseat",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/lanterns.jpg": {
+  "w": 1920,
+  "h": 1272,
+  "base": "img/opt/lanterns",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/medina-arch.jpg": {
+  "w": 1600,
+  "h": 800,
+  "base": "img/opt/medina-arch",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600
+  ]
+ },
+ "img/ouzoud.jpg": {
+  "w": 1920,
+  "h": 1281,
+  "base": "img/opt/ouzoud",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/riad.jpg": {
+  "w": 1920,
+  "h": 1280,
+  "base": "img/opt/riad",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/riad2.jpg": {
+  "w": 1630,
+  "h": 1240,
+  "base": "img/opt/riad2",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1630
+  ]
+ },
+ "img/riad3.jpg": {
+  "w": 1600,
+  "h": 1200,
+  "base": "img/opt/riad3",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600
+  ]
+ },
+ "img/rooftop.jpg": {
+  "w": 1920,
+  "h": 1255,
+  "base": "img/opt/rooftop",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/t-delauro.jpg": {
+  "w": 252,
+  "h": 252,
+  "base": "img/opt/t-delauro",
+  "widths": [
+   252
+  ]
+ },
+ "img/t-gold.jpg": {
+  "w": 400,
+  "h": 400,
+  "base": "img/opt/t-gold",
+  "widths": [
+   400
+  ]
+ },
+ "img/t-whiteman.jpg": {
+  "w": 400,
+  "h": 400,
+  "base": "img/opt/t-whiteman",
+  "widths": [
+   400
+  ]
+ },
+ "img/tagine.jpg": {
+  "w": 1920,
+  "h": 956,
+  "base": "img/opt/tagine",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/tajines.jpg": {
+  "w": 1920,
+  "h": 1282,
+  "base": "img/opt/tajines",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
+ "img/villa-dusk.jpg": {
+  "w": 3893,
+  "h": 2848,
+  "base": "img/opt/villa-dusk",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/wedding-reception.jpg": {
+  "w": 2400,
+  "h": 3255,
+  "base": "img/opt/wedding-reception",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/ap/agafay-dinner.jpg": {
+  "w": 564,
+  "h": 281,
+  "base": "img/opt/ap-agafay-dinner",
+  "widths": [
+   480,
+   564
+  ]
+ },
+ "img/ap/candle-dinner.jpg": {
+  "w": 564,
+  "h": 279,
+  "base": "img/opt/ap-candle-dinner",
+  "widths": [
+   480,
+   564
+  ]
+ },
+ "img/ap/caravan.jpg": {
+  "w": 736,
+  "h": 399,
+  "base": "img/opt/ap-caravan",
+  "widths": [
+   480,
+   736
+  ]
+ },
+ "img/ap/corridor.jpg": {
+  "w": 575,
+  "h": 494,
+  "base": "img/opt/ap-corridor",
+  "widths": [
+   480,
+   575
+  ]
+ },
+ "img/ap/desert-sunset.jpg": {
+  "w": 724,
+  "h": 397,
+  "base": "img/opt/ap-desert-sunset",
+  "widths": [
+   480,
+   724
+  ]
+ },
+ "img/ap/embroidery.jpg": {
+  "w": 568,
+  "h": 286,
+  "base": "img/opt/ap-embroidery",
+  "widths": [
+   480,
+   568
+  ]
+ },
+ "img/ap/koutoubia.jpg": {
+  "w": 726,
+  "h": 685,
+  "base": "img/opt/ap-koutoubia",
+  "widths": [
+   480,
+   726
+  ]
+ },
+ "img/ap/lounge.jpg": {
+  "w": 705,
+  "h": 533,
+  "base": "img/opt/ap-lounge",
+  "widths": [
+   480,
+   705
+  ]
+ },
+ "img/ap/majorelle.jpg": {
+  "w": 568,
+  "h": 493,
+  "base": "img/opt/ap-majorelle",
+  "widths": [
+   480,
+   568
+  ]
+ },
+ "img/ap/palms.jpg": {
+  "w": 726,
+  "h": 391,
+  "base": "img/opt/ap-palms",
+  "widths": [
+   480,
+   726
+  ]
+ },
+ "img/ap/pool-water.jpg": {
+  "w": 568,
+  "h": 267,
+  "base": "img/opt/ap-pool-water",
+  "widths": [
+   480,
+   568
+  ]
+ },
+ "img/ap/riad-salon.jpg": {
+  "w": 697,
+  "h": 532,
+  "base": "img/opt/ap-riad-salon",
+  "widths": [
+   480,
+   697
+  ]
+ },
+ "img/ap/textiles.jpg": {
+  "w": 575,
+  "h": 287,
+  "base": "img/opt/ap-textiles",
+  "widths": [
+   480,
+   575
+  ]
+ }
+}
