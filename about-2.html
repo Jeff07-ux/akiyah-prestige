@@ -20,11 +20,9 @@
 <script>(function(d){var still=location.hash==="#static"||matchMedia("(prefers-reduced-motion: reduce)").matches;d.classList.add(still?"still":"js");
 try{if(sessionStorage.getItem("keyDrawn"))d.classList.add("key-drawn");sessionStorage.setItem("keyDrawn","1")}catch(e){}
 addEventListener("load",function(){if(!d.classList.contains("motion-ready"))d.classList.remove("js")})})(document.documentElement)</script>
-<link rel="stylesheet" href="motion.css?v=a5b16912">
-<link rel="stylesheet" href="site.css?v=432ec8a4">
-<script src="vendor/gsap.min.js?v=92bb9a96" defer></script>
-<script src="vendor/ScrollTrigger.min.js?v=b0b14d67" defer></script>
-<script src="motion.js?v=0c15e144" defer></script>
+<link rel="stylesheet" href="motion.min.css?v=e030fce9">
+<link rel="stylesheet" href="site.min.css?v=7760fc1e">
+<script src="motion.js?v=e4a15204" defer data-gsap="vendor/gsap.min.js?v=92bb9a96" data-st="vendor/ScrollTrigger.min.js?v=b0b14d67"></script>
 <script src="site.js?v=f9cbc289" defer></script>
 </head>
 <body data-page="about">

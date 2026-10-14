@@ -85,8 +85,9 @@ const heroVisible = (body) => body.replace(/<h1([^>]*?) data-masked-reveal/, "<h
 // with a fallback for browsers that do not support it yet; full-bleed photos get FULL_BLEED. An explicit sizes="" in the markup wins.
 const IMGS = existsSync("img/opt/manifest.json") ? JSON.parse(readFileSync("img/opt/manifest.json", "utf8")) : {};
 // Full-bleed photos (first child of a .stage or .events section) are cropped with object-fit: cover, so on a portrait
-// screen they are drawn far wider than the viewport: ask for about twice the viewport width there.
-const FULL_BLEED = "(max-aspect-ratio: 3/4) 200vw, 100vw";
+// screen a landscape photo is drawn wider than the viewport. The portrait request scales with the photo's own shape:
+// about 2x the viewport for a 3:2 landscape, close to 1x for a tall photo, so tall photos stop pulling the largest file.
+const fullBleed = (ratio) => `(max-aspect-ratio: 3/4) ${Math.round(Math.min(200, Math.max(100, 160 * ratio)))}vw, 100vw`;
 const isFullBleed = (before) => /<section class="(?:stage|events)\b[^"]*"[^>]*>\s*(?:<!--(?:(?!-->)[\s\S])*-->\s*)?$/.test(before);
 function responsive(body) {
   return body.replace(/<img ([^>]*)>/g, (m, a, at) => {
@@ -103,7 +104,7 @@ function responsive(body) {
     const given = (a.match(/\bsizes="([^"]+)"/) || [])[1];
     a = a.replace(/\s*\bsizes="[^"]*"/, "");
     if (v.widths.length > 1) {
-      const sizes = given || (isFullBleed(body.slice(Math.max(0, at - 300), at)) ? FULL_BLEED
+      const sizes = given || (isFullBleed(body.slice(Math.max(0, at - 300), at)) ? fullBleed(v.w / v.h)
         : lazy ? "auto, (max-width: 900px) 100vw, 50vw" : "100vw");
       a += ` srcset="${v.widths.map((w) => `${file(w)} ${w}w`).join(", ")}" sizes="${sizes}"`;
     }
@@ -111,6 +112,22 @@ function responsive(body) {
     return `<img ${a}>`;
   });
 }
+// Stylesheets ship minified: site.css and motion.css stay the readable sources; build writes *.min.css next to them.
+// Strings (quoted values and data: URIs) are set aside first so nothing inside them changes.
+function minifyCss(css) {
+  const keep = [];
+  // One pass over strings and comments together, so an apostrophe inside a comment never opens a "string".
+  const out = css.replace(/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\/\*[\s\S]*?\*\//g, (m) => (m[0] === "/" ? "" : `\u0000${keep.push(m) - 1}\u0000`))
+    .replace(/\s+/g, " ")
+    .replace(/\s*([{};,])\s*/g, "$1")
+    .replace(/;}/g, "}")
+    .trim();
+  return out.replace(/\u0000(\d+)\u0000/g, (m, i) => keep[i]) + "\n";
+}
+const CSS_SITE = "site.min.css", CSS_MOTION = "motion.min.css";
+writeFileSync(CSS_SITE, minifyCss(readFileSync("site.css", "utf8")));
+writeFileSync(CSS_MOTION, minifyCss(readFileSync("motion.css", "utf8")));
+
 // Head script, also hashed into the Content-Security-Policy in vercel.json. Before first paint: hide entrance targets
 // only when motion will run, and show everything if motion.js fails.
 const HEAD_SCRIPT = `(function(d){var still=location.hash==="#static"||matchMedia("(prefers-reduced-motion: reduce)").matches;d.classList.add(still?"still":"js");
@@ -194,11 +211,9 @@ function page(file, { title, desc, page, solid = false, body, type, schema, page
 ${head}
 ${FONT_PRELOAD}
 <script>${HEAD_SCRIPT}</script>
-<link rel="stylesheet" href="${asset("motion.css")}">
-<link rel="stylesheet" href="${asset("site.css")}">
-<script src="${asset("vendor/gsap.min.js")}" defer></script>
-<script src="${asset("vendor/ScrollTrigger.min.js")}" defer></script>
-<script src="${asset("motion.js")}" defer></script>
+<link rel="stylesheet" href="${asset(CSS_MOTION)}">
+<link rel="stylesheet" href="${asset(CSS_SITE)}">
+<script src="${asset("motion.js")}" defer data-gsap="${asset("vendor/gsap.min.js")}" data-st="${asset("vendor/ScrollTrigger.min.js")}"></script>
 <script src="${asset("site.js")}" defer></script>
 </head>
 <body data-page="${page}"${solid ? ' class="solid-head"' : ""}>
@@ -911,7 +926,7 @@ writeFileSync("vercel.json", JSON.stringify({
       { key: "X-Frame-Options", value: "SAMEORIGIN" },
       { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=()" },
     ] },
-    ...["/site.css", "/motion.css", "/site.js", "/motion.js", "/vendor/(.*)", "/fonts/(.*)", "/img/opt/(.*)"].map((s) => cache(s, YEAR)),
+    ...["/site.min.css", "/motion.min.css", "/site.js", "/motion.js", "/vendor/(.*)", "/fonts/(.*)", "/img/opt/(.*)"].map((s) => cache(s, YEAR)),
     cache("/img/:file", "public, max-age=604800, stale-while-revalidate=86400"), cache("/img/ap/:file", "public, max-age=604800, stale-while-revalidate=86400"),
   ],
 }, null, 2) + "\n");

@@ -33,7 +33,7 @@
       ]
     },
     {
-      "source": "/site.css",
+      "source": "/site.min.css",
       "headers": [
         {
           "key": "Cache-Control",
@@ -42,7 +42,7 @@
       ]
     },
     {
-      "source": "/motion.css",
+      "source": "/motion.min.css",
       "headers": [
         {
           "key": "Cache-Control",
