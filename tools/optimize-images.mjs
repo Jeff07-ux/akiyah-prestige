@@ -16,8 +16,8 @@ const OUT = "img/opt";
 // Widths cover phones (1x and 2x), tablets and desktop, up to 2400px for full-bleed photos on large high-density screens.
 const WIDTHS = [480, 800, 1200, 1600, 2400];
 const QUALITY = 80; // WebP quality: no visible loss on these photos at roughly a quarter of the JPEG weight
-// Files in img/ that no page uses (logo source, duplicates); not worth shipping variants for.
-const SKIP = new Set(["IMG_9832.PNG", "image.png", "a_different_perspective-marrakech-4500910_1920.jpg", "hero-palms.jpg"]);
+// Files in img/ that no page uses (logo source, duplicates, uploads kept as originals); not worth shipping variants for.
+const SKIP = new Set(["IMG_9832.PNG", "logo-512.png", "image.png", "image1.png", "image2.png", "a_different_perspective-marrakech-4500910_1920.jpg", "hero-palms.jpg"]);
 const force = process.argv.includes("--force");
 
 mkdirSync(OUT, { recursive: true });

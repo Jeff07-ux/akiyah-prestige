@@ -1097,9 +1097,15 @@ header.site .in, header.site.scrolled .in { --bar-h: 68px; position: relative; i
 header.site .in > .logo { align-self: start; margin-top: -24px; row-gap: 10px; }
 header.site .in > .logo > .logo-key, header.site.scrolled .in > .logo > .logo-key { box-sizing: border-box; width: 56px; height: 56px; padding: 6px; border-radius: 50%; background: var(--smoke); transform-origin: 50% 50%; box-shadow: 0 6px 18px rgba(0,0,0,.10); transition: transform .9s var(--ease), background-color .35s var(--ease), box-shadow .35s var(--ease); }
 body:not(.solid-head) > header.site:not(.scrolled) .in > .logo > .logo-key { background-color: transparent; box-shadow: none; }
+/* Over the home hero (no bar yet) the key is drawn large, 36x72 like the intro mark below; it returns to the 56px
+   emblem in the notch once the page scrolls. */
+body:not(.solid-head) > header.site:not(.scrolled) .in > .logo > .logo-key { width: 84px; height: 84px; }
+header.site .in > .logo > .logo-key { transition: transform .9s var(--ease), background-color .35s var(--ease), box-shadow .35s var(--ease), width .5s var(--ease), height .5s var(--ease); }
 /* Floating capsule (scrolled down): the bar and its notch fold away with the links; the capsule is unchanged. */
 header.site.nav-float .nav-shape { opacity: 0; transform: translateY(-14px); }
-header.site.nav-float .in > .logo { margin-top: 0; align-self: center; }
+/* The capsule rides close to the top edge: 12px below it (plus the safe area), since the bar it sat in is gone. */
+header.site.nav-float .in > .logo { align-self: start; margin-top: -18px; }
+header.site .in > .logo { transition: gap .5s var(--ease), background-color .5s var(--ease), box-shadow .5s var(--ease), padding .5s var(--ease), border-color .5s var(--ease), margin-top .5s var(--ease); }
 header.site.nav-float .in > .logo > .logo-key { width: 14px; height: 28px; padding: 0; border-radius: 0; background: none; box-shadow: none; }
 @media (max-width: 640px) {
   header.site .in, header.site.scrolled .in { grid-template-columns: 1fr auto 1fr; padding-inline: 12px; }
@@ -1198,3 +1204,95 @@ footer.site .in > a { padding-block: 14px; margin-block: -14px; }
   .tile .t .lab { font-size: 10px; letter-spacing: .1em; }
   .tile.wide .t > p:not(.lab) { display: block; }
 }
+
+/* Home intro: a larger brand key with the title set beside it, centred on the key. */
+.intro-head { display: flex; align-items: center; gap: clamp(16px, 1.8vw, 24px); }
+.intro-head .intro-key { width: 36px; height: 72px; }
+.intro-head .intro-h { margin: 0; }
+.intro-head .intro-h::after { display: none; } /* the trailing hairline dangled beside a two-line title */
+@media (max-width: 640px) { .intro-head .intro-key { width: 28px; height: 56px; } }
+
+/* Home hero title: "entirely your own." stays on one line. */
+.H .nw { white-space: nowrap; }
+
+/* ---------- Contact and trust (planner, reply promise, testimonials, example day) ---------- */
+/* Reply promise under the main contact buttons. */
+.promise { display: flex; align-items: center; gap: 10px; margin: 14px 0 0; font: 400 13px/1.4 var(--sans); color: rgba(var(--ink),.72); max-width: none; }
+.promise i { flex: none; width: 7px; height: 7px; border-radius: 50%; background: #3FA66B; box-shadow: 0 0 0 3px rgba(63,166,107,.22); }
+.stage .copy .promise, .ev-c .promise { color: rgba(245,242,235,.82); font-size: 13px; margin-top: 14px; }
+.ev-c .promise { justify-content: center; }
+.art aside .promise { font-size: 12px; margin-top: 12px; }
+.cta-acts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+.cta-acts .btn { margin-top: 0; }
+
+/* Signature experiences: a quiet link to the full service page beside the WhatsApp button. */
+.pnl-more { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin: 22px 0 0 18px; font: 500 14px var(--sans); color: var(--pale, #F4F2EF); border-bottom: 1px solid transparent; }
+.pnl-more:hover { border-bottom-color: currentColor; }
+@media (max-width: 640px) { .pnl-more { margin: 8px 0 0; display: flex; } }
+
+/* Plan your stay dialog. */
+dialog.planner { width: min(560px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); padding: 0; border: 1px solid var(--rail); background: var(--smoke); color: var(--text); overflow: auto; }
+dialog.planner::backdrop { background: rgba(21,20,20,.55); backdrop-filter: blur(3px); }
+dialog.planner[open] { animation: pl-in var(--dur-ui, .32s) var(--ease) both; }
+@keyframes pl-in { from { opacity: 0; transform: translateY(12px); } }
+.planner form { padding: clamp(20px, 3vw, 32px); display: grid; gap: 16px; }
+.pl-top { display: flex; justify-content: space-between; align-items: center; }
+.pl-x { width: 44px; height: 44px; margin: -10px -10px -10px 0; font-size: 16px; color: var(--ash); }
+.planner .H.md { font-size: clamp(30px, 3.4vw, 42px); }
+.pl-sub { margin: -6px 0 4px; font-size: 15px; }
+.pl-f { display: grid; gap: 8px; margin: 0; padding: 0; border: 0; min-width: 0; }
+.pl-f .lab span, .pl-f legend span { text-transform: none; letter-spacing: 0; color: var(--ash); font-weight: 400; }
+.pl-f legend { padding: 0; margin-bottom: 8px; }
+.pl-f input { width: 100%; min-height: 48px; padding: 0 14px; border: 1px solid var(--rail); background: transparent; color: var(--text); font: 400 16px var(--sans); }
+.pl-f input:focus-visible { outline: 2px solid var(--sage-hi); outline-offset: 0; }
+.pl-step { display: inline-flex; align-items: center; border: 1px solid var(--rail); width: max-content; }
+.pl-step button { width: 48px; height: 48px; font-size: 20px; }
+.pl-step output { min-width: 44px; text-align: center; font: 500 17px var(--sans); }
+.planner .chips .chip { min-height: 40px; font-size: 13px; }
+.pl-send { justify-content: center; margin-top: 6px; }
+.planner .promise { margin-top: 0; justify-content: center; }
+
+/* Home testimonials: one quote at a time, guests as portrait tabs. */
+.vc { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 300px); gap: clamp(28px, 5vw, 80px); align-items: center; }
+.vc-panels figure { margin: 0; }
+.vc-panels blockquote { margin: 0; font: 400 clamp(24px, 2.6vw, 38px)/1.3 var(--serif); color: var(--text); text-wrap: pretty; }
+.vc-panels figcaption { margin-top: 22px; font-size: 14px; color: var(--ash); }
+.vc-panels figcaption b { display: block; font: 500 16px var(--sans); color: var(--text); margin-bottom: 2px; }
+.vc-list { display: grid; gap: 4px; border-left: 1px solid var(--rail); }
+.vc-list button { display: flex; align-items: center; gap: 14px; min-height: 64px; padding: 6px 0 6px 20px; text-align: left; font: 400 15px var(--sans); color: rgba(var(--ink),.6); border-left: 2px solid transparent; margin-left: -1px; transition: color var(--dur-micro, .24s), border-color var(--dur-micro, .24s); }
+.vc-list button img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; filter: grayscale(1); opacity: .75; transition: filter .3s, opacity .3s; }
+.vc-list button[aria-selected="true"] { color: var(--text); border-left-color: var(--sage-hi); }
+.vc-list button[aria-selected="true"] img, .vc-list button:hover img { filter: none; opacity: 1; }
+@media (max-width: 900px) {
+  .vc { grid-template-columns: 1fr; }
+  .vc-list { grid-auto-flow: column; grid-auto-columns: 1fr; border-left: 0; border-top: 1px solid var(--rail); }
+  .vc-list button { flex-direction: column; gap: 6px; padding: 12px 4px 0; border-left: 0; border-top: 2px solid transparent; margin: -1px 0 0; text-align: center; font-size: 12px; }
+  .vc-list button[aria-selected="true"] { border-top-color: var(--sage-hi); }
+}
+
+/* Service pages: an example day as a timeline. */
+.day-tl { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid var(--rail); }
+.day-tl li { position: relative; padding: 24px 20px 8px 0; }
+.day-tl li::before { content: ""; position: absolute; top: -5px; left: 0; width: 9px; height: 9px; border-radius: 50%; background: var(--sage-hi); }
+.day-t { display: block; font: 500 12px var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--sage-hi); }
+.day-tl h3 { font: 400 22px/1.2 var(--display); margin: 10px 0 8px; }
+.day-tl p { margin: 0; font-size: 15px; color: var(--soft); }
+@media (max-width: 900px) {
+  .day-tl { grid-template-columns: 1fr; border-top: 0; border-left: 1px solid var(--rail); margin-left: 4px; }
+  .day-tl li { padding: 0 0 26px 24px; }
+  .day-tl li::before { top: 4px; left: -5px; }
+}
+/* Planner: compact enough to fit a laptop screen without scrolling; selected interests read clearly. */
+.planner form { gap: 12px; }
+.planner .H.md { font-size: clamp(28px, 3vw, 36px); }
+.pl-sub { margin: -4px 0 2px; font-size: 14px; }
+.pl-f { gap: 6px; }
+.pl-f input { min-height: 44px; }
+.pl-step button { width: 44px; height: 44px; }
+.planner .chips { gap: 6px; }
+.planner .chips .chip { min-height: 36px; padding: 0 12px; }
+.planner .chip[aria-pressed="true"] { background: var(--cta, var(--sage-hi)); border-color: var(--cta, var(--sage-hi)); color: #fff; }
+/* Enquiry band: the planner is the secondary way in, outlined on the photo. The promise line is not held to paragraph width. */
+.stage .copy .promise { max-width: none; }
+.cta-acts .btn:not(.solid) { background: transparent; border-color: rgba(245,242,235,.6); color: #F5F2EB; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.cta-acts .btn:not(.solid):hover { background: var(--pale, #F4F2EF); border-color: var(--pale, #F4F2EF); color: var(--pale-ink, #151414); }

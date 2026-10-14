@@ -149,11 +149,30 @@ function header(page) {
   <nav aria-label="Mobile">${NAV.map(([t, h]) => `<a href="${h}">${t}</a>`).join("")}<a href="#enquire">Enquire</a></nav>
   <a class="btn solid" href="${WA_URL}">WhatsApp the concierge</a></div>`;
 }
+// The reply promise shown under the main contact buttons (24/7 and languages as stated on aliyahprestige.com).
+const PROMISE = `<p class="promise"><i aria-hidden="true"></i>A real person replies within the hour · English, French, Spanish</p>`;
+// "Plan your stay": three quick answers become a ready-written WhatsApp message. Buttons with data-planner open it;
+// without JavaScript they are plain WhatsApp links. The message is composed in site.js.
+const PLAN_INTERESTS = ["Riad or villa", "Private jet", "Desert & Atlas", "Fine dining", "Wellness & spa", "Cultural tours", "Chauffeur", "Wedding or event"];
+const planner = `<dialog class="planner" id="planner" aria-labelledby="planner-h">
+  <form method="dialog" data-planner-form data-wa="${WA_URL}">
+    <div class="pl-top"><p class="lab">Plan your stay</p><button type="submit" value="close" class="pl-x" formnovalidate aria-label="Close">✕</button></div>
+    <h2 class="H md" id="planner-h">Three answers, <em>one message</em>.</h2>
+    <p class="muted pl-sub">Your concierge replies with two or three options. Nothing is booked until you say so.</p>
+    <label class="pl-f"><span class="lab">Travelling from</span><input name="from" type="text" autocomplete="address-level2" placeholder="Paris, London, Dubai…"></label>
+    <label class="pl-f"><span class="lab">Dates</span><input name="dates" type="text" placeholder="12–18 May, or flexible"></label>
+    <div class="pl-f"><span class="lab" id="pl-g">Guests</span><div class="pl-step" role="group" aria-labelledby="pl-g"><button type="button" data-step="-1" aria-label="One guest fewer">−</button><output name="guests" aria-live="polite">2</output><button type="button" data-step="1" aria-label="One guest more">+</button></div></div>
+    <fieldset class="pl-f"><legend class="lab">Interested in <span>(optional)</span></legend><div class="chips">${PLAN_INTERESTS.map((t) => `<button class="chip" type="button" aria-pressed="false" data-interest="${attr(t)}">${t}</button>`).join("")}</div></fieldset>
+    <label class="pl-f"><span class="lab">Anything else <span>(optional)</span></span><input name="note" type="text" placeholder="An anniversary, a wheelchair, a quiet riad…"></label>
+    <button type="submit" value="send" class="btn solid pl-send">Send on WhatsApp <span aria-hidden="true">→</span></button>
+    ${PROMISE}
+  </form>
+</dialog>`;
 const footer = `<footer class="site lab"><div class="in"><span>Aliyah Prestige · Marrakech</span><a href="${WA_URL}">WhatsApp ${WA}</a><span>Names stay private</span></div></footer>`;
 
 function cta(img, h, p, label = "WhatsApp the concierge") {
   return `<section class="stage short" id="enquire"><img src="${im(img)}" alt="" data-par>${rails}<div class="in">
-  <div class="copy"><p class="lab">24/7 · Within the hour</p><h2 class="H" data-masked-reveal>${h}</h2><p data-reveal>${p}</p><a class="btn solid" href="${WA_URL}" data-reveal style="--d:.1s">${label}</a></div>
+  <div class="copy"><p class="lab">24/7 · Within the hour</p><h2 class="H" data-masked-reveal>${h}</h2><p data-reveal>${p}</p><div class="cta-acts" data-reveal style="--d:.1s"><a class="btn solid" href="${WA_URL}">${label}</a><a class="btn" href="${WA_URL}" data-planner>Plan in three steps</a></div>${PROMISE}</div>
   <div class="side" data-reveal style="--d:.2s"><p class="lab">Concierge</p><p style="margin-top:10px;color:var(--bone)">${WA}<br>${EMAIL}</p></div></div></section>`;
 }
 
@@ -187,6 +206,7 @@ ${header(page)}
 <main id="main">
 ${body}
 </main>
+${planner}
 ${footer}
 </body>
 </html>
@@ -210,14 +230,22 @@ function svcItem(t) {
 // Tiles crop their photo with object-fit: cover into a tall box, so they ask for about twice the tile width.
 const svcTile = (sv, i, all) => `<a class="tile${i === 0 || i === all.length - 1 ? " wide" : ""}" href="${svcFile(sv)}" data-reveal style="--d:${(i % 4) * 0.06}s"><img src="${im(sv.img)}" alt="" loading="lazy" sizes="(max-width: 900px) 100vw, 50vw"><span class="lab n">${String(i + 1).padStart(2, "0")}</span><div class="t"><p class="lab">${esc(sv.kicker)}</p><h3>${esc(sv.card)}</h3><p>${esc(sv.line)}</p></div></a>`;
 
+// Guest testimonials (with permission and photos, see PRODUCT.md): home band and About pages.
+const TESTIMONIALS = [
+  ["Thank you for this wonderful discovery of Morocco. We have gained a new respect for the country and its people. You have always been generous and professional.", "Rosa Luisa DeLauro", "Member of Congress, United States House of Representatives"],
+  ["Morocco remains an unforgettable memory. It was a wonderful trip, largely thanks to the generosity with which you helped us discover your country. Your wit and erudition made this trip unforgettable for all of us.", "Michael Whiteman", "Chairman, Baum and Whiteman"],
+  ["Our cup is overflowing with joy. Our hearts and souls have allowed us to enjoy the richest and most memorable vacation of our lives. We can't wait to return to Morocco one day.", "Rozanne Gold", "Chef and journalist, four-time James Beard Award winner"],
+];
+const AB_T_PICS = ["t-delauro", "t-whiteman", "t-gold"];
+
 // ---------- Home ----------
 const SIGNATURE = [
-  ["atlas", "Helicopter over the Atlas", "Lift off from Marrakech, land for lunch in a Berber valley, and be back before the evening call to prayer.", "Atlas"],
-  ["desertcamp", "Dinner under the stars", "A table for two in the Agafay, lit by lanterns only. Your chef cooks over embers.", "Agafay"],
-  ["tajines", "Exclusive souk access", "Workshops opened for you before the medina wakes: a lantern maker, a leather worker, a weaver.", "Medina"],
-  ["tagine", "Cooking class", "A family kitchen and recipes kept for generations, then lunch at the table you cooked for.", "Medina"],
-  ["riad", "The secret garden", "A private hour in a walled garden, closed to others.", "Medina"],
-  ["car", "Private chauffeur", "The same driver for your whole stay, day and night.", "Everywhere"],
+  ["atlas", "Helicopter over the Atlas", "Lift off from Marrakech, land for lunch in a Berber valley, and be back before the evening call to prayer.", "Atlas", "desert-atlas-escapes"],
+  ["desertcamp", "Dinner under the stars", "A table for two in the Agafay, lit by lanterns only. Your chef cooks over embers.", "Agafay", "desert-atlas-escapes"],
+  ["tajines", "Exclusive souk access", "Workshops opened for you before the medina wakes: a lantern maker, a leather worker, a weaver.", "Medina", "private-souk-shopping"],
+  ["tagine", "Cooking class", "A family kitchen and recipes kept for generations, then lunch at the table you cooked for.", "Medina", "private-chef-gastronomy"],
+  ["riad", "The secret garden", "A private hour in a walled garden, closed to others.", "Medina", "private-cultural-tours"],
+  ["car", "Private chauffeur", "The same driver for your whole stay, day and night.", "Everywhere", "chauffeur-transportation"],
 ];
 // ---------- "Exclusively for you": three promises, five layout variants ----------
 // Home uses EX_VARIANT; sections.html shows all five for comparison.
@@ -351,16 +379,16 @@ const apFig = (k, i) => `<figure class="isc-ph isc-${i + 1}" data-reveal style="
 const HOME = { title: "Aliyah Prestige | Private concierge in Marrakech", page: "home",
   desc: "Bespoke stays, journeys and evenings in Marrakech and across Morocco, arranged with absolute discretion.",
   body: `<section class="stage" id="stays"><img src="img/hero-jemaa.jpg" alt="Jemaa el-Fna square at dusk with market stalls lit below the Koutoubia minaret, Marrakech" style="object-position:40% 50%" data-par>${rails}<div class="in">
-  <div class="copy"><p class="lab">Private concierge · Marrakech</p><h1 class="H" data-masked-reveal>A whole riad, opened for <em>you</em>.</h1>
-    <p data-reveal>Bespoke stays, journeys and evenings in Marrakech and across Morocco, arranged with absolute discretion.</p>
-    <a class="btn" href="#enquire" data-reveal style="--d:.1s">Plan a stay</a></div>
-  <div class="side" data-reveal style="--d:.2s"><p class="lab">Since 1989</p><p class="v">Two generations</p><p>One family, welcoming guests at home in the medina.</p></div></div></section>
+  <div class="copy"><p class="lab">Luxury private concierge · Marrakech</p><h1 class="H">Marrakech,<br><span class="nw">entirely your <em>own</em>.</span></h1>
+    <p data-reveal>Exceptional stays, private encounters and unforgettable evenings, thoughtfully arranged across Marrakech and beyond.</p>
+    <a class="btn" href="${WA_URL}" data-planner data-reveal style="--d:.1s">Plan your stay <span aria-hidden="true">→</span></a>${PROMISE}</div>
+  <div class="side" data-reveal style="--d:.2s"><p class="lab">Since 1986</p><p class="v">Two generations</p><p>One family, welcoming guests at home in the medina.</p></div></div></section>
 
 
 <div class="sec intro" id="welcome" role="region" aria-labelledby="intro-h"><div class="inner intro-split">
   <div class="intro-copy">
-    <span class="intro-mark" data-reveal>${KEY.replace('class="logo-key"', 'class="intro-key"')}</span>
-    <h2 class="intro-h" id="intro-h" data-reveal style="--d:.15s">A world of privilege, rooted in excellence</h2>
+    <div class="intro-head"><span class="intro-mark" data-reveal>${KEY.replace('class="logo-key"', 'class="intro-key"')}</span>
+    <h2 class="intro-h" id="intro-h" data-reveal style="--d:.15s">A world of privilege, rooted in excellence</h2></div>
     <p class="intro-p" data-word-reveal>At Aliyah Prestige, we craft bespoke experiences of rare elegance in Marrakech and beyond. Since 1986, discerning visionaries, global tastemakers, and loyal connoisseurs have entrusted us with their most exclusive moments, delivered with absolute discretion and timeless sophistication.</p>
     <p class="intro-sig" data-reveal style="--d:.3s">Marrakech <i aria-hidden="true"></i> Since 1986</p>
   </div>
@@ -377,19 +405,20 @@ const HOME = { title: "Aliyah Prestige | Private concierge in Marrakech", page: 
     <h2 class="ev-name" id="events-h" data-masked-reveal>Aliyah <em>Events</em></h2>
     <p class="ev-lead" data-reveal>Weddings and private celebrations in Marrakech, planned from the first idea to the last guest home.</p>
     <ul class="ev-types" data-reveal style="--d:.1s"><li>Weddings</li><li>Henna nights</li><li>Anniversaries</li><li>Corporate events</li></ul>
-    <a class="btn ev-btn" href="${WA_URL}?text=${encodeURIComponent("Hello, I would like to plan an event with Aliyah Events.")}" data-reveal style="--d:.2s">Plan your event</a>
+    <a class="btn ev-btn" href="${WA_URL}?text=${encodeURIComponent("Hello, I would like to plan an event with Aliyah Events.")}" data-reveal style="--d:.2s">Plan your event</a>${PROMISE}
   </div>
 </section>
 
 <section class="sec" id="signature">${rails}<div class="inner">
   <div class="sec-head"><div><p class="lab">Signature experiences</p><h2 class="H md" data-masked-reveal>Only with <em>Aliyah</em>.</h2></div>
     <p class="muted">Six moments we arrange for our guests, and nowhere else in quite the same way.</p></div>
-  <div class="pn" data-panels>${SIGNATURE.map(([img, t, d, where], i) => `
+  <div class="pn" data-panels>${SIGNATURE.map(([img, t, d, where, svc], i) => `
     <article class="pnl${i === 0 ? " on" : ""}">
       <img src="${im(img)}" alt="" loading="lazy">
       <button class="pnl-tab" type="button" aria-expanded="${i === 0}" aria-controls="sig-${i}"><i>0${i + 1}</i>${t}</button>
       <div class="pnl-d" id="sig-${i}"><p class="lab">0${i + 1} · ${where}</p><h3>${t}</h3><p>${d}</p>
-        <a class="btn" href="${WA_URL}?text=${encodeURIComponent("Hello, I would like to ask about: " + t)}">Ask about this</a></div>
+        <a class="btn" href="${WA_URL}?text=${encodeURIComponent("Hello, I would like to ask about: " + t)}">Ask about this</a>
+        <a class="pnl-more" href="${svc}.html">Discover the service <span aria-hidden="true">→</span></a></div>
     </article>`).join("")}
   </div>
 </div></section>
@@ -400,6 +429,14 @@ const HOME = { title: "Aliyah Prestige | Private concierge in Marrakech", page: 
   <div class="grid">${SERVICES.map(svcTile).join("")}</div>
 </div></section>
 
+
+<section class="sec voices" id="voices" aria-labelledby="voices-h">${rails}<div class="inner">
+  <div class="sec-head"><div><p class="lab">In their words</p><h2 class="H md" id="voices-h" data-masked-reveal>Trusted since <em>1986</em>.</h2></div><a class="chip" href="about.html">Our story</a></div>
+  <div class="vc" data-qtabs>
+    <div class="vc-panels">${TESTIMONIALS.map(([q, who, role], i) => `<div role="tabpanel" id="vc-q${i}" aria-labelledby="vc-t${i}"${i ? " hidden" : ""}><figure><blockquote>“${q}”</blockquote><figcaption><b>${who}</b>${role}</figcaption></figure></div>`).join("")}</div>
+    <div class="vc-list" role="tablist" aria-label="Guests">${TESTIMONIALS.map(([, who], i) => `<button type="button" role="tab" id="vc-t${i}" aria-controls="vc-q${i}" aria-selected="${i === 0}" tabindex="${i ? -1 : 0}"><img src="${im(AB_T_PICS[i])}" alt="" width="56" height="56" loading="lazy"><span>${who}</span></button>`).join("")}</div>
+  </div>
+</div></section>
 
 <section class="sec flush" id="journal-preview">${rails}<div class="inner">
   <div class="sec-head"><div><p class="lab">The journal</p><h2 class="H md" data-masked-reveal>Notes from <em>Morocco</em>.</h2></div><a class="chip" href="journal.html">All articles</a></div>
@@ -530,8 +567,12 @@ SERVICES.forEach((sv, i) => {
 <section class="sec"><div class="inner art">
   <aside><div class="box"><p class="lab">On this page</p><nav class="toc" style="margin-top:10px">${h2s.map((h) => `<a href="#${slug(h)}">${esc(h)}</a>`).join("")}</nav></div></aside>
   <article class="body svc">${svcBody(sv)}</article>
-  <aside><div class="box"><p class="lab">Arrange this</p><p class="muted" style="margin:10px 0 16px;font-size:15px">One message is enough. A concierge replies within the hour, day or night.</p><a class="btn solid flat" style="width:100%;justify-content:center" href="${svcAsk(sv)}">WhatsApp the concierge</a></div></aside>
+  <aside><div class="box"><p class="lab">Arrange this</p><p class="muted" style="margin:10px 0 16px;font-size:15px">One message is enough. Ask about ${esc(sv.name.toLowerCase())}, or plan the whole stay.</p><a class="btn solid flat" style="width:100%;justify-content:center" href="${svcAsk(sv)}">WhatsApp the concierge</a><a class="btn flat" style="width:100%;justify-content:center;margin-top:8px" href="${WA_URL}" data-planner data-interest-pre="${attr(sv.plan || "")}">Plan your stay</a>${PROMISE}</div></aside>
 </div></section>
+${sv.day ? `<section class="sec day-sec" aria-labelledby="day-h">${rails}<div class="inner">
+  <div class="sec-head"><div><p class="lab">An example day</p><h2 class="H md" id="day-h" data-masked-reveal>How it can <em>unfold</em>.</h2></div><p class="muted">One illustration, not a fixed programme. Every day is planned around you.</p></div>
+  <ol class="day-tl">${sv.day.map(([t, h, p], k) => `<li data-reveal style="--d:${k * 0.06}s"><span class="day-t">${esc(t)}</span><div><h3>${esc(h)}</h3><p>${esc(p)}</p></div></li>`).join("")}</ol>
+</div></section>` : ""}
 <section class="sec flush">${rails}<div class="inner"><div class="sec-head"><div><p class="lab">More services</p><h2 class="H md">Also <em>arranged</em>.</h2></div><a class="chip" href="index.html#services">All services</a></div>
   <div class="grid svc-more">${others.map((o, k) => `<a class="tile" href="${svcFile(o)}" data-reveal style="--d:${k * 0.06}s"><img src="${im(o.img)}" alt="" loading="lazy" sizes="(max-width: 900px) 100vw, 50vw"><div class="t"><p class="lab">${esc(o.kicker)}</p><h3>${esc(o.card)}</h3></div></a>`).join("")}</div></div></section>
 ${cta("riad3", "Tell us the <em>date</em>.", "A message on WhatsApp is enough: where from, when, how many. Two or three options follow within the hour.")}` });
@@ -544,7 +585,7 @@ const REVIEWS = [
   ["Our wedding weekend ran without a single question from us. Discreet, warm, and always one step ahead.", "Guest from Paris", "Wedding, 120 guests"],
   ["We messaged at two in the morning about a flight change. Ten minutes later it was solved.", "Guest from Dubai", "Private jet and riad"],
 ];
-const STATS = [["Since 1989", "one family, two generations"], ["24/7", "a real person answers"], ["5/5", "placeholder rating"]];
+const STATS = [["Since 1986", "one family, two generations"], ["24/7", "a real person answers"], ["5/5", "placeholder rating"]];
 const stars = `<span class="sp-stars" role="img" aria-label="5 out of 5">★★★★★</span>`;
 function socialProof(v) {
   if (v === 1) return `<section class="sec sp sp-1"><div class="inner">
@@ -572,11 +613,6 @@ function socialProof(v) {
 const STARS = `<span class="stars" role="img" aria-label="Rated 5 out of 5">${'<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.5l2.6 5.5 6 .8-4.4 4.1 1.1 5.9L10 15l-5.3 2.8 1.1-5.9L1.4 7.8l6-.8z"/></svg>'.repeat(5)}</span>`;
 
 // ---------- About: copy from aliyahprestige.com/about-us, laid out in the Riad Grid style ----------
-const TESTIMONIALS = [
-  ["Thank you for this wonderful discovery of Morocco. We have gained a new respect for the country and its people. You have always been generous and professional.", "Rosa Luisa DeLauro", "Member of Congress, United States House of Representatives"],
-  ["Morocco remains an unforgettable memory. It was a wonderful trip, largely thanks to the generosity with which you helped us discover your country. Your wit and erudition made this trip unforgettable for all of us.", "Michael Whiteman", "Chairman, Baum and Whiteman"],
-  ["Our cup is overflowing with joy. Our hearts and souls have allowed us to enjoy the richest and most memorable vacation of our lives. We can't wait to return to Morocco one day.", "Rozanne Gold", "Chef and journalist, four-time James Beard Award winner"],
-];
 // Moments listed under "Photos" on the current site. Archive photos can be added later.
 const ARCHIVE = [
   ["1986", "Founded", "A private concierge service, born from a family tradition."],
@@ -593,7 +629,6 @@ const AB_ARCH_ALT = {
   2002: "A private tour in a courtyard of the Bahia Palace, 2002",
   2023: "US First Lady Jill Biden with her hosts at Madrasa Ben Youssef, 2023",
 };
-const AB_T_PICS = ["t-delauro", "t-whiteman", "t-gold"];
 const AB_STORY = [
   "Founded in 1986, our exclusive private concierge service is born from a family tradition of excellence.",
   "For generations, we have opened the doors to Marrakech's hidden treasures, offering unparalleled expertise and personalisation.",

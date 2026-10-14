@@ -124,12 +124,15 @@
     const img = lb.querySelector("img"), pos = lb.querySelector("[data-lb-pos]"), txt = lb.querySelector("[data-lb-text]"), cta = lb.querySelector("[data-lb-cta]");
     let i = 0;
     const visible = () => figs.filter((f) => !f.hidden);
+    const wa = cta.getAttribute("href").split("?")[0];
     function show(fig) {
       const list = visible(); i = list.indexOf(fig);
       img.src = fig.querySelector("img").src; img.alt = fig.querySelector("img").alt;
       pos.textContent = `${String(i + 1).padStart(2, "0")} / ${String(list.length).padStart(2, "0")} · ${fig.dataset.title}`;
       txt.textContent = fig.dataset.text;
       cta.textContent = "Arrange this";
+      // The WhatsApp message names the photo, so the concierge knows what caught the guest's eye.
+      cta.href = `${wa}?text=${encodeURIComponent(`Hello, I would like to arrange this: ${fig.dataset.title} (from your gallery).`)}`;
     }
     const step = (d) => { const list = visible(); show(list[(i + d + list.length) % list.length]); };
     figs.forEach((f) => f.querySelector("button").addEventListener("click", () => { show(f); lb.showModal(); }));
@@ -140,6 +143,44 @@
     let x0 = null;
     lb.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; }, { passive: true });
     lb.addEventListener("touchend", (e) => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1); x0 = null; });
+  }
+
+  // Plan your stay: three answers in a dialog become one ready-written WhatsApp message.
+  // Buttons with data-planner open it; without JavaScript (or <dialog>) they stay plain WhatsApp links.
+  const planner = document.getElementById("planner");
+  if (planner && typeof planner.showModal === "function") {
+    const form = planner.querySelector("[data-planner-form]");
+    const out = form.querySelector("output[name=guests]");
+    let guests = 2;
+    form.querySelectorAll("[data-step]").forEach((b) => b.addEventListener("click", () => {
+      guests = Math.min(60, Math.max(1, guests + Number(b.dataset.step)));
+      out.textContent = guests;
+    }));
+    const chips = [...form.querySelectorAll("[data-interest]")];
+    chips.forEach((b) => b.addEventListener("click", () => b.setAttribute("aria-pressed", String(b.getAttribute("aria-pressed") !== "true"))));
+    document.querySelectorAll("[data-planner]").forEach((a) => a.addEventListener("click", (e) => {
+      e.preventDefault();
+      // A service page preselects its own interest.
+      const pre = a.dataset.interestPre;
+      if (pre) chips.forEach((b) => { if (b.dataset.interest === pre) b.setAttribute("aria-pressed", "true"); });
+      planner.showModal();
+      form.elements.from.focus();
+    }));
+    form.addEventListener("submit", (e) => {
+      if (!e.submitter || e.submitter.value !== "send") return; // the close button just closes the dialog
+      e.preventDefault();
+      const v = (n) => form.elements[n].value.trim();
+      const picks = chips.filter((b) => b.getAttribute("aria-pressed") === "true").map((b) => b.dataset.interest);
+      const lines = ["Hello Aliyah Prestige, I would like to plan a stay.",
+        v("from") && `From: ${v("from")}`, v("dates") && `Dates: ${v("dates")}`, `Guests: ${guests}`,
+        picks.length && `Interested in: ${picks.join(", ")}`, v("note") && `Note: ${v("note")}`].filter(Boolean);
+      const url = `${form.dataset.wa}?text=${encodeURIComponent(lines.join("\n"))}`;
+      planner.close();
+      const w = window.open(url, "_blank");
+      if (w) w.opener = null; else location.href = url;
+    });
+    // A click on the backdrop closes the dialog.
+    planner.addEventListener("click", (e) => { if (e.target === planner) planner.close(); });
   }
 
   // Newsletter: no provider connected yet. TODO: post to the chosen mailing service.
@@ -165,23 +206,26 @@
     }));
   });
 
-  // Sticky header: solid once the page leaves the top. Scrolling down folds it to a floating capsule
-  // holding only the wordmark; scrolling up, pointing near the top or tabbing into it brings the full header back.
+  // Sticky header: transparent at the top. Scrolling down folds it straight into the floating capsule holding only
+  // the wordmark (no solid bar on the way); scrolling up, pointing near the top or tabbing into it brings the full,
+  // solid header back.
   const head = document.querySelector("header.site");
   if (head) {
+    const TOP = 10;
     let last = window.scrollY;
     const float = (on) => head.classList.toggle("nav-float", on && !head.contains(document.activeElement));
     const onScroll = () => {
       const y = window.scrollY;
-      head.classList.toggle("scrolled", y > 10);
-      if (y <= 160) float(false);
-      else if (y > last + 4) float(true);
+      // Float first, then mark scrolled, so the solid bar never paints between the two states.
+      if (y <= TOP) float(false);
+      else if (y > last + 4 || (last <= TOP && y > last)) float(true); // leaving the top floats at once, even on a slow scroll
       else if (y < last - 4) float(false);
+      head.classList.toggle("scrolled", y > TOP);
       last = y;
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("mousemove", (e) => { if (e.clientY < 90 && window.scrollY > 160) float(false); });
+    window.addEventListener("mousemove", (e) => { if (e.clientY < 90 && window.scrollY > TOP) float(false); });
     head.addEventListener("focusin", () => float(false));
   }
 

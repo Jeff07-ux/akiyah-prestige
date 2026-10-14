@@ -21,11 +21,11 @@
 try{if(sessionStorage.getItem("keyDrawn"))d.classList.add("key-drawn");sessionStorage.setItem("keyDrawn","1")}catch(e){}
 addEventListener("load",function(){if(!d.classList.contains("motion-ready"))d.classList.remove("js")})})(document.documentElement)</script>
 <link rel="stylesheet" href="motion.css?v=a5b16912">
-<link rel="stylesheet" href="site.css?v=2665a4f7">
+<link rel="stylesheet" href="site.css?v=432ec8a4">
 <script src="vendor/gsap.min.js?v=92bb9a96" defer></script>
 <script src="vendor/ScrollTrigger.min.js?v=b0b14d67" defer></script>
 <script src="motion.js?v=0c15e144" defer></script>
-<script src="site.js?v=856718df" defer></script>
+<script src="site.js?v=f9cbc289" defer></script>
 </head>
 <body data-page="about" class="solid-head">
 <a class="skip" href="#main">Skip to content</a>
@@ -77,6 +77,20 @@ addEventListener("load",function(){if(!d.classList.contains("motion-ready"))d.cl
   <a class="btn solid" href="https://wa.me/212600000000">Enquire now</a></div></section>
 <nav class="av-switch" aria-label="About page layouts"><span>About layout</span><a href="about-1.html">1</a><a href="about-2.html">2</a><a href="about-3.html">3</a><a href="about-4.html" aria-current="page">4</a><a href="about-5.html">5</a><a href="about.html">Current</a></nav><div class="av-space" aria-hidden="true"></div>
 </main>
+<dialog class="planner" id="planner" aria-labelledby="planner-h">
+  <form method="dialog" data-planner-form data-wa="https://wa.me/212600000000">
+    <div class="pl-top"><p class="lab">Plan your stay</p><button type="submit" value="close" class="pl-x" formnovalidate aria-label="Close">✕</button></div>
+    <h2 class="H md" id="planner-h">Three answers, <em>one message</em>.</h2>
+    <p class="muted pl-sub">Your concierge replies with two or three options. Nothing is booked until you say so.</p>
+    <label class="pl-f"><span class="lab">Travelling from</span><input name="from" type="text" autocomplete="address-level2" placeholder="Paris, London, Dubai…"></label>
+    <label class="pl-f"><span class="lab">Dates</span><input name="dates" type="text" placeholder="12–18 May, or flexible"></label>
+    <div class="pl-f"><span class="lab" id="pl-g">Guests</span><div class="pl-step" role="group" aria-labelledby="pl-g"><button type="button" data-step="-1" aria-label="One guest fewer">−</button><output name="guests" aria-live="polite">2</output><button type="button" data-step="1" aria-label="One guest more">+</button></div></div>
+    <fieldset class="pl-f"><legend class="lab">Interested in <span>(optional)</span></legend><div class="chips"><button class="chip" type="button" aria-pressed="false" data-interest="Riad or villa">Riad or villa</button><button class="chip" type="button" aria-pressed="false" data-interest="Private jet">Private jet</button><button class="chip" type="button" aria-pressed="false" data-interest="Desert &amp; Atlas">Desert & Atlas</button><button class="chip" type="button" aria-pressed="false" data-interest="Fine dining">Fine dining</button><button class="chip" type="button" aria-pressed="false" data-interest="Wellness &amp; spa">Wellness & spa</button><button class="chip" type="button" aria-pressed="false" data-interest="Cultural tours">Cultural tours</button><button class="chip" type="button" aria-pressed="false" data-interest="Chauffeur">Chauffeur</button><button class="chip" type="button" aria-pressed="false" data-interest="Wedding or event">Wedding or event</button></div></fieldset>
+    <label class="pl-f"><span class="lab">Anything else <span>(optional)</span></span><input name="note" type="text" placeholder="An anniversary, a wheelchair, a quiet riad…"></label>
+    <button type="submit" value="send" class="btn solid pl-send">Send on WhatsApp <span aria-hidden="true">→</span></button>
+    <p class="promise"><i aria-hidden="true"></i>A real person replies within the hour · English, French, Spanish</p>
+  </form>
+</dialog>
 <footer class="site lab"><div class="in"><span>Aliyah Prestige · Marrakech</span><a href="https://wa.me/212600000000">WhatsApp +212 6 00 00 00 00</a><span>Names stay private</span></div></footer>
 </body>
 </html>

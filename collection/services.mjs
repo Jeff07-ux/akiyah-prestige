@@ -1,5 +1,7 @@
 // The ten services, one page each. Copy is taken from the service pages of aliyahprestige.com (October 2026),
 // kept in the client's words; only obvious copy-paste slips from the original pages were left out.
+// plan: the planner interest preselected from the page. day: an illustrative "example day" ([time, title, text]),
+// written from the service copy; it promises nothing the original pages do not.
 // Blocks: ["p", text] ["h2", text] ["ul", [items]] ["quote", text]. A list item written "Label: detail" renders
 // the label in bold with the detail beneath. Text is plain: build.mjs escapes it.
 export const SERVICES = [
@@ -8,6 +10,14 @@ export const SERVICES = [
     card: "Luxury Private Jet Charter", line: "To and from Morocco, and between its cities.",
     title: "Private jet charter to and from <em>Morocco</em>.",
     name: "Private Jet Charter", serviceType: "Private jet charter",
+    plan: "Private jet",
+    day: [
+      ["Morning","One message","Your departure city, the date and the number of guests, sent on WhatsApp before breakfast."],
+      ["Within the hour","Two or three aircraft","A short list with cabin photos, flight time and what is included. You choose; we handle crew, slots and permits."],
+      ["Afternoon","Wheels down in Marrakech","Greeted at the aircraft, escorted through the private terminal, your driver waiting planeside."],
+      ["Sunset","From tarmac to riad","Check-in already done. Mint tea on the terrace while your luggage is unpacked."],
+      ["Evening","Dinner, arranged","A courtyard table booked for your first night, and tomorrow quietly planned."],
+    ],
     lead: "A journey beyond luxury, where Morocco unfolds from the skies.",
     desc: "Private jet charter to Marrakech and across Morocco, arranged by your Aliyah Prestige concierge: aircraft, crew, ground transfers and your whole stay.",
     blocks: [
@@ -72,6 +82,14 @@ export const SERVICES = [
     card: "Private Villa, Hotels & Riad Bookings", line: "Villas, riads and 5-star hotels, chosen for you.",
     title: "Private villas and luxury stays in <em>Marrakech</em>.",
     name: "Private Villas and Luxury Stays", serviceType: "Luxury accommodation booking",
+    plan: "Riad or villa",
+    day: [
+      ["Before you travel","A shortlist that fits","Two or three properties matched to your party: a villa in the Palmeraie, a riad in the Medina or a suite in Hivernage."],
+      ["Arrival","No front desk","Check-in handled in advance; your room set with flowers and the welcome you asked for."],
+      ["Late morning","Your house, your rhythm","Breakfast served when you wake, by staff who already know your preferences."],
+      ["Afternoon","In-room details","A spa treatment at the villa, a butler for the children's lunch, the pool to yourselves."],
+      ["Evening","Celebration, quietly prepared","An anniversary or a birthday, marked with the touch you mentioned once."],
+    ],
     lead: "Villas, riads and 5-star hotels, tailored to your desires.",
     desc: "Private villas, riads and 5-star hotels in Marrakech, handpicked and arranged by Aliyah Prestige, from check-in to every in-room detail.",
     blocks: [
@@ -98,6 +116,14 @@ export const SERVICES = [
     card: "Personal Chefs & Gastronomy", line: "An authentic Moroccan culinary journey.",
     title: "Gastronomy and fine dining in <em>Marrakech</em>.",
     name: "Gastronomy and Fine Dining", serviceType: "Private chef and restaurant reservations",
+    plan: "Fine dining",
+    day: [
+      ["Morning","Market with your chef","A walk through the spice stalls to choose the day's ingredients together."],
+      ["Midday","Cooking class at home","Hands-on with the family recipes: tagine, salads, pastries, then lunch at the table you set."],
+      ["Afternoon","Rest","The kitchen cleared, the house quiet, nothing to organise."],
+      ["Evening","The right table","Priority access to one of the city's sought-after dining rooms, or a candlelit dinner in a hidden riad."],
+      ["Late","Under the stars","On another night, a desert banquet with Andalusian musicians."],
+    ],
     lead: "An authentic Moroccan culinary journey, elevated to excellence.",
     desc: "Private chefs, the finest restaurant tables, cooking classes and dinners in unique settings in Marrakech, curated by Aliyah Prestige.",
     blocks: [
@@ -120,6 +146,14 @@ export const SERVICES = [
     card: "Wellness & Spa Rituals", line: "A sanctuary of Moroccan serenity.",
     title: "Wellness and spa <em>rituals</em>.",
     name: "Wellness and Spa", serviceType: "Spa and wellness experiences",
+    plan: "Wellness & spa",
+    day: [
+      ["Morning","A slow start","Herbal infusion on the terrace while your therapists prepare."],
+      ["Late morning","Hammam ceremony","Steam, savon noir, ghassoul clay and rose-water rinses, entirely private."],
+      ["Afternoon","Royal massage","Aromatic oils or deep tissue, chosen for how you feel that day."],
+      ["Golden hour","Signature treatment","A saffron facial or an argan wrap, in a sanctuary behind an ornate door."],
+      ["Evening","Light dinner, early night","A table kept simple, so the calm lasts."],
+    ],
     lead: "A sanctuary of Moroccan serenity, reserved for the most distinguished.",
     desc: "Private hammam ceremonies, massages and Moroccan spa rituals in Marrakech's most select sanctuaries, arranged by Aliyah Prestige.",
     blocks: [
@@ -145,6 +179,14 @@ export const SERVICES = [
     card: "Private Cultural Experiences", line: "Tailored excursions and cultural journeys.",
     title: "Private tours and bespoke cultural <em>experiences</em>.",
     name: "Private Tours and Cultural Experiences", serviceType: "Private guided tours",
+    plan: "Cultural tours",
+    day: [
+      ["Early morning","The Medina before the crowds","Your certified guide opens the day with workshops most visitors never see."],
+      ["Mid-morning","A palace, privately","Monuments and museums with curated commentary, at your pace."],
+      ["Lunch","In a centuries-old riad","A private table, then a garden tea service as a surprise stop."],
+      ["Afternoon","Majorelle and beyond","Gardens, design boutiques or a quiet museum, chauffeured between each."],
+      ["Evening","A rooftop at sunset","The city's call to prayer from a terrace reserved for you."],
+    ],
     lead: "Curated cultural journeys in Marrakech, designed around your interests, passions and pace.",
     desc: "Private tours and bespoke cultural experiences in Marrakech with a certified multilingual guide: museums, monuments, artisans and excursions.",
     blocks: [
@@ -172,6 +214,14 @@ export const SERVICES = [
     card: "Luxury Events Planner", line: "Weddings, celebrations and corporate events.",
     title: "Luxury event planner in Marrakech and <em>Morocco</em>.",
     name: "Luxury Event Planner", serviceType: "Event planning",
+    plan: "Wedding or event",
+    day: [
+      ["Months before","Your vision, on one page","Type of event, dates, guests and mood, turned into a clear proposal and budget."],
+      ["Weeks before","Venue and design","The setting chosen with you, scenography and florals drawn, every supplier confirmed."],
+      ["The day before","Guests arrive","Airport welcomes, transfers and a welcome dinner, coordinated by our team."],
+      ["The day","You are a guest","Ceremony, dinner and music directed on the ground, so you only have to be present."],
+      ["The day after","A farewell brunch","Then departures handled one by one, until the last guest is home."],
+    ],
     lead: "Weddings, private celebrations and corporate events. Marrakech is the stage; Aliyah Prestige is the producer.",
     desc: "Luxury weddings, private celebrations and corporate events in Marrakech and Morocco: full-service planning, scenography, venues and guest logistics.",
     blocks: [
@@ -216,6 +266,14 @@ export const SERVICES = [
     card: "Luxury Transportation & Chauffeurs", line: "From arrival to departure, one private driver.",
     title: "A tailor-made journey from arrival to <em>departure</em>.",
     name: "Luxury Transportation and Chauffeurs", serviceType: "Chauffeur and VIP airport service",
+    plan: "Chauffeur",
+    day: [
+      ["Arrival","Welcomed airside","Private immigration assistance and straight to your car. No queues, no waiting."],
+      ["Morning","Your driver, all day","The same discreet, multilingual driver and guide, at your disposal."],
+      ["Midday","Beyond the city","A table booked at one of the most coveted addresses, or a drive into the Atlas foothills."],
+      ["Afternoon","Plans change, gracefully","A new idea at lunch becomes the afternoon's itinerary within minutes."],
+      ["Night","Home, whatever the hour","Collected after dinner, with an optional bodyguard if you prefer."],
+    ],
     lead: "Your private Marrakech, reimagined: VIP airport welcome, private chauffeur and guide, 24/7.",
     desc: "VIP airport welcome, private chauffeur and certified local guide in Marrakech, at your service 24/7 from arrival to departure.",
     blocks: [
@@ -240,6 +298,14 @@ export const SERVICES = [
     card: "Privatised Souk Experience & Personal Curation", line: "Moroccan treasures, without the chaos.",
     title: "Private souk experience and personal <em>shopping</em>.",
     name: "Private Souk Experience and Personal Shopping", serviceType: "Personal shopping",
+    plan: "Cultural tours",
+    day: [
+      ["Morning","Meet your expert","A local negotiator who knows the ateliers and the stories behind them."],
+      ["Late morning","Ateliers, not stalls","Rug weavers, lantern makers and leather workshops, many closed to the public."],
+      ["Lunch","A pause in a riad","Mint tea and a light lunch while pieces are set aside for you."],
+      ["Afternoon","Made for you","A caftan fitting or a custom leather order, with honest pricing."],
+      ["Evening","Delivered","Purchases brought to your riad, or shipped home for you."],
+    ],
     lead: "Your gateway to authentic Moroccan treasures, without the chaos.",
     desc: "A private souk experience and personal shopping in Marrakech with a local expert: trusted ateliers, honest pricing and authentic Moroccan craft.",
     blocks: [
@@ -264,6 +330,14 @@ export const SERVICES = [
     card: "Desert & Atlas Escapes", line: "Where dreams of the desert and mountains come alive.",
     title: "Desert and Atlas <em>escapes</em>.",
     name: "Desert and Atlas Escapes", serviceType: "Private desert and mountain excursions",
+    plan: "Desert & Atlas",
+    day: [
+      ["Afternoon","Into the Agafay","A short drive from Marrakech by luxury SUV, or by helicopter for a farther escape."],
+      ["Golden hour","Camels or buggies","A ride over the stone hills as the sun melts into the horizon."],
+      ["Sunset","A table for you","Dinner under the stars with Moroccan folklore, fire shows and live music."],
+      ["Night","A private bivouac","On a longer journey, a camp in the Merzouga dunes styled like a palace."],
+      ["Next morning","The Atlas","Valleys, waterfalls and Berber villages, with a picnic by a waterfall."],
+    ],
     lead: "Where dreams of the desert and mountains come alive.",
     desc: "Private escapes from Marrakech to the Agafay Desert, the Merzouga dunes and the Atlas Mountains: luxury bivouacs, helicopter transfers and starlit dinners.",
     blocks: [
@@ -301,6 +375,14 @@ export const SERVICES = [
     card: "24/7 Discreet Personal Assistance", line: "Your peace of mind, our signature service.",
     title: "24/7 private concierge <em>assistance</em>.",
     name: "24/7 Private Concierge Assistance", serviceType: "Private concierge service",
+    plan: "",
+    day: [
+      ["07:30","A table moved","Breakfast on the terrace instead of the courtyard, arranged before you ask twice."],
+      ["11:00","A last-minute reservation","Lunch at a fully booked address, confirmed within minutes."],
+      ["15:00","Flowers sent","An anniversary bouquet delivered to your suite while you are out."],
+      ["19:00","A change of plan","A flight moved to tomorrow; the car, the riad and dinner follow automatically."],
+      ["02:00","Still answered","A real person on the line, in English, French or Spanish."],
+    ],
     lead: "Your peace of mind, our signature service. A personal assistant by your side in Marrakech, day and night.",
     desc: "24/7 private concierge assistance in Marrakech: a dedicated, discreet personal assistant who answers within minutes, in English, French and Spanish.",
     blocks: [
