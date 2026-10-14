@@ -4,6 +4,7 @@
 import { writeFileSync, readFileSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { POSTS, ARTICLE } from "./collection/content.mjs";
+import { SERVICES } from "./collection/services.mjs";
 
 const WA = "+212 6 00 00 00 00";
 const WA_URL = "https://wa.me/212600000000";
@@ -22,7 +23,7 @@ const PREVIEW = SITE_URL === SITE_URL_PLACEHOLDER;
 const SITE_NAME = "Aliyah Prestige";
 // Pages meant for search. Everything else (About layout variants, the section comparison page, 404) is noindex
 // and stays out of the sitemap.
-const INDEXABLE = ["index.html", "service.html", "gallery.html", "journal.html", "post.html", "about.html"];
+const INDEXABLE = ["index.html", ...SERVICES.map((sv) => `${sv.slug}.html`), "gallery.html", "journal.html", "post.html", "about.html"];
 const urlFor = (file) => `${SITE_URL}/${file === "index.html" ? "" : file}`;
 const attr = (s) => String(s).replace(/<[^>]+>/g, "").replace(/&(?!amp;|lt;|gt;|quot;|#)/g, "&amp;").replace(/"/g, "&quot;");
 const isoDate = (d) => { const t = new Date(d + " UTC"); return isNaN(t) ? undefined : t.toISOString().slice(0, 10); };
@@ -120,7 +121,7 @@ const FONT_PRELOAD = ["fonts/playfair-latin.woff2", "fonts/poppins-400-latin.wof
 const BUILT = [];
 // Vertical guide rails were removed from the design; kept as an empty slot so sections need no edits.
 const rails = "";
-const NAV = [["Gallery", "gallery.html", "gallery"], ["Events", "./#events", "events"], ["Services", "./#services", "service"], ["Journal", "journal.html", "journal"], ["About", "about.html", "about"]];
+const NAV = [["Gallery", "gallery.html", "gallery"], ["Events", "index.html#events", "events"], ["Services", "index.html#services", "service"], ["Journal", "journal.html", "journal"], ["About", "about.html", "about"]];
 
 // Brand key, traced from the company logo (img/IMG_9832.PNG) as line art so it stays crisp and takes the theme colour.
 const KEY = `<svg class="logo-key" viewBox="0 0 48 96" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
@@ -139,7 +140,7 @@ function header(page) {
   const left = NAV.slice(0, 3).map(link).join("");
   const right = NAV.slice(3).map(link).join("") + `<a href="#enquire">Enquire</a>`;
   return `<a class="skip" href="#main">Skip to content</a>
-<header class="site"><div class="in"><span class="nav-shape" aria-hidden="true"></span><a class="logo" href="./" aria-label="Aliyah Prestige, home"><span class="logo-word">Aliyah</span>${KEY}<span class="logo-word">Prestige</span></a>
+<header class="site"><div class="in"><span class="nav-shape" aria-hidden="true"></span><a class="logo" href="index.html" aria-label="Aliyah Prestige, home"><span class="logo-word">Aliyah</span>${KEY}<span class="logo-word">Prestige</span></a>
   <nav class="nav-l" aria-label="Main">${left}</nav>
   <div class="tools"><nav class="nav-r" aria-label="More">${right}</nav>
   <button class="menu-btn" type="button" data-menu-open aria-controls="drawer" aria-expanded="false">Menu</button></div></div></header>
@@ -195,6 +196,20 @@ ${footer}
   writeFileSync(file, html);
 }
 
+// ---------- Service pages: one per service, copy in ./collection/services.mjs ----------
+// Long-form layout shared with the article: chapter index on the left, copy in the middle, an enquiry box on the right.
+const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const svcFile = (sv) => `${sv.slug}.html`;
+const svcAsk = (sv) => `${WA_URL}?text=${encodeURIComponent("Hello, I would like to ask about: " + sv.name)}`;
+// "Label: detail" list items show the label in bold with the detail beneath; plain items stay one line.
+function svcItem(t) {
+  const m = t.match(/^([^:]{2,70}):\s+(.+)$/);
+  return m ? `<li><div>${esc(m[1])}<span>${esc(m[2])}</span></div></li>` : `<li><div>${esc(t)}</div></li>`;
+}
+// Home tiles, one per service: the first and last span two columns so ten tiles close a four-column grid.
+// Tiles crop their photo with object-fit: cover into a tall box, so they ask for about twice the tile width.
+const svcTile = (sv, i, all) => `<a class="tile${i === 0 || i === all.length - 1 ? " wide" : ""}" href="${svcFile(sv)}" data-reveal style="--d:${(i % 4) * 0.06}s"><img src="${im(sv.img)}" alt="" loading="lazy" sizes="(max-width: 900px) 100vw, 50vw"><span class="lab n">${String(i + 1).padStart(2, "0")}</span><div class="t"><p class="lab">${esc(sv.kicker)}</p><h3>${esc(sv.card)}</h3><p>${esc(sv.line)}</p></div></a>`;
+
 // ---------- Home ----------
 const SIGNATURE = [
   ["atlas", "Helicopter over the Atlas", "Lift off from Marrakech, land for lunch in a Berber valley, and be back before the evening call to prayer.", "Atlas"],
@@ -203,14 +218,6 @@ const SIGNATURE = [
   ["tagine", "Cooking class", "A family kitchen and recipes kept for generations, then lunch at the table you cooked for.", "Medina"],
   ["riad", "The secret garden", "A private hour in a walled garden, closed to others.", "Medina"],
   ["car", "Private chauffeur", "The same driver for your whole stay, day and night.", "Everywhere"],
-];
-const SERVICES = [
-  ["jet", "Arrivals &amp; Travel", "4 services", "Jets, helicopters, chauffeurs, meet and assist.", "wide", "service.html"],
-  ["riad3", "Stays", "3 services", "Riads, palaces and desert camps.", "", "#enquire"],
-  ["balloon", "Experiences", "3 services", "Desert, mountains, medina.", "", "#enquire"],
-  ["tagine", "Gastronomy", "2 services", "Private chefs and tables.", "", "#enquire"],
-  ["hammam", "Wellness", "2 services", "Hammam rituals at home.", "", "#enquire"],
-  ["riad2", "Events &amp; Concierge", "2 services", "Weddings and celebrations by Aliyah Events.", "wide", "#events"],
 ];
 // ---------- "Exclusively for you": three promises, five layout variants ----------
 // Home uses EX_VARIANT; sections.html shows all five for comparison.
@@ -390,7 +397,7 @@ const HOME = { title: "Aliyah Prestige | Private concierge in Marrakech", page: 
 <section class="sec" id="services">${rails}<div class="inner">
   <div class="sec-head"><div><p class="lab">Services</p><h2 class="H md" data-masked-reveal>Everything, <em>arranged</em>.</h2></div>
     <p class="muted">One concierge for the whole stay. A real person answers at any hour, in your language.</p></div>
-  <div class="grid">${SERVICES.map(([img, h, n, p, cls, href], i) => `<a class="tile ${cls}" href="${href}" data-reveal style="--d:${(i % 3) * 0.06}s"><img src="${im(img)}" alt="" loading="lazy"><span class="lab n">0${i + 1}</span><div class="t"><p class="lab">${n}</p><h3>${h}</h3><p>${p}</p></div></a>`).join("")}</div>
+  <div class="grid">${SERVICES.map(svcTile).join("")}</div>
 </div></section>
 
 
@@ -403,40 +410,6 @@ ${cta("riad3", "Tell us the <em>date</em>.", "A message on WhatsApp is enough: w
 page("index.html", HOME);
 
 
-
-// ---------- Service: Private Jet Charter (simple version) ----------
-const SERVICE_DESC = "Private jet charter to Marrakech: the right aircraft within the hour, fast arrival and a chauffeur at the door.";
-page("service.html", { title: "Private Jet Charter | Aliyah Prestige", page: "service",
-  desc: SERVICE_DESC, crumbs: [["Private Jet Charter", "service.html"]],
-  schema: [{ "@type": "Service", "@id": `${urlFor("service.html")}#service`, name: "Private Jet Charter", serviceType: "Private jet charter",
-    description: SERVICE_DESC, url: urlFor("service.html"), provider: { "@id": ORG["@id"] }, areaServed: "Marrakech, Morocco",
-    mainEntityOfPage: { "@id": `${urlFor("service.html")}#webpage` } }],
-  body: `<section class="stage short"><img src="${im("jet")}" alt="Private jet cabin" data-par>${rails}<div class="in"><div class="copy">
-  <p class="crumb"><a href="./#services">Services</a> / <b>Private Jet Charter</b></p>
-  <h1 class="H" data-masked-reveal>Private jet <em>charter</em>.</h1>
-  <p data-reveal>Tell us where and when. We find the aircraft, handle every detail, and meet you at the door in Marrakech.</p>
-  <a class="btn solid" href="${WA_URL}" data-reveal style="--d:.1s">Request a flight</a></div></div></section>
-
-<section class="sec">${rails}<div class="inner incl">
-  <div class="pic" data-reveal><img src="${im("jetseat")}" alt="Seat in a private jet cabin" loading="lazy"></div>
-  <div><p class="lab">What's included</p><h2 class="H md" data-masked-reveal>Everything, from take-off to <em>riad</em>.</h2>
-  <ul class="ticks">
-    <li data-reveal><div>The right aircraft<span>Two or three options within the hour, with clear prices.</span></div></li>
-    <li data-reveal style="--d:.06s"><div>Fast arrival<span>Private terminal. Formalities in minutes.</span></div></li>
-    <li data-reveal style="--d:.12s"><div>A chauffeur at the door<span>Straight from the aircraft to your riad.</span></div></li>
-    <li data-reveal style="--d:.18s"><div>The return flight too<span>Or we keep the aircraft in Marrakech for you.</span></div></li>
-  </ul></div>
-</div></section>
-
-<section class="sec flush">${rails}<div class="inner">
-  <div class="sec-head"><div><p class="lab">How it works</p><h2 class="H md" data-masked-reveal>Three <em>steps</em>.</h2></div><p class="muted">Paris 3 h 05 · London 3 h 35 · Geneva 2 h 55</p></div>
-  <div class="row3">
-    <div class="step" data-reveal><span class="n">01</span><h3>Send your dates</h3><p>Where from, when, how many. WhatsApp is enough.</p></div>
-    <div class="step" data-reveal style="--d:.06s"><span class="n">02</span><h3>Choose the aircraft</h3><p>Clear options and prices, within the hour.</p></div>
-    <div class="step" data-reveal style="--d:.12s"><span class="n">03</span><h3>Fly</h3><p>We handle the rest, until you land and after.</p></div>
-  </div>
-</div></section>
-${cta("riad3", "Where are you flying <em>from</em>?", "Send one message. Options and prices follow within the hour.")}` });
 
 // ---------- Gallery ----------
 const GAL = [
@@ -528,6 +501,41 @@ page("post.html", { title: "A first evening in the medina | Aliyah Prestige", pa
 <section class="sec flush">${rails}<div class="inner"><div class="sec-head"><h2 class="H md">Keep <em>reading</em>.</h2><a class="chip" href="journal.html">All articles</a></div>
   <div class="posts">${POSTS.slice(1, 4).map(postCard).join("")}</div></div></section>
 ${cta("riad3", "An evening like <em>this</em>?", "Tell us the date. We arrange the guide, the rooftop and the table.")}` });
+
+// ---------- Service pages (generated) ----------
+function svcBody(sv) {
+  let first = true, paras = 0;
+  return sv.blocks.map(([t, v]) => {
+    if (t === "h2") return `<h2 id="${slug(v)}">${esc(v)}</h2>`;
+    if (t === "ul") return `<ul class="ticks">${v.map(svcItem).join("")}</ul>`;
+    if (t === "quote") return `<blockquote>${esc(v)}</blockquote>`;
+    const p = `<p class="${first ? "lead" : ""}">${esc(v)}</p>`;
+    first = false;
+    // The second photo sits after the opening two paragraphs.
+    return ++paras === 2 ? p + `\n<figure><img src="${im(sv.pic)}" alt="${attr(sv.name)}, Aliyah Prestige, Marrakech" loading="lazy" sizes="(max-width: 900px) 100vw, 680px"></figure>` : p;
+  }).join("\n");
+}
+SERVICES.forEach((sv, i) => {
+  const file = svcFile(sv);
+  const h2s = sv.blocks.filter(([t]) => t === "h2").map(([, v]) => v);
+  const others = [1, 2, 3, 4].map((k) => SERVICES[(i + k) % SERVICES.length]);
+  page(file, { title: `${sv.name} in Marrakech | Aliyah Prestige`, page: "service", desc: sv.desc, crumbs: [[sv.name, file]],
+    schema: [{ "@type": "Service", "@id": `${urlFor(file)}#service`, name: sv.name, serviceType: sv.serviceType, description: sv.desc,
+      url: urlFor(file), provider: { "@id": ORG["@id"] }, areaServed: "Marrakech, Morocco", mainEntityOfPage: { "@id": `${urlFor(file)}#webpage` } }],
+    body: `<section class="stage short"><img src="${im(sv.img)}" alt="${attr(sv.name)} in Marrakech" data-par>${rails}<div class="in"><div class="copy wide">
+  <p class="crumb"><a href="index.html#services">Services</a> / <b>${esc(sv.name)}</b></p>
+  <h1 class="H" style="font-size:clamp(40px,5.2vw,84px)" data-masked-reveal>${sv.title}</h1>
+  <p data-reveal>${esc(sv.lead)}</p>
+  <a class="btn solid" href="${svcAsk(sv)}" data-reveal style="--d:.1s">Ask the concierge</a></div></div></section>
+<section class="sec"><div class="inner art">
+  <aside><div class="box"><p class="lab">On this page</p><nav class="toc" style="margin-top:10px">${h2s.map((h) => `<a href="#${slug(h)}">${esc(h)}</a>`).join("")}</nav></div></aside>
+  <article class="body svc">${svcBody(sv)}</article>
+  <aside><div class="box"><p class="lab">Arrange this</p><p class="muted" style="margin:10px 0 16px;font-size:15px">One message is enough. A concierge replies within the hour, day or night.</p><a class="btn solid flat" style="width:100%;justify-content:center" href="${svcAsk(sv)}">WhatsApp the concierge</a></div></aside>
+</div></section>
+<section class="sec flush">${rails}<div class="inner"><div class="sec-head"><div><p class="lab">More services</p><h2 class="H md">Also <em>arranged</em>.</h2></div><a class="chip" href="index.html#services">All services</a></div>
+  <div class="grid svc-more">${others.map((o, k) => `<a class="tile" href="${svcFile(o)}" data-reveal style="--d:${k * 0.06}s"><img src="${im(o.img)}" alt="" loading="lazy" sizes="(max-width: 900px) 100vw, 50vw"><div class="t"><p class="lab">${esc(o.kicker)}</p><h3>${esc(o.card)}</h3></div></a>`).join("")}</div></div></section>
+${cta("riad3", "Tell us the <em>date</em>.", "A message on WhatsApp is enough: where from, when, how many. Two or three options follow within the hour.")}` });
+});
 
 // ---------- Social proof: three templates (preview only, not on the home page yet) ----------
 // PLACEHOLDER copy: replace with real guest reviews, used with the guests' permission, before publishing.
@@ -624,7 +632,7 @@ page("about-wall.html", { title: "About us | Aliyah Prestige", page: "about", so
 <section class="aw-art"><figure class="aw-art-ph"><img src="${im("lanterns")}" alt="Lanterns in a metalworker's workshop in the medina" loading="lazy"></figure>
   <div class="aw-art-copy"><h2 class="aw-h2">Hand in hand with <em>artisans</em>.</h2>
     <p>${AB_ART}</p>
-    <a class="btn" href="./#services">Our services</a></div></section>
+    <a class="btn" href="index.html#services">Our services</a></div></section>
 
 <section class="aw-sec aw-words"><div class="aw-in">
   <h2 class="aw-h2">In their <em>words</em>.</h2>
@@ -681,7 +689,7 @@ page("about-1.html", { ...AB_PAGE, solid: true, body: `<section class="sec v1-he
 
 <section class="sec"><div class="inner v1-art">
   <div class="pic" data-reveal>${abImg("lanterns", "A lantern maker's workshop in the medina", true)}</div>
-  <div class="v1-card" data-reveal style="--d:.15s"><h2 class="H md">Hand in hand with <em>artisans</em>.</h2>${abBody([AB_ART])}<a class="btn" href="./#services">Our services</a></div>
+  <div class="v1-card" data-reveal style="--d:.15s"><h2 class="H md">Hand in hand with <em>artisans</em>.</h2>${abBody([AB_ART])}<a class="btn" href="index.html#services">Our services</a></div>
 </div></section>
 
 <section class="sec v1-voices"><div class="inner">${abTabs("v1")}</div></section>
@@ -705,7 +713,7 @@ const ABOUT_2 = `<section class="stage v2-hero">${abImg("riad2", "Riad courtyard
   <div>
     <article class="v2-ch" id="ch1"><h2>Born from a family tradition.</h2>${abBody()}<div class="pic" data-reveal>${abImg("riad", "Garden inside a medina riad", true)}</div></article>
     <article class="v2-ch" id="ch2"><blockquote class="av-quote" data-reveal>${AB_PHILO}</blockquote><ul class="v2-values">${AB_VALUES.map((v) => `<li>${v}</li>`).join("")}</ul></article>
-    <article class="v2-ch" id="ch3"><h2>Hand in hand with artisans.</h2>${abBody([AB_ART])}<div class="pic" data-reveal>${abImg("lanterns", "A lantern maker's workshop in the medina", true)}</div><a class="btn" href="./#services">Our services</a></article>
+    <article class="v2-ch" id="ch3"><h2>Hand in hand with artisans.</h2>${abBody([AB_ART])}<div class="pic" data-reveal>${abImg("lanterns", "A lantern maker's workshop in the medina", true)}</div><a class="btn" href="index.html#services">Our services</a></article>
     <article class="v2-ch" id="ch4"><h2>Four decades in Marrakech.</h2>
       <p class="v2-founded" data-reveal><span>1986</span>${ARCHIVE[0][2]}</p>
       <div class="v2-arch">${ARCHIVE.slice(1).map(([y, t, d], i) => `<figure data-reveal style="--d:${(i % 2) * 0.1}s"><div class="pic">${abImg(AB_ARCH_PICS[y], `${t}, ${d}, ${y}`)}</div><figcaption><span class="av-y">${y}</span><b>${t}</b>${d}</figcaption></figure>`).join("")}</div></article>
@@ -744,7 +752,7 @@ page("about-3.html", { ...AB_PAGE, solid: true, body: `<section class="sec v3-he
 </div></section>
 
 <section class="sec"><div class="inner incl">
-  <div><h2 class="H md" data-masked-reveal>Hand in hand with <em>artisans</em>.</h2><div data-reveal>${abBody([AB_ART])}</div><a class="btn" href="./#services">Our services</a></div>
+  <div><h2 class="H md" data-masked-reveal>Hand in hand with <em>artisans</em>.</h2><div data-reveal>${abBody([AB_ART])}</div><a class="btn" href="index.html#services">Our services</a></div>
   <div class="v3-mat" data-reveal><div class="pic">${abImg("lanterns", "A lantern maker's workshop in the medina")}</div></div>
 </div></section>
 
@@ -779,7 +787,7 @@ page("about-4.html", { ...AB_PAGE, solid: true, body: `<section class="v4-hero">
   <div class="v4-era"><p class="v4-y">Today<span>Our philosophy</span></p>
     <div><blockquote class="av-quote" data-reveal>${AB_PHILO}</blockquote><ul class="v2-values">${AB_VALUES.map((v) => `<li>${v}</li>`).join("")}</ul>
       <div class="v4-split v4-art"><div class="pic" data-reveal>${abImg("lanterns", "A lantern maker's workshop in the medina")}</div>
-        <div><h2 class="H md" data-masked-reveal>Hand in hand with <em>artisans</em>.</h2><div data-reveal>${abBody([AB_ART])}</div><a class="btn" href="./#services">Our services</a></div></div></div></div>
+        <div><h2 class="H md" data-masked-reveal>Hand in hand with <em>artisans</em>.</h2><div data-reveal>${abBody([AB_ART])}</div><a class="btn" href="index.html#services">Our services</a></div></div></div></div>
 </div></section>
 
 <section class="sec v4-voices"><div class="inner"><h2 class="H md" data-masked-reveal>In their <em>words</em>.</h2>${abTabs("v4", "v4-tabs")}</div></section>
@@ -801,7 +809,7 @@ page("about-5.html", { ...AB_PAGE, solid: true, body: `<section class="sec v5-he
   <div class="c pic" data-reveal style="--d:.08s">${abImg("riad", "Garden inside a medina riad")}</div>
   <div class="c quote" data-reveal><blockquote class="av-quote">${AB_PHILO}</blockquote></div>
   <div class="c vals" data-reveal style="--d:.08s"><ul>${AB_VALUES.map((v) => `<li>${v}</li>`).join("")}</ul></div>
-  <div class="c art av-dark" data-reveal>${abImg("lanterns", "A lantern maker's workshop in the medina")}<div class="t"><h2>Hand in hand with artisans.</h2><p>${AB_ART}</p><a class="btn" href="./#services">Our services</a></div></div>
+  <div class="c art av-dark" data-reveal>${abImg("lanterns", "A lantern maker's workshop in the medina")}<div class="t"><h2>Hand in hand with artisans.</h2><p>${AB_ART}</p><a class="btn" href="index.html#services">Our services</a></div></div>
   <div class="c year" data-reveal style="--d:.08s"><p class="v5-num">1986</p><p>A family tradition of expertise and personalisation, passed down through generations.</p></div>
   <div class="c voice" data-reveal>${abTabs("v5", "v4-tabs")}</div>
 </div></section>
@@ -833,7 +841,7 @@ page("404.html", { title: "Page not found | Aliyah Prestige", page: "", solid: t
   desc: "This page could not be found. Return to Aliyah Prestige, private concierge in Marrakech.",
   body: `<section class="sec"><div class="inner"><p class="lab">404</p><h1 class="H">This door is <em>closed</em>.</h1>
   <p class="muted">The page you asked for has moved or never existed. Everything else is still open.</p>
-  <a class="btn solid" href="./">Return home</a></div></section>` });
+  <a class="btn solid" href="index.html">Return home</a></div></section>` });
 
 // ---------- Crawl files and icon ----------
 writeFileSync("robots.txt", `User-agent: *
@@ -848,7 +856,7 @@ writeFileSync("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>
 writeFileSync(LASTMOD_FILE, JSON.stringify(LASTMOD, null, 1) + "\n");
 
 // ---------- Hosting: Vercel (static files from the repository root, no build step on Vercel) ----------
-// /index.html redirects to / so the home page has one URL. Assets linked with ?v=<hash> (see asset()) and the fonts are
+// Home links use index.html so the site also works opened from disk; the canonical tag makes / the one indexed URL. Assets linked with ?v=<hash> (see asset()) and the fonts are
 // cached for a year; photos for a week; HTML is always revalidated. The CSP allows only same-origin files, the hashed
 // head script and inline style attributes (used for animation delays). Vercel adds HSTS itself.
 const CSP = ["default-src 'self'", `script-src 'self' 'sha256-${sha(HEAD_SCRIPT).toString("base64")}'`, "style-src 'self' 'unsafe-inline'",
@@ -857,7 +865,9 @@ const CSP = ["default-src 'self'", `script-src 'self' 'sha256-${sha(HEAD_SCRIPT)
 const cache = (source, value) => ({ source, headers: [{ key: "Cache-Control", value }] });
 const YEAR = "public, max-age=31536000, immutable";
 writeFileSync("vercel.json", JSON.stringify({
-  redirects: [{ source: "/index.html", destination: "/", permanent: true }],
+  redirects: [
+    // The single sample service page became one page per service.
+    { source: "/service.html", destination: "/private-jet-charter.html", permanent: true }],
   headers: [
     { source: "/(.*)", headers: [
       { key: "Content-Security-Policy", value: CSP },
@@ -874,7 +884,7 @@ writeFileSync("vercel.json", JSON.stringify({
 writeFileSync("favicon.svg", `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-24 0 96 96"><rect x="-24" width="96" height="96" rx="20" fill="#fff"/>${KEY.replace(/^<svg[^>]*>/, `<g fill="none" stroke="#6B4226" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round">`).replace("</svg>", "</g>").replace(/ pathLength="1"/g, "")}</svg>
 `);
 
-console.log("built: index, service, gallery, journal, post, about (layout 2), about-wall, about-1..5, sections, 404, robots.txt, sitemap.xml, favicon.svg, vercel.json");
+console.log(`built: index, ${SERVICES.length} service pages, gallery, journal, post, about (layout 2), about-wall, about-1..5, sections, 404, robots.txt, sitemap.xml, favicon.svg, vercel.json`);
 if (!Object.keys(IMGS).length) console.warn("WARNING: img/opt/manifest.json is missing, so pages use the full-size JPEGs. Run: node tools/optimize-images.mjs");
 if (PREVIEW) console.warn(`
 WARNING: SITE_URL is not set, so this is a preview build: every page is noindex, and og:url, og:image, robots.txt and

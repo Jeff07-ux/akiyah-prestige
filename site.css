@@ -1184,3 +1184,17 @@ html:not(.js) .intro-key :is(path, circle) { stroke-dashoffset: 0; }
 header.site nav a { padding-block: 13px; margin-block: -13px; }
 .crumb a { padding-block: 12px; }
 footer.site .in > a { padding-block: 14px; margin-block: -14px; }
+
+/* Service pages: tick lists inside the long-form body keep the paragraph rhythm. */
+.body .ticks { margin: 4px 0 30px; }
+.body .ticks li { font-size: 18px; padding: 16px 0; }
+.body .ticks li span { line-height: 1.6; }
+/* Phones: ten individual service tiles sit two to a row, so titles get smaller and the one-line blurb steps aside. */
+@media (max-width: 640px) {
+  .tile .t { left: 14px; right: 14px; bottom: 14px; }
+  .tile .n { left: 14px; top: 12px; }
+  .tile h3 { font-size: 19px; line-height: 1.15; overflow-wrap: anywhere; hyphens: auto; }
+  .tile .t > p:not(.lab) { display: none; }
+  .tile .t .lab { font-size: 10px; letter-spacing: .1em; }
+  .tile.wide .t > p:not(.lab) { display: block; }
+}

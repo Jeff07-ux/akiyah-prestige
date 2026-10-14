@@ -19,7 +19,7 @@ Date: 2026-10-14. Scope: technical SEO, rendering, performance, structured data,
 | Article markup missing on `post.html` | Wrong. It existed. Extended it. |
 | Tap targets too small | Confirmed: desktop nav 19px, crumbs 23px, footer link 15px. The mobile menu was already 44px. Fixed. |
 | Sitemap has no `lastmod` | Confirmed. Fixed. |
-| 404 status, `/index.html` duplicate | Confirmed on the live Vercel site. Fixed through config. Takes effect on deploy. |
+| 404 status, `/index.html` duplicate | Confirmed on the live Vercel site. 404 fixed through config. The `/index.html` redirect was later removed so links also work when the files are opened from disk; the canonical tag still makes `/` the one indexed URL. |
 | Render-blocking Google Fonts, unused weights | Confirmed. Poppins 300 was never used. Fixed. |
 | No caching or security headers | Confirmed. Fixed through `vercel.json`. Takes effect on deploy. |
 | "Use TravelAgency" | Not adopted. The business model is a concierge with no confirmed address or phone. `Organization` stays until the owner confirms the details. |
@@ -27,7 +27,7 @@ Date: 2026-10-14. Scope: technical SEO, rendering, performance, structured data,
 
 ## Files modified or added
 
-- `build.mjs`: responsive image rewriting; hero heading and paragraph visible on first paint; self-hosted font preloads; cache-busting `?v=hash` on assets; structured data graph per page (Organization with logo, WebSite, WebPage/AboutPage/CollectionPage, BreadcrumbList, Service, Article); sitemap `lastmod`; root-absolute URLs in `404.html`; home links point to `./` instead of `index.html`; generates `vercel.json`; preview builds without `SITE_URL` are noindex.
+- `build.mjs`: responsive image rewriting; hero heading and paragraph visible on first paint; self-hosted font preloads; cache-busting `?v=hash` on assets; structured data graph per page (Organization with logo, WebSite, WebPage/AboutPage/CollectionPage, BreadcrumbList, Service, Article); sitemap `lastmod`; root-absolute URLs in `404.html`; generates `vercel.json`; preview builds without `SITE_URL` are noindex.
 - `site.css`: `@font-face` for self-hosted fonts plus metric-matched fallbacks; `img { height: auto }`; larger hit areas on nav, crumb and footer links.
 - `motion.js`, `motion.css`: split text keeps its full wording in a visually hidden span instead of `aria-label` on `<p>` (which fixed a Lighthouse ARIA failure).
 - New: `tools/optimize-images.mjs`, `img/opt/` (172 WebP variants and `manifest.json`, 31 MB), `img/logo-512.png`, `fonts/` (8 woff2 files, 116 KB), `vercel.json`, `collection/lastmod.json`.
@@ -41,7 +41,6 @@ Date: 2026-10-14. Scope: technical SEO, rendering, performance, structured data,
 - Sitemap XML parses and includes `lastmod`.
 - Local server reproducing the Vercel config:
   - `/nope/deep/x` returns 404 with the styled page.
-  - `/index.html` redirects with 308 to `/`.
   - The CSP produces no console violations on 8 routes.
   - The lightbox opens the 1600px WebP.
 - Visual check: screenshots at 1440px and 390px show no layout change.
@@ -80,7 +79,7 @@ The local mobile numbers understate real speed. Kaspersky antivirus injects a sc
 
 - Commit the new files and deploy (`404.html`, `vercel.json`, `fonts/`, `img/opt/`, `img/logo-512.png`, `tools/`, `collection/lastmod.json`).
 - On the live site, check:
-  - The 404 status and the `/index.html` redirect.
+  - The 404 status.
   - The cache and security headers.
   - That the CSP causes no console errors on Vercel.
 - The Vercel preview toolbar may be blocked by the CSP on preview deployments only.

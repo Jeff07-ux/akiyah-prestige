@@ -1,8 +1,8 @@
 {
   "redirects": [
     {
-      "source": "/index.html",
-      "destination": "/",
+      "source": "/service.html",
+      "destination": "/private-jet-charter.html",
       "permanent": true
     }
   ],
