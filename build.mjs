@@ -393,7 +393,7 @@ const apFig = (k, i) => `<figure class="isc-ph isc-${i + 1}" data-reveal style="
 
 const HOME = { title: "Aliyah Prestige | Private concierge in Marrakech", page: "home",
   desc: "Bespoke stays, journeys and evenings in Marrakech and across Morocco, arranged with absolute discretion.",
-  body: `<section class="stage" id="stays"><img src="img/hero-jemaa.jpg" alt="Jemaa el-Fna square at dusk with market stalls lit below the Koutoubia minaret, Marrakech" style="object-position:40% 50%" data-par>${rails}<div class="in">
+  body: `<section class="stage" id="stays"><img src="img/hero-palais.png" alt="A Moroccan palace lit at dusk behind a long reflecting pool lined with lanterns and palm trees" style="object-position:63% 50%" data-par>${rails}<div class="in">
   <div class="copy"><p class="lab">Luxury private concierge · Marrakech</p><h1 class="H">Marrakech,<br><span class="nw">entirely your <em>own</em>.</span></h1>
     <p data-reveal>Exceptional stays, private encounters and unforgettable evenings, thoughtfully arranged across Marrakech and beyond.</p>
     <a class="btn" href="${WA_URL}" data-planner data-reveal style="--d:.1s">Plan your stay <span aria-hidden="true">→</span></a>${PROMISE}</div>

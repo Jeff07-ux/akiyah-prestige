@@ -17,7 +17,13 @@ const OUT = "img/opt";
 const WIDTHS = [480, 800, 1200, 1600, 2400];
 const QUALITY = 80; // WebP quality: no visible loss on these photos at roughly a quarter of the JPEG weight
 // Files in img/ that no page uses (logo source, duplicates, uploads kept as originals); not worth shipping variants for.
-const SKIP = new Set(["IMG_9832.PNG", "logo-512.png", "image.png", "image1.png", "image2.png", "a_different_perspective-marrakech-4500910_1920.jpg", "hero-palms.jpg"]);
+// "Palais marocain au bord de l’eau.png" is used through its copy hero-palais.png (the home hero).
+const SKIP = new Set(["IMG_9832.PNG", "508760777.jpg.jpeg", "Palais marocain au bord de l’eau.png", "logo-512.png", "image.png", "image1.png", "image2.png", "a_different_perspective-marrakech-4500910_1920.jpg", "hero-palms.jpg"]);
+// Per-photo tuning for full-screen heroes whose source is smaller than a 2x screen needs: Lanczos upscaling, a light
+// unsharp mask to restore edge crispness, wider variants and a higher WebP quality. Everything else uses the defaults.
+const TUNE = {
+  "hero-palais.png": { quality: 86, widths: [480, 800, 1200, 1600, 2400, 3200], enlarge: true, sharpen: { sigma: 0.9, m1: 0.6, m2: 2.5 } },
+};
 const force = process.argv.includes("--force");
 
 mkdirSync(OUT, { recursive: true });
@@ -34,13 +40,16 @@ for (const dir of SRC_DIRS) {
     // rotate() applies EXIF orientation, so width/height describe the image as displayed.
     const turned = (meta.orientation || 1) >= 5;
     const w = turned ? meta.height : meta.width, h = turned ? meta.width : meta.height;
+    const tune = TUNE[file];
     const widths = WIDTHS.filter((x) => x < w);
     if (!widths.length || w <= 2400) widths.push(Math.min(w, 2400));
-    const variants = [...new Set(widths)].sort((a, b) => a - b);
+    const variants = tune ? tune.widths : [...new Set(widths)].sort((a, b) => a - b);
     for (const vw of variants) {
       const out = `${OUT}/${base}-${vw}.webp`;
       if (!force && existsSync(out) && statSync(out).mtimeMs > statSync(src).mtimeMs) continue;
-      await sharp(src).rotate().resize({ width: vw, withoutEnlargement: true }).webp({ quality: QUALITY, effort: 6, smartSubsample: true }).toFile(out);
+      let img = sharp(src).rotate().resize({ width: vw, withoutEnlargement: !tune?.enlarge, kernel: "lanczos3" });
+      if (tune?.sharpen) img = img.sharpen(tune.sharpen);
+      await img.webp({ quality: tune?.quality ?? QUALITY, effort: 6, smartSubsample: true }).toFile(out);
       made++;
     }
     manifest[key] = { w, h, base: `${OUT}/${base}`, widths: variants };

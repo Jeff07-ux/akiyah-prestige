@@ -181,6 +181,19 @@
    1920
   ]
  },
+ "img/hero-palais.png": {
+  "w": 1983,
+  "h": 793,
+  "base": "img/opt/hero-palais",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400,
+   3200
+  ]
+ },
  "img/imlil.jpg": {
   "w": 1920,
   "h": 1020,
