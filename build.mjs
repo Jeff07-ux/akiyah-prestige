@@ -5,6 +5,8 @@ import { writeFileSync, readFileSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { POSTS, ARTICLE } from "./collection/content.mjs";
 import { SERVICES } from "./collection/services.mjs";
+import { serviceDesigns } from "./service-designs.mjs";
+import { serviceHeroTemplate } from "./service-page.mjs";
 
 const WA = "+212 6 00 00 00 00";
 const WA_URL = "https://wa.me/212600000000";
@@ -232,7 +234,6 @@ ${footer}
 }
 
 // ---------- Service pages: one per service, copy in ./collection/services.mjs ----------
-// Long-form layout shared with the article: chapter index on the left, copy in the middle, an enquiry box on the right.
 const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const svcFile = (sv) => `${sv.slug}.html`;
 const svcAsk = (sv) => `${WA_URL}?text=${encodeURIComponent("Hello, I would like to ask about: " + sv.name)}`;
@@ -555,6 +556,8 @@ page("post.html", { title: "A first evening in the medina | Aliyah Prestige", pa
 ${cta("riad3", "An evening like <em>this</em>?", "Tell us the date. We arrange the guide, the rooftop and the table.")}` });
 
 // ---------- Service pages (generated) ----------
+// Hero: design 9 of service-designs.html (service-page.mjs). Body: the long-form layout shared with the journal article.
+const serviceHero = serviceHeroTemplate({ esc, attr, im, ask: svcAsk, WA, WA_URL, PROMISE });
 function svcBody(sv) {
   let first = true, paras = 0;
   return sv.blocks.map(([t, v]) => {
@@ -574,11 +577,7 @@ SERVICES.forEach((sv, i) => {
   page(file, { title: `${sv.name} in Marrakech | Aliyah Prestige`, page: "service", desc: sv.desc, crumbs: [[sv.name, file]],
     schema: [{ "@type": "Service", "@id": `${urlFor(file)}#service`, name: sv.name, serviceType: sv.serviceType, description: sv.desc,
       url: urlFor(file), provider: { "@id": ORG["@id"] }, areaServed: "Marrakech, Morocco", mainEntityOfPage: { "@id": `${urlFor(file)}#webpage` } }],
-    body: `<section class="stage short"><img src="${im(sv.img)}" alt="${attr(sv.name)} in Marrakech" data-par>${rails}<div class="in"><div class="copy wide">
-  <p class="crumb"><a href="index.html#services">Services</a> / <b>${esc(sv.name)}</b></p>
-  <h1 class="H" style="font-size:clamp(40px,5.2vw,84px)" data-masked-reveal>${sv.title}</h1>
-  <p data-reveal>${esc(sv.lead)}</p>
-  <a class="btn solid" href="${svcAsk(sv)}" data-reveal style="--d:.1s">Ask the concierge</a></div></div></section>
+    solid: true, body: `${serviceHero(sv)}
 <section class="sec"><div class="inner art">
   <aside><div class="box"><p class="lab">On this page</p><nav class="toc" style="margin-top:10px">${h2s.map((h) => `<a href="#${slug(h)}">${esc(h)}</a>`).join("")}</nav></div></aside>
   <article class="body svc">${svcBody(sv)}</article>
@@ -592,6 +591,46 @@ ${sv.day ? `<section class="sec day-sec" aria-labelledby="day-h">${rails}<div cl
   <div class="grid svc-more">${others.map((o, k) => `<a class="tile" href="${svcFile(o)}" data-reveal style="--d:${k * 0.06}s"><img src="${im(o.img)}" alt="" loading="lazy" sizes="(max-width: 900px) 100vw, 50vw"><div class="t"><p class="lab">${esc(o.kicker)}</p><h3>${esc(o.card)}</h3></div></a>`).join("")}</div></div></section>
 ${cta("riad3", "Tell us the <em>date</em>.", "A message on WhatsApp is enough: where from, when, how many. Two or three options follow within the hour.")}` });
 });
+
+// Helpers for the layout proposals below: split the blocks at each h2 (the first group, with no heading, is the introduction).
+const svcLabel = (t) => t.match(/^([^:]{2,70}):\s+(.+)$/);
+function svcGroups(blocks) {
+  const groups = [{ h: null, items: [] }];
+  for (const b of blocks) b[0] === "h2" ? groups.push({ h: b[1], items: [] }) : groups.at(-1).items.push(b);
+  return groups;
+}
+// What a section holds: steps (a list written "1. Label: detail"), feat (mostly "Label: detail" items), list, or text.
+const svcKind = (items) => {
+  const ul = (items.find(([t]) => t === "ul") || [])[1];
+  return !ul ? "text" : /^\d+\.\s/.test(ul[0]) ? "steps" : ul.filter(svcLabel).length * 2 >= ul.length ? "feat" : "list";
+};
+// ---------- Service page: twenty layout proposals (preview only, noindex) ----------
+// design-01.html ... design-20.html show Private Jet Charter (long page); design-01-b.html ... show Private Villas (short page).
+// service-designs.html lists them. Their styles live in service-designs.css and are inlined into those pages only.
+{
+  const { model, designs, tail } = serviceDesigns({ esc, attr, im, slug, WA, WA_URL, EMAIL, PROMISE, ask: svcAsk, groups: svcGroups, kind: svcKind, label: svcLabel,
+    others: (sv) => { const i = SERVICES.indexOf(sv); return [1, 2, 3, 4].map((k) => SERVICES[(i + k) % SERVICES.length]); }, href: svcFile });
+  const css = `<style>${minifyCss(readFileSync("service-designs.css", "utf8"))}</style>`;
+  // The outer wrapper reads the colour theme's accent before the design's own palette replaces the theme tokens.
+  const wrap = (cls, inner) => `${css}
+<div class="fx-theme"><div class="fx ${cls}">${inner}</div></div>`;
+  const SAMPLES = [["", 0], ["-b", 1]];
+  designs.forEach((d, n) => {
+    for (const [suffix, i] of SAMPLES) {
+      const sv = SERVICES[i];
+      page(`design-${String(n + 1).padStart(2, "0")}${suffix}.html`, { title: `Design ${n + 1}: ${d.name} | ${sv.name}`, page: "service", desc: sv.desc, solid: d.solid,
+        body: wrap(d.cls, `${d.render(sv, model(sv))}
+${d.ownTail ? "" : tail(sv)}`) });
+    }
+  });
+  const row = (d, n) => { const f = `design-${String(n + 1).padStart(2, "0")}`; return `<li><span class="num">${String(n + 1).padStart(2, "0")}</span><div><h2>${esc(d.name)}</h2><p class="mute">${esc(d.note)}</p></div><div class="cta-acts"><a class="btn solid" href="${f}.html">Long page</a><a class="btn" href="${f}-b.html">Short page</a></div></li>`; };
+  const group = (h, p, brand) => `<h2 class="dz-h">${h}</h2><p class="mute">${p}</p><ol class="dz-list">${designs.map((d, n) => (!!d.brand === brand ? row(d, n) : "")).join("")}</ol>`;
+  page("service-designs.html", { title: "Service page designs | Aliyah Prestige", page: "", solid: true, desc: "Twenty layout proposals for the service pages.",
+    body: wrap("fx-light dz", `<section><h1 class="H">Service page, twenty designs.</h1>
+  <p class="mute">Each is built from the same copy. Open the long version (Private Jet Charter) and the short one (Private Villas).</p>
+  ${group("1 to 10: futuristic palette", "Own dark and light palettes, Poppins headings, rounded panels and pill buttons.", false)}
+  ${group("11 to 20: the site's own palette and fonts", "Colour theme tokens, Playfair headings with Poppins text, square corners, the same dense spacing.", true)}</section>`) });
+}
 
 // ---------- Social proof: three templates (preview only, not on the home page yet) ----------
 // PLACEHOLDER copy: replace with real guest reviews, used with the guests' permission, before publishing.

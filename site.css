@@ -1308,3 +1308,52 @@ header.site.nav-float .in > .logo {
 /* backdrop-filter only sees up to the nearest "backdrop root", and view-transition-name makes the header one, which hides
    the page from the blur. While floating, the header drops it; page transitions then simply fade the capsule with the page. */
 header.site.nav-float { view-transition-name: none; }
+
+/* ---------- Service page hero ----------
+   Built by service-page.mjs: the design 9 hero (a rounded inset photograph with a frosted title card); the body below it
+   is the journal layout. Colours come from the active colour theme, read into --b-* on .fx-theme before .fx re-points
+   the site tokens at the page palette. Headings in Playfair, text in Poppins; the hero photo and its title card are rounded. */
+.fx-theme { --b-bg: var(--smoke); --b-panel: var(--smoke-2); --b-fg: var(--text); --b-ink: var(--ink); --b-acc: var(--sage-hi);
+  --b-cta: var(--cta, var(--text)); --b-cta-ink: var(--cta-ink, var(--smoke)); }
+.fx { --gap: 12px; --side: clamp(12px, 1.6vw, 24px); --cp: clamp(20px, 2.4vw, 36px);
+  --bg: var(--b-bg); --panel: var(--b-panel); --panel-2: color-mix(in srgb, var(--b-fg) 5%, var(--b-panel));
+  --line: rgba(var(--b-ink),.12); --line-2: rgba(var(--b-ink),.3); --fg: var(--b-fg); --ink: var(--b-ink); --mute: rgba(var(--b-ink),.7);
+  --acc: var(--b-acc); --cta: var(--b-cta); --cta-ink: var(--b-cta-ink); --glass: color-mix(in srgb, var(--b-bg) 80%, transparent);
+  --smoke: var(--bg); --smoke-2: var(--panel); --text: var(--fg); --bone: var(--fg); --rail: var(--line); --soft: var(--mute); --ash: var(--mute);
+  --sage: var(--acc); --sage-hi: var(--acc);
+  background: var(--bg); color: var(--fg); padding-bottom: var(--gap); font-size: 15px; line-height: 1.6; }
+.fx :is(h1, h2, h3, .H) { margin: 0; font-family: var(--display); font-weight: 400; letter-spacing: -.012em; }
+.fx .H { font-size: clamp(32px, 3.6vw, 56px); line-height: 1.04; }
+.fx .H em { font: inherit; letter-spacing: inherit; color: var(--acc); }
+.fx h2 { font-size: clamp(26px, 2.5vw, 40px); line-height: 1.1; }
+.fx h3 { font-size: 19px; line-height: 1.25; }
+.fx p { margin: 0; }
+.fx .lead { margin-top: 16px; max-width: 38ch; font-size: clamp(16px, 1.25vw, 19px); line-height: 1.5; color: var(--mute); }
+.fx .big { max-width: 40ch; font: 400 clamp(20px, 1.9vw, 28px)/1.32 var(--display); letter-spacing: -.01em; }
+.fx .mute { color: var(--mute); }
+.fx :is(.k, .crumb) { font: 500 11px/1.3 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
+.fx .crumb { margin: 0 0 14px; }
+.fx .crumb b { color: var(--fg); font-weight: 500; }
+.fx .copy-t { margin-top: 12px; max-width: 68ch; color: var(--mute); }
+.fx .copy-t p + p { margin-top: 10px; }
+.fx blockquote { margin: 10px 0 0; max-width: 40ch; font: 400 clamp(20px, 2vw, 30px)/1.3 var(--display); letter-spacing: -.01em; }
+.fx .cta-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.fx .btn { margin: 0; min-height: 44px; padding: 0 20px; font: 500 14px var(--sans); backdrop-filter: none; -webkit-backdrop-filter: none; transition: background-color .25s, color .25s, border-color .25s, transform .25s var(--ease); }
+.fx .btn:active { transform: scale(.98); }
+.fx .btn.solid { background: var(--cta); color: var(--cta-ink); border-color: var(--cta); }
+.fx .btn:not(.solid), .fx .cta-acts .btn:not(.solid) { background: transparent; color: var(--fg); border: 1px solid var(--line-2); }
+.fx .btn:not(.solid):hover, .fx .cta-acts .btn:not(.solid):hover { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.fx .promise { margin-top: 12px; font-size: 12px; color: var(--mute); }
+.fx .num { display: block; margin-bottom: 10px; font: 400 30px/1 var(--display); color: var(--acc); }
+.fx :is(ul, ol) { list-style: none; margin: 0; padding: 0; }
+.fx li > p { margin-top: 6px; font-size: 14px; line-height: 1.55; color: var(--mute); }
+.fx img { display: block; }
+.fx h2[id] { scroll-margin-top: 110px; }
+
+/* Hero: the photograph inset with square corners, the title on a frosted card in its lower corner. */
+.sv-hero { position: relative; display: flex; align-items: flex-end; height: calc(76svh / var(--vz)); min-height: 520px; margin: 6px var(--side) 0; padding: var(--side); overflow: hidden; }
+.sv-hero > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.sv-title { position: relative; z-index: 1; max-width: 620px; padding: clamp(22px, 3vw, 40px); background: var(--glass); border: 1px solid color-mix(in srgb, var(--b-bg) 60%, transparent);
+  -webkit-backdrop-filter: blur(22px) saturate(1.5); backdrop-filter: blur(22px) saturate(1.5); box-shadow: 0 20px 50px rgba(0,0,0,.12); }
+@media (prefers-reduced-transparency: reduce) { .sv-title { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; } }
+@media (max-width: 700px) { .sv-hero { min-height: 600px; } }

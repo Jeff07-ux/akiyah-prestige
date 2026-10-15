@@ -39,7 +39,16 @@ export const SERVICES = [
         "To Morocco: From Europe, UK, Middle East / GCC, USA, Africa and beyond.",
         "Within Morocco: Marrakech, Casablanca, Rabat, Tangier, Agadir, Fès, Ouarzazate and selected remote airfields.",
       ]],
-      ["p", "Typical routes include (one-way or return): Paris – Marrakech, London – Marrakech, Geneva – Marrakech, Dubai / Riyadh / Doha – Marrakech, New York – Casablanca or Marrakech (with long-range jets), and domestic hops (e.g. Marrakech – Casablanca – Laayoune – Agadir). If your destination is not listed, our team will study your route and propose the most efficient solution."],
+      ["p", "Typical routes include (one-way or return):"],
+      ["ul", [
+        "Paris – Marrakech",
+        "London – Marrakech",
+        "Geneva – Marrakech",
+        "Dubai / Riyadh / Doha – Marrakech",
+        "New York – Casablanca or Marrakech (with long-range jets)",
+        "Domestic hops (e.g. Marrakech – Casablanca – Laayoune – Agadir)",
+      ]],
+      ["p", "If your destination is not listed, our team will study your route and propose the most efficient solution."],
       ["h2", "Types of jets available"],
       ["p", "Through our aviation partner and their extended operator network, we can offer the full spectrum of aircraft, from quick weekend escapes to long-haul intercontinental flights:"],
       ["ul", [

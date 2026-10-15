@@ -22,11 +22,11 @@
 try{if(sessionStorage.getItem("keyDrawn"))d.classList.add("key-drawn");sessionStorage.setItem("keyDrawn","1")}catch(e){}
 addEventListener("load",function(){if(!d.classList.contains("motion-ready"))d.classList.remove("js")})})(document.documentElement)</script>
 <link rel="stylesheet" href="motion.min.css?v=e030fce9">
-<link rel="stylesheet" href="site.min.css?v=57038c46">
+<link rel="stylesheet" href="site.min.css?v=c14d9f62">
 <script src="motion.js?v=e4a15204" defer data-gsap="vendor/gsap.min.js?v=92bb9a96" data-st="vendor/ScrollTrigger.min.js?v=b0b14d67"></script>
 <script src="site.js?v=f9cbc289" defer></script>
 </head>
-<body data-page="service">
+<body data-page="service" class="solid-head">
 <a class="skip" href="#main">Skip to content</a>
 <header class="site"><div class="in"><span class="nav-shape" aria-hidden="true"></span><a class="logo" href="index.html" aria-label="Aliyah Prestige, home"><span class="logo-word">Aliyah</span><svg class="logo-key" viewBox="0 0 48 96" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
 <circle pathLength="1" cx="24" cy="8" r="4.5"/><path pathLength="1" d="M24 12.5V16"/>
@@ -45,11 +45,10 @@ addEventListener("load",function(){if(!d.classList.contains("motion-ready"))d.cl
   <nav aria-label="Mobile"><a href="gallery.html">Gallery</a><a href="index.html#events">Events</a><a href="index.html#services">Services</a><a href="journal.html">Journal</a><a href="about.html">About</a><a href="#enquire">Enquire</a></nav>
   <a class="btn solid" href="https://wa.me/212600000000">WhatsApp the concierge</a></div>
 <main id="main">
-<section class="stage short"><img src="img/opt/jet-1600.webp?v=0aa0171c" alt="Private Jet Charter in Marrakech" data-par fetchpriority="high" srcset="img/opt/jet-480.webp?v=98b77bf1 480w, img/opt/jet-800.webp?v=094b649e 800w, img/opt/jet-1200.webp?v=04eca022 1200w, img/opt/jet-1600.webp?v=0aa0171c 1600w, img/opt/jet-1920.webp?v=d772fdb2 1920w" sizes="(max-aspect-ratio: 3/4) 200vw, 100vw" width="1920" height="1440"><div class="in"><div class="copy wide">
-  <p class="crumb"><a href="index.html#services">Services</a> / <b>Private Jet Charter</b></p>
-  <h1 class="H" style="font-size:clamp(40px,5.2vw,84px)">Private jet charter to and from <em>Morocco</em>.</h1>
-  <p>A journey beyond luxury, where Morocco unfolds from the skies.</p>
-  <a class="btn solid" href="https://wa.me/212600000000?text=Hello%2C%20I%20would%20like%20to%20ask%20about%3A%20Private%20Jet%20Charter" data-reveal style="--d:.1s">Ask the concierge</a></div></div></section>
+<div class="fx-theme"><div class="fx fx-brand sv">
+<section class="sv-hero"><img src="img/opt/jet-1600.webp?v=0aa0171c" alt="Private Jet Charter in Marrakech" fetchpriority="high" srcset="img/opt/jet-480.webp?v=98b77bf1 480w, img/opt/jet-800.webp?v=094b649e 800w, img/opt/jet-1200.webp?v=04eca022 1200w, img/opt/jet-1600.webp?v=0aa0171c 1600w, img/opt/jet-1920.webp?v=d772fdb2 1920w" sizes="100vw" width="1920" height="1440"><div class="sv-title">
+  <p class="crumb"><a href="index.html#services">Services</a> / <b>Private Jet Charter</b></p><h1 class="H">Private jet charter to and from <em>Morocco</em>.</h1><p class="lead">A journey beyond luxury, where Morocco unfolds from the skies.</p><div class="cta-acts"><a class="btn solid" href="https://wa.me/212600000000?text=Hello%2C%20I%20would%20like%20to%20ask%20about%3A%20Private%20Jet%20Charter">WhatsApp the concierge</a><a class="btn" href="https://wa.me/212600000000" data-planner data-interest-pre="Private jet">Plan your stay</a></div><p class="promise"><i aria-hidden="true"></i>A real person replies within the hour · English, French, Spanish</p></div></section>
+</div></div>
 <section class="sec"><div class="inner art">
   <aside><div class="box"><p class="lab">On this page</p><nav class="toc" style="margin-top:10px"><a href="#more-than-a-jet-a-fully-curated-morocco-experience">More than a jet: a fully curated Morocco experience</a><a href="#private-jet-to-marrakech-and-morocco">Private jet to Marrakech and Morocco</a><a href="#types-of-jets-available">Types of jets available</a><a href="#safety-compliance-and-reliability">Safety, compliance and reliability</a><a href="#how-the-experience-feels">How the experience feels</a><a href="#additional-capabilities">Additional capabilities</a></nav></div></aside>
   <article class="body svc"><p class="lead">At Aliyah Prestige, chartering a private jet to Marrakech or anywhere in Morocco becomes as effortless as sending a message to your dedicated concierge.</p>
@@ -62,7 +61,9 @@ addEventListener("load",function(){if(!d.classList.contains("motion-ready"))d.cl
 <h2 id="private-jet-to-marrakech-and-morocco">Private jet to Marrakech and Morocco</h2>
 <p class="">We organise private jet flights:</p>
 <ul class="ticks"><li><div>To Morocco<span>From Europe, UK, Middle East / GCC, USA, Africa and beyond.</span></div></li><li><div>Within Morocco<span>Marrakech, Casablanca, Rabat, Tangier, Agadir, Fès, Ouarzazate and selected remote airfields.</span></div></li></ul>
-<p class="">Typical routes include (one-way or return): Paris – Marrakech, London – Marrakech, Geneva – Marrakech, Dubai / Riyadh / Doha – Marrakech, New York – Casablanca or Marrakech (with long-range jets), and domestic hops (e.g. Marrakech – Casablanca – Laayoune – Agadir). If your destination is not listed, our team will study your route and propose the most efficient solution.</p>
+<p class="">Typical routes include (one-way or return):</p>
+<ul class="ticks"><li><div>Paris – Marrakech</div></li><li><div>London – Marrakech</div></li><li><div>Geneva – Marrakech</div></li><li><div>Dubai / Riyadh / Doha – Marrakech</div></li><li><div>New York – Casablanca or Marrakech (with long-range jets)</div></li><li><div>Domestic hops (e.g. Marrakech – Casablanca – Laayoune – Agadir)</div></li></ul>
+<p class="">If your destination is not listed, our team will study your route and propose the most efficient solution.</p>
 <h2 id="types-of-jets-available">Types of jets available</h2>
 <p class="">Through our aviation partner and their extended operator network, we can offer the full spectrum of aircraft, from quick weekend escapes to long-haul intercontinental flights:</p>
 <ul class="ticks"><li><div>Very Light and Light Jets<span>Ideal for 2–6 passengers on short to mid-range routes (e.g. Madrid – Marrakech, Casablanca – Marrakech, Lisbon – Marrakech).</span></div></li><li><div>Midsize and Super Midsize Jets<span>Perfect for business trips and family holidays across Europe, the Middle East and North Africa.</span></div></li><li><div>Heavy and Ultra Long Range Jets<span>For transatlantic and long-range flights (e.g. New York – Casablanca, Doha – Marrakech) in full luxury with lie-flat seating and generous cabin space.</span></div></li><li><div>VIP Airliners (on request)<span>For large groups, weddings, incentives or corporate events travelling together to Morocco.</span></div></li></ul>
