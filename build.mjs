@@ -126,14 +126,21 @@ function minifyCss(css) {
     .trim();
   return out.replace(/\u0000(\d+)\u0000/g, (m, i) => keep[i]) + "\n";
 }
-const CSS_SITE = "site.min.css", CSS_MOTION = "motion.min.css";
+const CSS_SITE = "site.min.css", CSS_MOTION = "motion.min.css", CSS_INTRO = "intro-site.min.css";
 writeFileSync(CSS_SITE, minifyCss(readFileSync("site.css", "utf8")));
 writeFileSync(CSS_MOTION, minifyCss(readFileSync("motion.css", "utf8")));
+// Opening animation: the shared rules and design 1 ("Gold line") of intro.css, plus the cover that hides the page until intro-site.js runs.
+{
+  const c = readFileSync("intro.css", "utf8").replace(/\r\n/g, "\n");
+  const part = (a, z) => c.slice(c.indexOf(a), z ? c.indexOf(z) : undefined);
+  writeFileSync(CSS_INTRO, minifyCss(part("/* Opening animation", "/* 2.") + part("@media (max-width: 600px) { .ix-name") +
+    "html.intro-pending::before{content:'';position:fixed;inset:0;z-index:9998;background:#0A0A09;animation:ix-off .01s 6s forwards}@keyframes ix-off{to{opacity:0;visibility:hidden}}"));
+}
 
 // Head script, also hashed into the Content-Security-Policy in vercel.json. Before first paint: hide entrance targets
 // only when motion will run, and show everything if motion.js fails.
 const HEAD_SCRIPT = `(function(d){var still=location.hash==="#static"||matchMedia("(prefers-reduced-motion: reduce)").matches;d.classList.add(still?"still":"js");
-try{if(sessionStorage.getItem("keyDrawn"))d.classList.add("key-drawn");sessionStorage.setItem("keyDrawn","1")}catch(e){}
+try{if(sessionStorage.getItem("keyDrawn"))d.classList.add("key-drawn");sessionStorage.setItem("keyDrawn","1");if(!still&&!sessionStorage.getItem("introSeen")){d.classList.add("intro-pending");sessionStorage.setItem("introSeen","1")}}catch(e){}
 addEventListener("load",function(){if(!d.classList.contains("motion-ready"))d.classList.remove("js")})})(document.documentElement)`;
 const FONT_PRELOAD = ["fonts/playfair-latin.woff2", "fonts/poppins-400-latin.woff2", "fonts/poppins-500-latin.woff2"]
   .map((f) => `<link rel="preload" href="${f}" as="font" type="font/woff2" crossorigin>`).join("");
@@ -215,8 +222,10 @@ ${FONT_PRELOAD}
 <script>${HEAD_SCRIPT}</script>
 <link rel="stylesheet" href="${asset(CSS_MOTION)}">
 <link rel="stylesheet" href="${asset(CSS_SITE)}">
+<link rel="stylesheet" href="${asset(CSS_INTRO)}">
 <script src="${asset("motion.js")}" defer data-gsap="${asset("vendor/gsap.min.js")}" data-st="${asset("vendor/ScrollTrigger.min.js")}"></script>
 <script src="${asset("site.js")}" defer></script>
+<script src="${asset("intro-site.js")}" defer></script>
 </head>
 <body data-page="${page}"${solid ? ' class="solid-head"' : ""}>
 ${header(page)}
@@ -630,6 +639,31 @@ ${d.ownTail ? "" : tail(sv)}`) });
   <p class="mute">Each is built from the same copy. Open the long version (Private Jet Charter) and the short one (Private Villas).</p>
   ${group("1 to 10: futuristic palette", "Own dark and light palettes, Poppins headings, rounded panels and pill buttons.", false)}
   ${group("11 to 20: the site's own palette and fonts", "Colour theme tokens, Playfair headings with Poppins text, square corners, the same dense spacing.", true)}</section>`) });
+}
+
+// ---------- Opening animation: five proposals (preview only, noindex) ----------
+// intro-designs.html plays each one over the page. intro.js and intro.css hold the animations; the brand key comes from here.
+{
+  const IN = [
+    ["Gold line", "The key is drawn in gold along a vertical hairline, the name rises letter by letter, then black doors part to show the site."],
+    ["Iris", "Three rings open around the key, the name resolves out of a blur, then the dark circle closes on its centre."],
+    ["Scan", "A scan line reveals the key on a fine grid with corner marks and a counter to 100; the site opens in six strips."],
+    ["Gilded", "Key and name in metallic gold, a bright sheen crosses the screen, the whole scene lifts away softly."],
+    ["Portal", "Slowly turning rings circle the key; at the end the view flies through them into the site."],
+    ["Beam", "A shaft of gold light falls from above and lights the key, then flares and fades into the site."],
+    ["Marquee", "The name runs in outline, row against row, behind the key; the whole screen then lifts away."],
+    ["Bloom", "A drop of gold swells until it floods the screen; key and name appear in black ink; the gold lifts away."],
+    ["Glass", "A frosted pane opens from a hairline over the blurred site, with the key and name set in it."],
+    ["Horizon", "A hairline crosses the screen and the name closes in from wide spacing; the dark halves part up and down."],
+  ];
+  const css = `<style>${minifyCss(readFileSync("service-designs.css", "utf8"))}${minifyCss(readFileSync("intro.css", "utf8"))}</style>`;
+  const row = ([n, d], i) => `<li><span class="num">${String(i + 1).padStart(2, "0")}</span><div><h2>${esc(n)}</h2><p class="mute">${esc(d)}</p></div><div class="cta-acts"><button class="btn solid" type="button" data-intro-play="${i + 1}">Play</button></div></li>`;
+  page("intro-designs.html", { title: "Opening animation designs | Aliyah Prestige", page: "", solid: true, desc: "Ten opening animation proposals.",
+    body: `${css}<template id="ix-key">${KEY}</template>
+<div class="fx-theme"><div class="fx fx-brand dz"><section><h1 class="H">Opening animation, ten designs.</h1>
+  <p class="mute">Each one shows the logo and the company name. Press Play to see it over this page. The Skip button ends it at once.</p>
+  <ol class="dz-list">${IN.map(row).join("")}</ol></section></div></div>
+<script src="${asset("intro.js")}" defer></script>` });
 }
 
 // ---------- Social proof: three templates (preview only, not on the home page yet) ----------
