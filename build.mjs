@@ -7,6 +7,7 @@ import { POSTS, ARTICLE } from "./collection/content.mjs";
 import { SERVICES } from "./collection/services.mjs";
 import { serviceDesigns } from "./service-designs.mjs";
 import { serviceHeroTemplate } from "./service-page.mjs";
+import { navDesigns } from "./nav-designs.mjs";
 
 const WA = "+212 6 00 00 00 00";
 const WA_URL = "https://wa.me/212600000000";
@@ -147,7 +148,7 @@ const FONT_PRELOAD = ["fonts/playfair-latin.woff2", "fonts/poppins-400-latin.wof
 const BUILT = [];
 // Vertical guide rails were removed from the design; kept as an empty slot so sections need no edits.
 const rails = "";
-const NAV = [["Gallery", "gallery.html", "gallery"], ["Events", "index.html#events", "events"], ["Services", "index.html#services", "service"], ["Journal", "journal.html", "journal"], ["About", "about.html", "about"]];
+const NAV = [["Gallery", "gallery.html", "gallery"], ["Events", "index.html#events", "events"], ["Services", "index.html#services", "service"], ["Experiences", "index.html#signature", "experiences"], ["Journal", "journal.html", "journal"], ["About", "about.html", "about"]];
 
 // Brand key, traced from the company logo (img/IMG_9832.PNG) as line art so it stays crisp and takes the theme colour.
 const KEY = `<svg class="logo-key" viewBox="0 0 48 96" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
@@ -162,13 +163,10 @@ const KEY = `<svg class="logo-key" viewBox="0 0 48 96" aria-hidden="true" fill="
 
 function header(page) {
   const link = ([t, h, k]) => `<a href="${h}"${k === page ? ' aria-current="page"' : ""}>${t}</a>`;
-  // Links split either side of the centred logo: three on the left, the rest plus Enquire on the right.
-  const left = NAV.slice(0, 3).map(link).join("");
-  const right = NAV.slice(3).map(link).join("") + `<a href="#enquire">Enquire</a>`;
   return `<a class="skip" href="#main">Skip to content</a>
-<header class="site"><div class="in"><span class="nav-shape" aria-hidden="true"></span><a class="logo" href="index.html" aria-label="Aliyah Prestige, home"><span class="logo-word">Aliyah</span>${KEY}<span class="logo-word">Prestige</span></a>
-  <nav class="nav-l" aria-label="Main">${left}</nav>
-  <div class="tools"><nav class="nav-r" aria-label="More">${right}</nav>
+<header class="site"><div class="in"><a class="logo" href="index.html" aria-label="Aliyah Prestige, home">${KEY}<span class="logo-word">Aliyah Prestige</span></a>
+  <nav aria-label="Main">${NAV.map(link).join("")}</nav>
+  <div class="tools"><a class="nav-enq" href="#enquire">Enquire</a>
   <button class="menu-btn" type="button" data-menu-open aria-controls="drawer" aria-expanded="false">Menu</button></div></div></header>
 <div class="drawer" id="drawer" hidden role="dialog" aria-modal="true" aria-label="Menu">
   <div class="top"><span class="logo">Aliyah Prestige</span><button class="chip" type="button" data-menu-close>Close</button></div>
@@ -198,7 +196,7 @@ const footer = `<footer class="site lab"><div class="in"><span>Aliyah Prestige �
 
 function cta(img, h, p, label = "WhatsApp the concierge") {
   return `<section class="stage short" id="enquire"><img src="${im(img)}" alt="" data-par>${rails}<div class="in">
-  <div class="copy"><p class="lab">24/7 · Within the hour</p><h2 class="H" data-masked-reveal>${h}</h2><p data-reveal>${p}</p><div class="cta-acts" data-reveal style="--d:.1s"><a class="btn solid" href="${WA_URL}">${label}</a><a class="btn" href="${WA_URL}" data-planner>Plan in three steps</a></div>${PROMISE}</div>
+  <div class="copy"><p class="lab">24/7 · Within the hour</p><h2 class="H" data-masked-reveal>${h}</h2><p data-reveal>${p}</p><div class="cta-acts" data-reveal style="--d:.1s"><a class="btn solid" href="${WA_URL}">${label}</a><a class="pnl-more cta-more" href="${WA_URL}" data-planner>Plan in three steps <span aria-hidden="true">→</span></a></div>${PROMISE}</div>
   <div class="side" data-reveal style="--d:.2s"><p class="lab">Concierge</p><p style="margin-top:10px;color:var(--bone)">${WA}<br>${EMAIL}</p></div></div></section>`;
 }
 
@@ -661,6 +659,14 @@ ${d.ownTail ? "" : tail(sv)}`) });
   <p class="mute">Each one shows the logo and the company name. Press Play to see it over this page. The Skip button ends it at once.</p>
   <ol class="dz-list">${IN.map(row).join("")}</ol></section></div></div>
 <script src="${asset("intro.js")}" defer></script>` });
+}
+
+// ---------- Navigation: ten proposals on scrollable mock pages (preview only, noindex) ----------
+{
+  const css = `<style>${minifyCss(readFileSync("nav-designs.css", "utf8"))}</style>`;
+  page("nav-designs.html", { title: "Navigation designs | Aliyah Prestige", page: "", solid: true, desc: "Ten navigation proposals.",
+    body: `${css}${navDesigns({ KEY, im, WA_URL, esc })}
+<script src="${asset("nav-designs.js")}" defer></script>` });
 }
 
 // ---------- Social proof: three templates (preview only, not on the home page yet) ----------

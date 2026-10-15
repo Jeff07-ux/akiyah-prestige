@@ -78,7 +78,7 @@
 :root[data-tone="light"][data-theme="atelier"]   { --smoke: #FFFFFF; --smoke-2: #F4F2EF; --text: #151414; --ink: 21,20,20;  --sage: #6B4226; --sage-hi: #5A3720; --ash: #5F5B57; --photo-hi: #E3C4A8; --cta: #6B4226; --cta-ink: #FFFFFF; --rail: rgba(var(--ink),.13); --soft: rgba(var(--ink),.78); }
 :root[data-tone="light"] { color-scheme: light; --cta: var(--sage); --cta-ink: #FFFFFF; --glass: rgba(255,255,255,.4); --panel: rgba(255,255,255,.5); }
 /* Photo-backed areas keep light ink on dark scrims in every light palette. */
-:root[data-tone="light"] :is(.stage, .events, .tile, .g, .pnl, dialog.lb, .ex-18, body:not(.solid-head) > header.site:not(.scrolled)) {
+:root[data-tone="light"] :is(.stage, .events, .tile, .g, .pnl, dialog.lb, .ex-18, header.site) {
   --text: #F5F2EB; --bone: #F5F2EB; --ink: 245,242,235; --smoke: #171612; --smoke-2: #23211B;
   --rail: rgba(245,242,235,.18); --soft: rgba(245,242,235,.75); --glass: rgba(var(--scrim),.4);
   --ash: #CFC8BA; --sage-hi: var(--photo-hi);
@@ -104,15 +104,51 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 
 /* Header */
 /* Fixed over the hero; turns solid once the page scrolls (site.js adds .scrolled). */
-header.site { position: fixed; inset: 0 0 auto; z-index: 20; padding-top: env(safe-area-inset-top, 0px); background: linear-gradient(rgba(var(--scrim),.7), transparent); border-bottom: 1px solid transparent; transition: background-color .4s, border-color .4s; }
-header.site.scrolled { background: var(--smoke); border-bottom-color: var(--rail); }
-.solid-head header.site { position: sticky; top: 0; background: var(--smoke); border-bottom: 1px solid var(--rail); }
-html { scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 100px); }
-header.site .in { margin-inline: var(--gut); display: flex; justify-content: space-between; align-items: center; height: 80px; padding-inline: var(--pad); }
-.logo { font: 500 17px var(--display); letter-spacing: .2em; text-transform: uppercase; }
-header.site nav { display: flex; gap: 30px; font-size: 14px; color: rgba(var(--ink),.85); }
-header.site nav a:hover, header.site nav a[aria-current] { color: var(--bone); }
-header.site nav a[aria-current] { text-decoration: underline; text-underline-offset: 6px; }
+/* Design 1 of nav-designs.html. Over a photo hero, at the very top: no bar, light text on the photo's top shade.
+   Once the page scrolls, and on pages without a photo hero, a slim frosted dark strip (site.js adds .scrolled).
+   Fixed palette: cream text and a champagne key and Enquire button, the same in every colour theme. */
+header.site { --hd-text: #F5F2EB; --hd-champ: #D9C4A0; position: fixed; inset: 0 0 auto; z-index: 20; padding-top: env(safe-area-inset-top, 0px); color: var(--hd-text);
+  background: linear-gradient(rgba(var(--scrim),.6), transparent); view-transition-name: none;
+  transition: background-color .45s var(--ease), -webkit-backdrop-filter .45s var(--ease), backdrop-filter .45s var(--ease); }
+header.site.scrolled, .solid-head header.site { background: rgba(30,22,16,.8); -webkit-backdrop-filter: blur(16px) saturate(1.3); backdrop-filter: blur(16px) saturate(1.3); }
+.solid-head header.site { position: sticky; top: 0; }
+html { scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 90px); }
+header.site .in { margin-inline: var(--gut); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; height: 84px; padding-inline: var(--pad); transition: height .45s var(--ease); }
+header.site.scrolled .in, .solid-head header.site .in { height: 64px; }
+/* Three columns keep the links on the true centre; logo, links and Enquire share one centre line. */
+header.site .logo { grid-column: 1; justify-self: start; display: inline-flex; align-items: center; gap: 14px; color: var(--hd-text); }
+.logo-key { flex: none; width: 22px; height: 44px; overflow: visible; color: var(--hd-champ); transform-origin: 50% 8%; transition: transform .9s var(--ease); }
+header.site .logo:hover .logo-key { transform: rotate(-9deg); }
+/* The name in the hero headline's face: Playfair Display, regular weight, natural case. */
+.logo-word { font: 400 21px/1 var(--display); letter-spacing: -.005em; white-space: nowrap; }
+/* Optical alignment: Playfair at 21px sits its baseline about 3px below the 14px Poppins links when both boxes are
+   centred, so the name read low. Lifting it .07em puts its lowercase on the links' centre line. */
+header.site .logo-word { transform: translateY(-.07em); }
+/* The key draws itself in a constant loop: it draws in, holds, wipes away along the same path and draws again (4.5s).
+   Reduced motion shows it drawn and still. */
+html.js .logo-key :is(path, circle) { stroke-dasharray: 1; stroke-dashoffset: 1; animation: key-draw 4.5s cubic-bezier(.45,0,.2,1) .2s infinite both; }
+html.js .logo-key :is(path, circle):nth-child(n+3) { animation-delay: .45s; }
+html.js .logo-key :is(path, circle):nth-child(n+7) { animation-delay: .7s; }
+@keyframes key-draw { 0% { stroke-dashoffset: 1; } 30%, 78% { stroke-dashoffset: 0; } 96%, 100% { stroke-dashoffset: -1; } }
+@media (prefers-reduced-motion: reduce) { html.js .logo-key :is(path, circle) { animation: none; stroke-dashoffset: 0; } }
+header.site nav { grid-column: 2; justify-self: center; display: flex; align-items: center; gap: clamp(18px, 2.4vw, 34px); font-size: 14px; line-height: 1; }
+header.site nav a { position: relative; color: rgba(245,242,235,.86); transition: color .3s; }
+header.site nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 8px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .35s var(--ease); }
+header.site nav a:hover, header.site nav a[aria-current] { color: var(--hd-text); }
+header.site nav a[aria-current] { color: var(--hd-champ); }
+header.site nav a:hover::after, header.site nav a[aria-current]::after { transform: scaleX(1); }
+header.site .tools { grid-column: 3; justify-self: end; display: flex; align-items: center; gap: 10px; }
+/* Enquire: the site's brown CTA (as "Plan your stay" in the hero), cream type at 7.8:1. Hover behaves like the
+   "Plan your event" button: a light sheen sweeps across while the fill clears to a champagne outline and text. */
+.nav-enq { position: relative; isolation: isolate; overflow: hidden; display: inline-flex; align-items: center; min-height: 40px; padding: 0 20px; background: #6B4226; color: var(--hd-text); border: 1px solid #6B4226;
+  font: 500 13px var(--sans); letter-spacing: .04em; transition: background-color .35s var(--ease), color .35s var(--ease), border-color .35s var(--ease); }
+.nav-enq::after { content: ""; position: absolute; inset: 0 auto 0 -60%; width: 50%; z-index: -1; background: linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent); transform: skewX(-20deg); transition: translate .8s var(--ease); }
+.nav-enq:hover, .nav-enq:focus-visible { background: transparent; border-color: var(--hd-champ); color: var(--hd-champ); }
+.nav-enq:hover::after { translate: 360% 0; }
+.nav-enq:focus-visible { outline: 2px solid var(--hd-champ); outline-offset: 3px; }
+header.site .menu-btn { color: var(--hd-text); border-color: rgba(245,242,235,.5); }
+@media (max-width: 1000px) { header.site nav { display: none; } header.site .menu-btn { display: inline-flex; align-items: center; } }
+@media (max-width: 520px) { header.site .in { height: 72px; } .logo-word { font-size: 18px; } .nav-enq { display: none; } }
 .menu-btn { display: none; min-height: 44px; padding: 0 16px; border: 1px solid var(--rail); font-size: 14px; }
 .drawer { position: fixed; inset: 0; z-index: 60; background: var(--smoke); padding: calc(env(safe-area-inset-top, 0px) + 20px) var(--gut) 32px; display: flex; flex-direction: column; }
 .drawer .top { display: flex; justify-content: space-between; align-items: center; height: 60px; }
@@ -337,8 +373,7 @@ header.site .in > .tools { position: relative; display: flex; align-items: cente
 .pnl::after { background: linear-gradient(0deg, rgba(var(--scrim),.5), rgba(var(--scrim),.08) 60%); }
 .events::after { background: radial-gradient(55% 45% at 50% 42%, rgba(var(--scrim),.3), rgba(var(--scrim),.1)), linear-gradient(rgba(var(--scrim),.3), transparent 35%); }
 .tile img, .tile:hover img, .g img, .g:hover img, .pnl > img, .pnl:not(.on):hover > img { filter: none; }
-body:not(.solid-head) > header.site:not(.scrolled) { background: transparent; }
-.stage .copy, .tile .t, .tile .n, .pnl-tab, .pnl-d, .ev-c, body:not(.solid-head) > header.site:not(.scrolled) {
+.stage .copy, .tile .t, .tile .n, .pnl-tab, .pnl-d, .ev-c , body:not(.solid-head) > header.site:not(.scrolled) {
   text-shadow: 0 1px 18px rgba(0,0,0,.55), 0 1px 2px rgba(0,0,0,.35);
 }
 /* Buttons draw their own edge, so their text stays crisp. */
@@ -919,10 +954,8 @@ main:has(> #stays) .sec-head { margin-bottom: 32px; }
 [data-theme="atelier"] .btn, [data-theme="atelier"] .btn.solid { background: var(--cta); border-color: var(--cta); color: var(--cta-ink); }
 [data-theme="atelier"] .btn:hover, [data-theme="atelier"] .btn.solid:hover { background: transparent; border-color: var(--sage-hi); color: var(--sage-hi); }
 [data-theme="atelier"] .btn::after { background: linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent); }
-[data-theme="atelier"] :is(header.site nav a, footer.site a, .crumb a, .art aside .toc a, .v2-nav a, .av-tabs-list button):hover,
-[data-theme="atelier"] header.site nav a[aria-current],
+[data-theme="atelier"] :is(footer.site a, .crumb a, .art aside .toc a, .v2-nav a, .av-tabs-list button):hover,
 [data-theme="atelier"] .v2-nav a[aria-current="true"] { color: var(--sage-hi); }
-[data-theme="atelier"] header.site nav a[aria-current] { text-decoration-color: var(--sage-hi); text-decoration-thickness: 2px; }
 [data-theme="atelier"] .body a { color: var(--sage-hi); text-decoration: underline; text-underline-offset: 4px; }
 [data-theme="atelier"] .chip:hover { border-color: var(--sage-hi); color: var(--sage-hi); }
 [data-theme="atelier"] .news form { border-color: var(--sage-hi); }
@@ -949,7 +982,9 @@ main:has(> #stays) .sec-head { margin-bottom: 32px; }
 [data-theme="atelier"] .pill b { background: var(--pale); }
 /* Photo-backed CTAs (hero, signature experiences): solid brown, turning pale on hover. */
 [data-theme="atelier"] :is(.stage .copy > .btn, .pnl-d .btn) { background: var(--cta); border-color: var(--cta); color: var(--cta-ink); backdrop-filter: none; -webkit-backdrop-filter: none; }
-[data-theme="atelier"] :is(.stage .copy > .btn, .pnl-d .btn):hover { background: var(--pale); border-color: var(--pale); color: var(--pale-ink); }
+/* Hero and signature-experience CTAs hover like the nav's Enquire and "Plan your event": the fill clears to a champagne
+   outline and text while the sheen sweeps. */
+[data-theme="atelier"] :is(.stage .copy > .btn, .pnl-d .btn, .stage .cta-acts .btn.solid):is(:hover, :focus-visible) { background: transparent; border-color: #D9C4A0; color: #D9C4A0; }
 /* Atelier: the "Exclusively for you" band shares the services mint, with dark ink and brown accents. */
 :root[data-theme="atelier"] .ex-5 { background: #F5FFFB; --bi: #151414; }
 [data-theme="atelier"] .ex-5 .lab, [data-theme="atelier"] .ex-5 .H em { color: var(--sage); }
@@ -997,125 +1032,6 @@ html.js .v2-nav.is-in .v2-thread { transform: none; }
   font-size: 15px; font-weight: 600; letter-spacing: .22em; }
 [data-page="home"] .sec-head > div > .lab::before, [data-page="home"] .sec-head > div > .lab::after { content: ""; width: clamp(32px, 6vw, 88px); height: 1px; background: currentColor; opacity: .45; }
 
-/* Header: links on the left, logo centred, tools on the right. Three columns keep the logo on the true centre. */
-header.site .in { display: grid; grid-template-columns: 1fr auto 1fr; gap: 24px; }
-header.site .in > nav { grid-column: 1; grid-row: 1; justify-self: start; gap: 22px; font-size: 13px; white-space: nowrap; }
-header.site .in > .logo { grid-column: 2; grid-row: 1; text-align: center; }
-header.site .in > .tools { grid-column: 3; grid-row: 1; justify-self: end; }
-/* Below this width the split links no longer fit beside a centred logo, so they move into the menu. */
-@media (max-width: 1100px) {
-  header.site nav { display: none; }
-  .menu-btn { display: inline-flex; align-items: center; }
-}
-/* Phones: no room for a centred logo beside the tools, so it returns to the left. */
-@media (max-width: 640px) {
-  header.site .in { grid-template-columns: auto 1fr; gap: 12px; }
-  header.site .in > .logo { grid-column: 1; text-align: left; }
-  header.site .in > .tools { grid-column: 2; }
-}
-/* Right-hand links sit before the menu button inside the tools group. */
-header.site .tools > .nav-r { gap: 22px; font-size: 13px; white-space: nowrap; margin-right: 4px; }
-/* Link groups gather in towards the centred logo instead of hugging the page edges. */
-header.site .in { gap: clamp(150px, 15vw, 240px); }
-header.site .in > .nav-l { justify-self: end; gap: 30px; }
-header.site .in > .tools { justify-self: stretch; }
-header.site .tools > .nav-r { gap: 30px; margin-right: auto; }
-@media (max-width: 1100px) { header.site .in > .tools { justify-self: end; } }
-@media (max-width: 640px) { header.site .in { gap: 12px; } }
-
-/* Brand key in the header: the key stands between the two words of the name. It draws itself in on load,
-   swings a few degrees from its ring on hover, and the whole mark tightens once the header turns solid. */
-header.site .in { height: 92px; transition: height .6s var(--ease); }
-header.site.scrolled .in { height: 76px; }
-header.site .in > .logo { display: flex; align-items: center; gap: 16px; color: var(--sage-hi); }
-.logo-key { width: 30px; height: 60px; overflow: visible; transform-origin: 50% 8%; transition: transform .9s var(--ease), height .6s var(--ease), width .6s var(--ease); }
-.logo-word { font: 500 15px/1 var(--display); letter-spacing: .26em; text-transform: uppercase; color: var(--bone); white-space: nowrap; }
-.logo-word:last-child { margin-right: -.26em; }
-header.site .logo:hover .logo-key { transform: rotate(-9deg); }
-header.site.scrolled .logo-key { width: 25px; height: 50px; }
-html.js .logo-key :is(path, circle) { stroke-dasharray: 1; stroke-dashoffset: 1; animation: key-in 2.4s cubic-bezier(.45,0,.2,1) .2s both; }
-html.js .logo-key :is(path, circle):nth-child(n+3) { animation-delay: .45s; }
-html.js .logo-key :is(path, circle):nth-child(n+7) { animation-delay: .7s; }
-/* The key draws itself once per visit; later pages in the same session show it already drawn (head script in build.mjs). */
-html.key-drawn .logo-key :is(path, circle) { animation: none; stroke-dashoffset: 0; }
-@media (prefers-reduced-motion: reduce) { html.js .logo-key :is(path, circle) { stroke-dashoffset: 0; } }
-/* Phones: a smaller mark on the left. */
-@media (max-width: 640px) {
-  header.site .in, header.site.scrolled .in { height: 72px; }
-  header.site .in > .logo { gap: 10px; }
-  .logo-word { font-size: 13px; letter-spacing: .2em; }
-  .logo-key, header.site.scrolled .logo-key { width: 19px; height: 38px; }
-}
-
-/* Floating header: scrolling down folds the header to a white capsule with the wordmark and key;
-   the bar, links and tools fade up and away. Scrolling up restores everything (site.js). */
-header.site { transition: background-color .45s var(--ease), border-color .45s var(--ease); }
-header.site .in > :is(.nav-l, .tools) { transition: opacity .45s var(--ease), transform .55s var(--ease), visibility 0s linear 0s; }
-header.site .in > .logo { position: relative; transition: gap .5s var(--ease), background-color .5s var(--ease), box-shadow .5s var(--ease), padding .5s var(--ease), border-color .5s var(--ease); border: 1px solid transparent; border-radius: 999px; }
-.logo-word { transition: font-size .5s var(--ease), color .5s var(--ease); }
-header.site.nav-float { background: transparent; border-bottom-color: transparent; pointer-events: none; }
-header.site.nav-float .in > :is(.nav-l, .tools) { opacity: 0; transform: translateY(-14px); visibility: hidden; transition: opacity .35s var(--ease), transform .45s var(--ease), visibility 0s linear .45s; }
-header.site.nav-float .in > .logo { pointer-events: auto; gap: 10px; padding: 10px 22px; background: var(--smoke); border-color: var(--rail); box-shadow: 0 4px 12px rgba(0,0,0,.06); }
-header.site.nav-float .logo-key { width: 12px; height: 24px; }
-header.site.nav-float .logo-word { font-size: 11px; color: var(--text); }
-/* Stacked brand mark: the key on top, the name on one line beneath it, both centred. */
-header.site .in > .logo { display: grid; grid-template-columns: auto auto; justify-content: center; justify-items: center; align-items: center; column-gap: .55em; row-gap: 6px; }
-header.site .in > .logo > .logo-key { grid-column: 1 / -1; grid-row: 1; }
-header.site .in > .logo > .logo-word { grid-row: 2; }
-header.site .in > .logo > .logo-word:first-child { justify-self: end; }
-header.site .in > .logo > .logo-word:last-child { justify-self: start; }
-/* Larger key: a taller header gives the stacked mark room. */
-header.site .in { height: 116px; }
-header.site.scrolled .in { height: 96px; }
-.logo-key { width: 32px; height: 64px; }
-header.site.scrolled .logo-key { width: 26px; height: 52px; }
-/* Floating capsule: the key returns between the two words on a single line. */
-header.site.nav-float .in > .logo { grid-template-columns: auto auto auto; column-gap: 10px; padding: 10px 22px; border-radius: 999px; }
-header.site.nav-float .in > .logo > .logo-word:first-child { grid-column: 1; grid-row: 1; }
-header.site.nav-float .in > .logo > .logo-key { grid-column: 2; grid-row: 1; }
-header.site.nav-float .in > .logo > .logo-word:last-child { grid-column: 3; grid-row: 1; }
-header.site.nav-float .logo-key { width: 14px; height: 28px; }
-@media (max-width: 640px) {
-  header.site .in, header.site.scrolled .in { height: 84px; }
-  header.site .in > .logo { row-gap: 4px; justify-self: start; }
-  .logo-key, header.site.scrolled .logo-key { width: 20px; height: 40px; }
-  header.site.nav-float .logo-key { width: 12px; height: 24px; }
-}
-/* Notched navbar: a compact floating bar whose top edge dips into a smooth semicircular notch at the centre,
-   cradling the round key emblem, with the name beneath it inside the bar. The bar is a masked layer (.nav-shape):
-   two plain strips either side plus a 98x68 SVG centre piece holding the notch (radius 34, centred 4px below the
-   top edge) and its two 14px fillets, so the curve meets the edge with no corner. The emblem (56px, centred on the
-   notch centre) leaves an even 6px ring. Change the geometry together: --bar-h, the SVG, the emblem size and offset. */
-header.site, .solid-head header.site, header.site.scrolled { background: transparent; border-bottom-color: transparent; padding-top: calc(env(safe-area-inset-top, 0px) + 30px); }
-header.site.scrolled, .solid-head header.site { text-shadow: none; }
-/* Over the home hero, at the very top: no bar, light text on the photo's top shade, as before. The notched bar fades in once the page scrolls. */
-body:not(.solid-head) > header.site:not(.scrolled) { background: linear-gradient(rgba(var(--scrim),.7), transparent) border-box; } /* border-box: the gradient must not repeat under the 1px transparent border as a dark line */
-body:not(.solid-head) > header.site:not(.scrolled) .nav-shape { opacity: 0; }
-header.site .in, header.site.scrolled .in { --bar-h: 68px; position: relative; isolation: isolate; height: var(--bar-h); padding-inline: clamp(16px, 2vw, 32px); }
-.nav-shape { position: absolute; inset: 0; z-index: -1; pointer-events: none; filter: drop-shadow(0px 2px 3px #858585); transition: opacity .35s var(--ease), transform .45s var(--ease); }
-.nav-shape::before { content: ""; position: absolute; inset: 0; border-radius: 6px; background: var(--smoke);
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='98' height='68'%3E%3Cpath d='M0 0H2.05A14 14 0 0 1 15.75 11.08A34 34 0 0 0 82.25 11.08A14 14 0 0 1 95.95 0H98V68H0Z'/%3E%3C/svg%3E") 50% 0 / 98px 68px no-repeat, linear-gradient(#000 0 0) 0 0 / calc(50% - 48px) 100% no-repeat, linear-gradient(#000 0 0) 100% 0 / calc(50% - 48px) 100% no-repeat;
-          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='98' height='68'%3E%3Cpath d='M0 0H2.05A14 14 0 0 1 15.75 11.08A34 34 0 0 0 82.25 11.08A14 14 0 0 1 95.95 0H98V68H0Z'/%3E%3C/svg%3E") 50% 0 / 98px 68px no-repeat, linear-gradient(#000 0 0) 0 0 / calc(50% - 48px) 100% no-repeat, linear-gradient(#000 0 0) 100% 0 / calc(50% - 48px) 100% no-repeat; }
-header.site .in > .logo { align-self: start; margin-top: -24px; row-gap: 10px; }
-header.site .in > .logo > .logo-key, header.site.scrolled .in > .logo > .logo-key { box-sizing: border-box; width: 56px; height: 56px; padding: 6px; border-radius: 50%; background: var(--smoke); transform-origin: 50% 50%; box-shadow: 0 6px 18px rgba(0,0,0,.10); transition: transform .9s var(--ease), background-color .35s var(--ease), box-shadow .35s var(--ease); }
-body:not(.solid-head) > header.site:not(.scrolled) .in > .logo > .logo-key { background-color: transparent; box-shadow: none; }
-/* Over the home hero (no bar yet) the key is drawn large, 36x72 like the intro mark below; it returns to the 56px
-   emblem in the notch once the page scrolls. */
-body:not(.solid-head) > header.site:not(.scrolled) .in > .logo > .logo-key { width: 84px; height: 84px; }
-header.site .in > .logo > .logo-key { transition: transform .9s var(--ease), background-color .35s var(--ease), box-shadow .35s var(--ease), width .5s var(--ease), height .5s var(--ease); }
-/* Floating capsule (scrolled down): the bar and its notch fold away with the links; the capsule is unchanged. */
-header.site.nav-float .nav-shape { opacity: 0; transform: translateY(-14px); }
-/* The capsule rides close to the top edge: 12px below it (plus the safe area), since the bar it sat in is gone. */
-header.site.nav-float .in > .logo { align-self: start; margin-top: -18px; }
-header.site .in > .logo { transition: gap .5s var(--ease), background-color .5s var(--ease), box-shadow .5s var(--ease), padding .5s var(--ease), border-color .5s var(--ease), margin-top .5s var(--ease); }
-header.site.nav-float .in > .logo > .logo-key { width: 14px; height: 28px; padding: 0; border-radius: 0; background: none; box-shadow: none; }
-@media (max-width: 640px) {
-  header.site .in, header.site.scrolled .in { grid-template-columns: 1fr auto 1fr; padding-inline: 12px; }
-  header.site .in > .logo { grid-column: 2; justify-self: center; }
-  header.site .in > .tools { grid-column: 3; }
-  header.site .in > .logo > .logo-word { font-size: 13px; letter-spacing: .2em; }
-  header.site.nav-float .in > .logo > .logo-key { width: 12px; height: 24px; }
-}
 /* About hero matches the journal's featured hero height. */
 .stage.v2-hero { min-height: calc(78svh / var(--vz)); }
 /* Journal listing page shares the services mint ground (the article page keeps white). */
@@ -1231,6 +1147,9 @@ footer.site .in > a { padding-block: 14px; margin-block: -14px; }
 .pnl-more { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin: 22px 0 0 18px; font: 500 14px var(--sans); color: var(--pale, #F4F2EF); border-bottom: 1px solid transparent; }
 .pnl-more:hover { border-bottom-color: currentColor; }
 @media (max-width: 640px) { .pnl-more { margin: 8px 0 0; display: flex; } }
+/* Enquiry band: "Plan in three steps" is the same quiet link as "Discover the service" in the signature panels, beside the main button. */
+.cta-acts .cta-more { margin: 0 0 0 14px; }
+@media (max-width: 640px) { .cta-acts .cta-more { margin: 4px 0 0; } }
 
 /* Plan your stay dialog. */
 dialog.planner { width: min(560px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); padding: 0; border: 1px solid var(--rail); background: var(--smoke); color: var(--text); overflow: auto; }
@@ -1292,17 +1211,6 @@ dialog.planner[open] { animation: pl-in var(--dur-ui, .32s) var(--ease) both; }
 .cta-acts .btn:not(.solid) { background: transparent; border-color: rgba(245,242,235,.6); color: #F5F2EB; backdrop-filter: none; -webkit-backdrop-filter: none; }
 .cta-acts .btn:not(.solid):hover { background: var(--pale, #F4F2EF); border-color: var(--pale, #F4F2EF); color: var(--pale-ink, #151414); }
 
-/* Floating capsule: frosted glass instead of a solid pill. The page shows through, blurred, behind the wordmark;
-   a light top edge and soft inner glow give it the glass highlight. */
-header.site.nav-float .in > .logo {
-  background: linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.32));
-  -webkit-backdrop-filter: blur(22px) saturate(1.8); backdrop-filter: blur(22px) saturate(1.8);
-  border-color: rgba(255,255,255,.6);
-  box-shadow: 0 10px 30px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.7), inset 0 -1px 0 rgba(255,255,255,.18);
-}
-/* backdrop-filter only sees up to the nearest "backdrop root", and view-transition-name makes the header one, which hides
-   the page from the blur. While floating, the header drops it; page transitions then simply fade the capsule with the page. */
-header.site.nav-float { view-transition-name: none; }
 
 /* ---------- Service page hero ----------
    Built by service-page.mjs: the design 9 hero (a rounded inset photograph with a frosted title card); the body below it

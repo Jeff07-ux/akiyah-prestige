@@ -206,27 +206,12 @@
     }));
   });
 
-  // Sticky header: transparent at the top. Scrolling down folds it straight into the floating capsule holding only
-  // the wordmark (no solid bar on the way); scrolling up, pointing near the top or tabbing into it brings the full,
-  // solid header back.
+  // Header: transparent over the hero at the very top, a slim frosted strip once the page scrolls.
   const head = document.querySelector("header.site");
   if (head) {
-    const TOP = 10;
-    let last = window.scrollY;
-    const float = (on) => head.classList.toggle("nav-float", on && !head.contains(document.activeElement));
-    const onScroll = () => {
-      const y = window.scrollY;
-      // Float first, then mark scrolled, so the solid bar never paints between the two states.
-      if (y <= TOP) float(false);
-      else if (y > last + 4 || (last <= TOP && y > last)) float(true); // leaving the top floats at once, even on a slow scroll
-      else if (y < last - 4) float(false);
-      head.classList.toggle("scrolled", y > TOP);
-      last = y;
-    };
+    const onScroll = () => head.classList.toggle("scrolled", window.scrollY > 10);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("mousemove", (e) => { if (e.clientY < 90 && window.scrollY > TOP) float(false); });
-    head.addEventListener("focusin", () => float(false));
   }
 
   // Theme picker: 3 dark and 26 light palettes, remembered per browser.
@@ -286,5 +271,26 @@
     });
     document.addEventListener("click", (e) => { if (!menu.hidden && !e.target.closest(".tools")) setOpen(false); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !menu.hidden) { setOpen(false); themeBtn.focus(); } });
+  }
+
+  // Aliyah Events: the menu link lands with the section centred on screen, not pinned under the header.
+  const events = document.getElementById("events");
+  if (events) {
+    const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Centre on the whole viewport (the header floats over the page), so scrollIntoView's scroll-padding offset is not wanted.
+    const centre = (smooth) => {
+      const r = events.getBoundingClientRect();
+      scrollTo({ top: scrollY + r.top + r.height / 2 - innerHeight / 2, behavior: smooth && !calm ? "smooth" : "instant" });
+    };
+    if (location.hash === "#events") addEventListener("load", () => centre(false), { once: true });
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest('a[href$="#events"]');
+      const path = (p) => p.replace(/index\.html$/, "");
+      if (!a || path(new URL(a.href).pathname) !== path(location.pathname)) return;
+      e.preventDefault();
+      if (document.getElementById("drawer")?.hidden === false) document.querySelector("[data-menu-close]")?.click();
+      centre(true);
+      history.replaceState(null, "", "#events");
+    });
   }
 })();
