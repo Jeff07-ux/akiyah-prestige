@@ -120,7 +120,7 @@ header.site .logo { grid-column: 1; justify-self: start; display: inline-flex; a
 .logo-key { flex: none; width: 22px; height: 44px; overflow: visible; color: var(--hd-champ); transform-origin: 50% 8%; transition: transform .9s var(--ease); }
 header.site .logo:hover .logo-key { transform: rotate(-9deg); }
 /* The name in the hero headline's face: Playfair Display, regular weight, natural case. */
-.logo-word { font: 400 21px/1 var(--display); letter-spacing: -.005em; white-space: nowrap; }
+.logo-word { font: 400 21px/1 var(--display); letter-spacing: .06em; white-space: nowrap; }
 /* Optical alignment: Playfair at 21px sits its baseline about 3px below the 14px Poppins links when both boxes are
    centred, so the name read low. Lifting it .07em puts its lowercase on the links' centre line. */
 header.site .logo-word { transform: translateY(-.07em); }
