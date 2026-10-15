@@ -457,10 +457,7 @@ const HOME = { title: "Aliyah Prestige | Private concierge in Marrakech", page: 
 
 <section class="sec voices" id="voices" aria-labelledby="voices-h">${rails}<div class="inner">
   <div class="sec-head"><div><p class="lab">In their words</p><h2 class="H md" id="voices-h" data-masked-reveal>Trusted since <em>1986</em>.</h2></div><a class="chip" href="about.html">Our story</a></div>
-  <div class="vc" data-qtabs>
-    <div class="vc-panels">${TESTIMONIALS.map(([q, who, role], i) => `<div role="tabpanel" id="vc-q${i}" aria-labelledby="vc-t${i}"${i ? " hidden" : ""}><figure><blockquote>“${q}”</blockquote><figcaption><b>${who}</b>${role}</figcaption></figure></div>`).join("")}</div>
-    <div class="vc-list" role="tablist" aria-label="Guests">${TESTIMONIALS.map(([, who], i) => `<button type="button" role="tab" id="vc-t${i}" aria-controls="vc-q${i}" aria-selected="${i === 0}" tabindex="${i ? -1 : 0}"><img src="${im(AB_T_PICS[i])}" alt="" width="56" height="56" loading="lazy"><span>${who}</span></button>`).join("")}</div>
-  </div>
+  <div class="vc3">${TESTIMONIALS.map(([q, who, role], i) => `<figure data-reveal style="--d:${i * 0.08}s"><div class="stars" role="img" aria-label="5 out of 5 stars">${"<i></i>".repeat(5)}</div><blockquote>“${q}”</blockquote><figcaption><img src="${im(AB_T_PICS[i])}" alt="" width="56" height="56" loading="lazy"><div><b>${who}</b>${role}</div></figcaption></figure>`).join("")}</div>
 </div></section>
 
 <section class="sec flush" id="journal-preview">${rails}<div class="inner">
@@ -522,7 +519,7 @@ page("journal.html", { title: "Journal | Aliyah Prestige", page: "journal", page
   desc: "Guides, places and tables in Marrakech and Morocco, from the Aliyah Prestige concierge.",
   body: `<section class="stage feat"><img src="${im(feat.img)}" alt="Riad courtyard at dusk" data-par>${rails}
   <div class="in">
-  <div class="copy"><p class="lab">The journal · Latest</p><h1 class="H" style="font-size:clamp(40px,5.4vw,88px)" data-masked-reveal>A first evening in the <em>medina</em>.</h1><p>${feat.excerpt}</p><a class="btn" href="post.html">Read the article</a></div>
+  <div class="copy wide"><p class="lab">The journal · Latest</p><h1 class="H" style="font-size:clamp(40px,5.4vw,88px)" data-masked-reveal>A first evening in the <em>medina</em>.</h1><p>${feat.excerpt}</p><a class="btn" href="post.html">Read the article</a></div>
   <div class="side"><div class="meta"><b>${feat.cat}</b><span>${feat.read}</span></div><p style="margin-top:12px">${feat.date}</p></div></div></section>
 <section class="sec">${rails}<div class="inner">
   <div class="sec-head"><div><p class="lab">All articles</p><h2 class="H md" data-masked-reveal>Notes from <em>Morocco</em>.</h2></div>
@@ -826,7 +823,7 @@ ${abSwitch(1)}` });
 
 // 2. Chapters: full-bleed photo hero, sticky chapter index beside scrolling chapters, quotes over a photo.
 const ABOUT_2 = `<section class="stage v2-hero">${abImg("riad2", "Riad courtyard in Marrakech", true)}<div class="in">
-  <div class="copy wide"><h1 class="H" data-masked-reveal>A bespoke experience in <em>Marrakech</em>.</h1>
+  <div class="copy wide"><h1 class="H" style="font-size:clamp(40px,5.4vw,88px)" data-masked-reveal>A bespoke experience in <em>Marrakech</em>.</h1>
     <p data-reveal>A refined concierge service, opening the doors to Marrakech's hidden treasures.</p></div>
   <p class="v2-meta" data-reveal style="--d:.2s">Since <em>1986</em></p></div></section>
 
