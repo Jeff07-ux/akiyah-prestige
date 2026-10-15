@@ -6,7 +6,7 @@
 // the label in bold with the detail beneath. Text is plain: build.mjs escapes it.
 export const SERVICES = [
   {
-    slug: "private-jet-charter", img: "jet", pic: "jetseat", kicker: "Arrivals",
+    slug: "private-jet-charter", img: "jet-tarmac", pic: "jet-cabin", kicker: "Arrivals",
     card: "Luxury Private Jet Charter", line: "To and from Morocco, and between its cities.",
     title: "Private jet charter to and from <em>Morocco</em>.",
     name: "Private Jet Charter", serviceType: "Private jet charter",
@@ -87,7 +87,7 @@ export const SERVICES = [
     ],
   },
   {
-    slug: "luxury-villas-riads-hotels", img: "riad3", pic: "villa-dusk", kicker: "Stays",
+    slug: "luxury-villas-riads-hotels", img: "riad-pool", pic: "villa-pool-dusk", kicker: "Stays",
     card: "Private Villa, Hotels & Riad Bookings", line: "Villas, riads and 5-star hotels, chosen for you.",
     title: "Private villas and luxury stays in <em>Marrakech</em>.",
     name: "Private Villas and Luxury Stays", serviceType: "Luxury accommodation booking",
@@ -121,7 +121,7 @@ export const SERVICES = [
     ],
   },
   {
-    slug: "private-chef-gastronomy", img: "tagine", pic: "tajines", kicker: "Gastronomy",
+    slug: "private-chef-gastronomy", img: "chef-plating", pic: "chef-smoke", kicker: "Gastronomy",
     card: "Personal Chefs & Gastronomy", line: "An authentic Moroccan culinary journey.",
     title: "Gastronomy and fine dining in <em>Marrakech</em>.",
     name: "Gastronomy and Fine Dining", serviceType: "Private chef and restaurant reservations",
@@ -151,7 +151,7 @@ export const SERVICES = [
     ],
   },
   {
-    slug: "wellness-spa", img: "hammam", pic: "ap/riad-salon", kicker: "Wellness",
+    slug: "wellness-spa", img: "hammam-marble", pic: "spa-candles", kicker: "Wellness",
     card: "Wellness & Spa Rituals", line: "A sanctuary of Moroccan serenity.",
     title: "Wellness and spa <em>rituals</em>.",
     name: "Wellness and Spa", serviceType: "Spa and wellness experiences",
@@ -184,7 +184,7 @@ export const SERVICES = [
     ],
   },
   {
-    slug: "private-cultural-tours", img: "bahia", pic: "medina-arch", kicker: "Experiences",
+    slug: "private-cultural-tours", img: "bahia-court", pic: "carved-arch", kicker: "Experiences",
     card: "Private Cultural Experiences", line: "Tailored excursions and cultural journeys.",
     title: "Private tours and bespoke cultural <em>experiences</em>.",
     name: "Private Tours and Cultural Experiences", serviceType: "Private guided tours",
@@ -219,7 +219,7 @@ export const SERVICES = [
     ],
   },
   {
-    slug: "luxury-event-planner", img: "wedding-reception", pic: "ap/agafay-dinner", kicker: "Aliyah Events",
+    slug: "luxury-event-planner", img: "garden-banquet", pic: "wedding-pavilion", kicker: "Aliyah Events",
     card: "Luxury Events Planner", line: "Weddings, celebrations and corporate events.",
     title: "Luxury event planner in Marrakech and <em>Morocco</em>.",
     name: "Luxury Event Planner", serviceType: "Event planning",
@@ -271,7 +271,7 @@ export const SERVICES = [
     ],
   },
   {
-    slug: "chauffeur-transportation", img: "car", pic: "ap/palms", kicker: "Arrivals",
+    slug: "chauffeur-transportation", img: "chauffeur-van", pic: "chauffeur-door", kicker: "Arrivals",
     card: "Luxury Transportation & Chauffeurs", line: "From arrival to departure, one private driver.",
     title: "A tailor-made journey from arrival to <em>departure</em>.",
     name: "Luxury Transportation and Chauffeurs", serviceType: "Chauffeur and VIP airport service",
@@ -303,7 +303,7 @@ export const SERVICES = [
     ],
   },
   {
-    slug: "private-souk-shopping", img: "tajines", pic: "lanterns", kicker: "Medina",
+    slug: "private-souk-shopping", img: "souk-lanterns", pic: "souk-stalls", kicker: "Medina",
     card: "Privatised Souk Experience & Personal Curation", line: "Moroccan treasures, without the chaos.",
     title: "Private souk experience and personal <em>shopping</em>.",
     name: "Private Souk Experience and Personal Shopping", serviceType: "Personal shopping",
@@ -335,7 +335,7 @@ export const SERVICES = [
     ],
   },
   {
-    slug: "desert-atlas-escapes", img: "agafay", pic: "desertcamp", kicker: "Desert & Atlas",
+    slug: "desert-atlas-escapes", img: "dunes", pic: "desert-tent", kicker: "Desert & Atlas",
     card: "Desert & Atlas Escapes", line: "Where dreams of the desert and mountains come alive.",
     title: "Desert and Atlas <em>escapes</em>.",
     name: "Desert and Atlas Escapes", serviceType: "Private desert and mountain excursions",
@@ -380,7 +380,7 @@ export const SERVICES = [
     ],
   },
   {
-    slug: "private-concierge-24-7", img: "rooftop", pic: "riad", kicker: "Concierge",
+    slug: "private-concierge-24-7", img: "medina-night", pic: "rooftops", kicker: "Concierge",
     card: "24/7 Discreet Personal Assistance", line: "Your peace of mind, our signature service.",
     title: "24/7 private concierge <em>assistance</em>.",
     name: "24/7 Private Concierge Assistance", serviceType: "Private concierge service",

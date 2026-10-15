@@ -51,6 +51,30 @@
    816
   ]
  },
+ "img/atlas-helicopter.jpg": {
+  "w": 2400,
+  "h": 1600,
+  "base": "img/opt/atlas-helicopter",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/atlas-snow.jpg": {
+  "w": 2400,
+  "h": 3313,
+  "base": "img/opt/atlas-snow",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
  "img/atlas.jpg": {
   "w": 1920,
   "h": 1280,
@@ -73,6 +97,18 @@
    1200,
    1600,
    1920
+  ]
+ },
+ "img/bahia-court.jpg": {
+  "w": 2400,
+  "h": 1601,
+  "base": "img/opt/bahia-court",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
   ]
  },
  "img/bahia.jpg": {
@@ -123,6 +159,18 @@
    1920
   ]
  },
+ "img/camp-fire.jpg": {
+  "w": 2400,
+  "h": 1488,
+  "base": "img/opt/camp-fire",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
  "img/car.jpg": {
   "w": 1920,
   "h": 1281,
@@ -135,6 +183,102 @@
    1920
   ]
  },
+ "img/carved-arch.jpg": {
+  "w": 2400,
+  "h": 3092,
+  "base": "img/opt/carved-arch",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/chauffeur-door.jpg": {
+  "w": 2400,
+  "h": 1602,
+  "base": "img/opt/chauffeur-door",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/chauffeur-suv.jpg": {
+  "w": 2400,
+  "h": 1347,
+  "base": "img/opt/chauffeur-suv",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/chauffeur-van.jpg": {
+  "w": 2400,
+  "h": 1600,
+  "base": "img/opt/chauffeur-van",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/chef-plating.jpg": {
+  "w": 2400,
+  "h": 3600,
+  "base": "img/opt/chef-plating",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/chef-smoke.jpg": {
+  "w": 2400,
+  "h": 1601,
+  "base": "img/opt/chef-smoke",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/cooking-hands.jpg": {
+  "w": 2400,
+  "h": 3600,
+  "base": "img/opt/cooking-hands",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/desert-tent.jpg": {
+  "w": 2400,
+  "h": 1592,
+  "base": "img/opt/desert-tent",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
  "img/desertcamp.jpg": {
   "w": 1024,
   "h": 576,
@@ -143,6 +287,18 @@
    480,
    800,
    1024
+  ]
+ },
+ "img/dunes.jpg": {
+  "w": 2400,
+  "h": 3600,
+  "base": "img/opt/dunes",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
   ]
  },
  "img/essaouira.jpg": {
@@ -155,6 +311,90 @@
    1200,
    1600,
    1920
+  ]
+ },
+ "img/events-ballroom.jpg": {
+  "w": 3200,
+  "h": 2133,
+  "base": "img/opt/events-ballroom",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/events-banquet.jpg": {
+  "w": 2400,
+  "h": 1602,
+  "base": "img/opt/events-banquet",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/events-gala.jpg": {
+  "w": 2400,
+  "h": 1600,
+  "base": "img/opt/events-gala",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/events-reception.jpg": {
+  "w": 3200,
+  "h": 2129,
+  "base": "img/opt/events-reception",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/events-table.jpg": {
+  "w": 3200,
+  "h": 2136,
+  "base": "img/opt/events-table",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/garden-banquet.jpg": {
+  "w": 2400,
+  "h": 1601,
+  "base": "img/opt/garden-banquet",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/hammam-marble.jpg": {
+  "w": 2400,
+  "h": 2400,
+  "base": "img/opt/hammam-marble",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
   ]
  },
  "img/hammam.jpg": {
@@ -218,6 +458,30 @@
    1920
   ]
  },
+ "img/jet-cabin.jpg": {
+  "w": 2400,
+  "h": 1800,
+  "base": "img/opt/jet-cabin",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/jet-tarmac.jpg": {
+  "w": 2400,
+  "h": 3200,
+  "base": "img/opt/jet-tarmac",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
  "img/jet.jpg": {
   "w": 1920,
   "h": 1440,
@@ -265,6 +529,18 @@
    1600
   ]
  },
+ "img/medina-night.jpg": {
+  "w": 2400,
+  "h": 1600,
+  "base": "img/opt/medina-night",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
  "img/ouzoud.jpg": {
   "w": 1920,
   "h": 1281,
@@ -275,6 +551,18 @@
    1200,
    1600,
    1920
+  ]
+ },
+ "img/riad-pool.jpg": {
+  "w": 2400,
+  "h": 3200,
+  "base": "img/opt/riad-pool",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
   ]
  },
  "img/riad.jpg": {
@@ -322,6 +610,78 @@
    1200,
    1600,
    1920
+  ]
+ },
+ "img/rooftops.jpg": {
+  "w": 2400,
+  "h": 3200,
+  "base": "img/opt/rooftops",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/secret-garden.jpg": {
+  "w": 2400,
+  "h": 3600,
+  "base": "img/opt/secret-garden",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/souk-alley.jpg": {
+  "w": 2400,
+  "h": 3200,
+  "base": "img/opt/souk-alley",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/souk-lanterns.jpg": {
+  "w": 2400,
+  "h": 3200,
+  "base": "img/opt/souk-lanterns",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/souk-stalls.jpg": {
+  "w": 2400,
+  "h": 1524,
+  "base": "img/opt/souk-stalls",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/spa-candles.jpg": {
+  "w": 2400,
+  "h": 3600,
+  "base": "img/opt/spa-candles",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
   ]
  },
  "img/t-delauro.jpg": {
@@ -376,6 +736,30 @@
   "w": 3893,
   "h": 2848,
   "base": "img/opt/villa-dusk",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/villa-pool-dusk.jpg": {
+  "w": 2400,
+  "h": 1601,
+  "base": "img/opt/villa-pool-dusk",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ]
+ },
+ "img/wedding-pavilion.jpg": {
+  "w": 2400,
+  "h": 1600,
+  "base": "img/opt/wedding-pavilion",
   "widths": [
    480,
    800,

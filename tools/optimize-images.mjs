@@ -18,7 +18,7 @@ const WIDTHS = [480, 800, 1200, 1600, 2400];
 const QUALITY = 80; // WebP quality: no visible loss on these photos at roughly a quarter of the JPEG weight
 // Files in img/ that no page uses (logo source, duplicates, uploads kept as originals); not worth shipping variants for.
 // "Palais marocain au bord de l’eau.png" is used through its copy hero-palais.png (the home hero).
-const SKIP = new Set(["IMG_9832.PNG", "508760777.jpg.jpeg", "Palais marocain au bord de l’eau.png", "logo-512.png", "image.png", "image1.png", "image2.png", "a_different_perspective-marrakech-4500910_1920.jpg", "hero-palms.jpg"]);
+const SKIP = new Set(["pexels-jonathanborba-35985212.jpg", "pexels-jonathanborba-35985242.jpg", "pexels-bertellifotografia-16120220.jpg", "IMG_9832.PNG", "508760777.jpg.jpeg", "Palais marocain au bord de l’eau.png", "logo-512.png", "image.png", "image1.png", "image2.png", "a_different_perspective-marrakech-4500910_1920.jpg", "hero-palms.jpg"]);
 // Per-photo tuning for full-screen heroes whose source is smaller than a 2x screen needs: Lanczos upscaling, a light
 // unsharp mask to restore edge crispness, wider variants and a higher WebP quality. Everything else uses the defaults.
 const TUNE = {

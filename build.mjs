@@ -265,12 +265,12 @@ const AB_T_PICS = ["t-delauro", "t-whiteman", "t-gold"];
 
 // ---------- Home ----------
 const SIGNATURE = [
-  ["atlas", "Helicopter over the Atlas", "Lift off from Marrakech, land for lunch in a Berber valley, and be back before the evening call to prayer.", "Atlas", "desert-atlas-escapes"],
-  ["desertcamp", "Dinner under the stars", "A table for two in the Agafay, lit by lanterns only. Your chef cooks over embers.", "Agafay", "desert-atlas-escapes"],
-  ["tajines", "Exclusive souk access", "Workshops opened for you before the medina wakes: a lantern maker, a leather worker, a weaver.", "Medina", "private-souk-shopping"],
-  ["tagine", "Cooking class", "A family kitchen and recipes kept for generations, then lunch at the table you cooked for.", "Medina", "private-chef-gastronomy"],
-  ["riad", "The secret garden", "A private hour in a walled garden, closed to others.", "Medina", "private-cultural-tours"],
-  ["car", "Private chauffeur", "The same driver for your whole stay, day and night.", "Everywhere", "chauffeur-transportation"],
+  ["atlas-helicopter", "Helicopter over the Atlas", "Lift off from Marrakech, land for lunch in a Berber valley, and be back before the evening call to prayer.", "Atlas", "desert-atlas-escapes"],
+  ["camp-fire", "Dinner under the stars", "A table for two in the Agafay, lit by lanterns only. Your chef cooks over embers.", "Agafay", "desert-atlas-escapes"],
+  ["souk-alley", "Exclusive souk access", "Workshops opened for you before the medina wakes: a lantern maker, a leather worker, a weaver.", "Medina", "private-souk-shopping"],
+  ["cooking-hands", "Cooking class", "A family kitchen and recipes kept for generations, then lunch at the table you cooked for.", "Medina", "private-chef-gastronomy"],
+  ["secret-garden", "The secret garden", "A private hour in a walled garden, closed to others.", "Medina", "private-cultural-tours"],
+  ["chauffeur-suv", "Private chauffeur", "The same driver for your whole stay, day and night.", "Everywhere", "chauffeur-transportation"],
 ];
 // ---------- "Exclusively for you": three promises, five layout variants ----------
 // Home uses EX_VARIANT; sections.html shows all five for comparison.
@@ -422,8 +422,8 @@ const HOME = { title: "Aliyah Prestige | Private concierge in Marrakech", page: 
   </div>
 </div></div>
 <section class="events" id="events" aria-labelledby="events-h">
-  <!-- Photo: Unsplash (free licence), photo-1766393524464. Replace with the client's own event photography. -->
-  <img src="${im("wedding-reception")}" alt="Wedding reception tables under palm trees at night" data-par>
+  <!-- Photo: Pexels (free licence), Jonathan Borba, photo 35985212. Replace with the client's own event photography. -->
+  <img src="${im("events-table")}" alt="Dark velvet reception table with white flowers, moss and candles, surrounded by rattan chairs">
   ${rails}
   <div class="ev-c">
     <span class="pill" data-reveal><b></b>New · Weddings &amp; celebrations</span>
