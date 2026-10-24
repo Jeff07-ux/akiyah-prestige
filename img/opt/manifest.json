@@ -434,6 +434,18 @@
    3200
   ]
  },
+ "img/hero-video-frame.jpg": {
+  "w": 1920,
+  "h": 1080,
+  "base": "img/opt/hero-video-frame",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   1920
+  ]
+ },
  "img/imlil.jpg": {
   "w": 1920,
   "h": 1020,

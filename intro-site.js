@@ -15,13 +15,24 @@
     '<p class="ix-name" aria-label="Aliyah Prestige">' + words + '</p><p class="ix-sub">Marrakech · Private concierge</p></div><button class="ix-skip" type="button">Skip</button>';
   document.body.appendChild(el);
   d.style.overflow = "hidden";
+  d.setAttribute("data-intro-playing", "");
   d.classList.remove("intro-pending");
-  var done = false, timer = setTimeout(end, 3700);
+  // After 3.7 s the doors open, unless the page asked to wait (html[data-intro-hold], set by the hero video
+  // while it loads): then they open on "aliyah:intro-ready", or at 9 s at the latest.
+  var done = false, timer = setTimeout(function () {
+    if (!d.hasAttribute("data-intro-hold")) return end();
+    document.addEventListener("aliyah:intro-ready", end, { once: true });
+    timer = setTimeout(end, 5300);
+  }, 3700);
   function end() {
     if (done) return;
     done = true;
     clearTimeout(timer);
     el.classList.add("out");
+    // The doors start to open: anything waiting for the page to be revealed (the hero video) starts now.
+    d.removeAttribute("data-intro-playing");
+    d.removeAttribute("data-intro-hold");
+    document.dispatchEvent(new CustomEvent("aliyah:intro-open"));
     setTimeout(function () { el.remove(); d.style.overflow = ""; }, 1100);
   }
   el.querySelector(".ix-skip").addEventListener("click", end);

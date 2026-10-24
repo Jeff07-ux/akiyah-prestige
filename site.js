@@ -127,7 +127,7 @@
     const wa = cta.getAttribute("href").split("?")[0];
     function show(fig) {
       const list = visible(); i = list.indexOf(fig);
-      img.src = fig.querySelector("img").src; img.alt = fig.querySelector("img").alt;
+      img.src = fig.querySelector("img").src; img.alt = fig.querySelector("img").alt; img.hidden = false;
       pos.textContent = `${String(i + 1).padStart(2, "0")} / ${String(list.length).padStart(2, "0")} · ${fig.dataset.title}`;
       txt.textContent = fig.dataset.text;
       cta.textContent = "Arrange this";

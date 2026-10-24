@@ -8,7 +8,7 @@ export const SERVICES = [
   {
     slug: "private-jet-charter", img: "jet-tarmac", pic: "jet-cabin", kicker: "Arrivals",
     card: "Luxury Private Jet Charter", line: "To and from Morocco, and between its cities.",
-    title: "Private jet charter to and from <em>Morocco</em>.",
+    title: "Private jet charter to Marrakech and across <em>Morocco</em>.",
     name: "Private Jet Charter", serviceType: "Private jet charter",
     plan: "Private jet",
     day: [
@@ -123,13 +123,13 @@ export const SERVICES = [
   {
     slug: "private-chef-gastronomy", img: "chef-plating", pic: "chef-smoke", kicker: "Gastronomy",
     card: "Personal Chefs & Gastronomy", line: "An authentic Moroccan culinary journey.",
-    title: "Gastronomy and fine dining in <em>Marrakech</em>.",
-    name: "Gastronomy and Fine Dining", serviceType: "Private chef and restaurant reservations",
+    title: "Private chefs and fine dining in <em>Marrakech</em>.",
+    name: "Private Chef and Fine Dining", serviceType: "Private chef and restaurant reservations",
     plan: "Fine dining",
     day: [
       ["Morning","Market with your chef","A walk through the spice stalls to choose the day's ingredients together."],
       ["Midday","Cooking class at home","Hands-on with the family recipes: tagine, salads, pastries, then lunch at the table you set."],
-      ["Afternoon","Rest","The kitchen cleared, the house quiet, nothing to organise."],
+      ["Afternoon","Time to rest","The kitchen cleared, the house quiet, nothing to organise."],
       ["Evening","The right table","Priority access to one of the city's sought-after dining rooms, or a candlelit dinner in a hidden riad."],
       ["Late","Under the stars","On another night, a desert banquet with Andalusian musicians."],
     ],
@@ -153,7 +153,7 @@ export const SERVICES = [
   {
     slug: "wellness-spa", img: "hammam-marble", pic: "spa-candles", kicker: "Wellness",
     card: "Wellness & Spa Rituals", line: "A sanctuary of Moroccan serenity.",
-    title: "Wellness and spa <em>rituals</em>.",
+    title: "Wellness and spa rituals in <em>Marrakech</em>.",
     name: "Wellness and Spa", serviceType: "Spa and wellness experiences",
     plan: "Wellness & spa",
     day: [
@@ -186,7 +186,7 @@ export const SERVICES = [
   {
     slug: "private-cultural-tours", img: "bahia-court", pic: "carved-arch", kicker: "Experiences",
     card: "Private Cultural Experiences", line: "Tailored excursions and cultural journeys.",
-    title: "Private tours and bespoke cultural <em>experiences</em>.",
+    title: "Private tours and cultural experiences in <em>Marrakech</em>.",
     name: "Private Tours and Cultural Experiences", serviceType: "Private guided tours",
     plan: "Cultural tours",
     day: [
@@ -202,7 +202,7 @@ export const SERVICES = [
       ["p", "At Aliyah Prestige, we believe that true luxury lies in the unexpected and the unforgettable. Our private tours in Marrakech are not simply sightseeing itineraries; they are curated cultural journeys, entirely designed around your interests, passions, and pace."],
       ["p", "From the vibrant souks of the Medina to the serene beauty of the Majorelle Garden, from secret palaces to lesser-known museums, we craft tailor-made Morocco travel experiences that unveil the most authentic and elegant side of Marrakech. Whether you are a history lover, art enthusiast, or a seeker of hidden gems, your itinerary is exclusively built to surprise and delight."],
       ["p", "Every experience is guided by a certified, multilingual local expert, available 24/7, whose only mission is to bring Marrakech alive just for you. Your guide doesn’t just explain; they unlock doors, literally and figuratively, to places and people inaccessible to the general public."],
-      ["h2", "Indulge in"],
+      ["h2", "What your private tour can include"],
       ["ul", [
         "Private museum visits in Marrakech with curated commentary",
         "Exclusive access to monuments, historical sites and gardens",
@@ -273,7 +273,7 @@ export const SERVICES = [
   {
     slug: "chauffeur-transportation", img: "chauffeur-van", pic: "chauffeur-door", kicker: "Arrivals",
     card: "Luxury Transportation & Chauffeurs", line: "From arrival to departure, one private driver.",
-    title: "A tailor-made journey from arrival to <em>departure</em>.",
+    title: "Private chauffeurs in Marrakech, from arrival to <em>departure</em>.",
     name: "Luxury Transportation and Chauffeurs", serviceType: "Chauffeur and VIP airport service",
     plan: "Chauffeur",
     day: [
@@ -305,7 +305,7 @@ export const SERVICES = [
   {
     slug: "private-souk-shopping", img: "souk-lanterns", pic: "souk-stalls", kicker: "Medina",
     card: "Privatised Souk Experience & Personal Curation", line: "Moroccan treasures, without the chaos.",
-    title: "Private souk experience and personal <em>shopping</em>.",
+    title: "Private souk experience and personal shopping in <em>Marrakech</em>.",
     name: "Private Souk Experience and Personal Shopping", serviceType: "Personal shopping",
     plan: "Cultural tours",
     day: [
@@ -320,7 +320,7 @@ export const SERVICES = [
     blocks: [
       ["p", "Step into the soul of Marrakech through its legendary souks and artisanal boutiques, but not as a tourist. As a guest of Aliyah Prestige, you are guided through a curated, exclusive personal shopping journey designed to elevate your experience while eliminating the stress, uncertainty, and pressure too often associated with traditional markets."],
       ["p", "Our VIP shopping concierge service pairs you with a local expert and negotiator, fluent in languages and in the art of tasteful curation. You skip the tourist traps and are ushered directly into reputable workshops, private ateliers, and trusted artisan studios, many of which are not open to the public."],
-      ["h2", "Whether you are looking for"],
+      ["h2", "What we can find for you in the souks"],
       ["ul", [
         "Handwoven Berber rugs with heritage provenance",
         "Antique lanterns, ceramics, and carved woodwork",
@@ -337,7 +337,7 @@ export const SERVICES = [
   {
     slug: "desert-atlas-escapes", img: "dunes", pic: "desert-tent", kicker: "Desert & Atlas",
     card: "Desert & Atlas Escapes", line: "Where dreams of the desert and mountains come alive.",
-    title: "Desert and Atlas <em>escapes</em>.",
+    title: "Desert and Atlas escapes from <em>Marrakech</em>.",
     name: "Desert and Atlas Escapes", serviceType: "Private desert and mountain excursions",
     plan: "Desert & Atlas",
     day: [
@@ -382,7 +382,7 @@ export const SERVICES = [
   {
     slug: "private-concierge-24-7", img: "medina-night", pic: "rooftops", kicker: "Concierge",
     card: "24/7 Discreet Personal Assistance", line: "Your peace of mind, our signature service.",
-    title: "24/7 private concierge <em>assistance</em>.",
+    title: "24/7 private concierge in <em>Marrakech</em>.",
     name: "24/7 Private Concierge Assistance", serviceType: "Private concierge service",
     plan: "",
     day: [

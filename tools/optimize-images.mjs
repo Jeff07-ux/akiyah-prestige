@@ -22,6 +22,8 @@ const SKIP = new Set(["pexels-jonathanborba-35985212.jpg", "pexels-jonathanborba
 // Per-photo tuning for full-screen heroes whose source is smaller than a 2x screen needs: Lanczos upscaling, a light
 // unsharp mask to restore edge crispness, wider variants and a higher WebP quality. Everything else uses the defaults.
 const TUNE = {
+  // Start frame of the home hero video: it sits under the video and must match it closely, so it keeps more detail.
+  "hero-video-frame.jpg": { quality: 92 },
   "hero-palais.png": { quality: 86, widths: [480, 800, 1200, 1600, 2400, 3200], enlarge: true, sharpen: { sigma: 0.9, m1: 0.6, m2: 2.5 } },
 };
 const force = process.argv.includes("--force");
@@ -43,7 +45,7 @@ for (const dir of SRC_DIRS) {
     const tune = TUNE[file];
     const widths = WIDTHS.filter((x) => x < w);
     if (!widths.length || w <= 2400) widths.push(Math.min(w, 2400));
-    const variants = tune ? tune.widths : [...new Set(widths)].sort((a, b) => a - b);
+    const variants = tune?.widths ?? [...new Set(widths)].sort((a, b) => a - b);
     for (const vw of variants) {
       const out = `${OUT}/${base}-${vw}.webp`;
       if (!force && existsSync(out) && statSync(out).mtimeMs > statSync(src).mtimeMs) continue;

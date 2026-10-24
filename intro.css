@@ -139,5 +139,104 @@
 .ix-10.out .ix-half:first-child { transform: translateY(-100%); } .ix-10.out .ix-half:nth-child(2) { transform: translateY(100%); }
 .ix-10.out .ix-stage, .ix-10.out .ix-hz, .ix-10.out .ix-skip { opacity: 0; transition: opacity .35s ease; }
 
+/* 11 to 20. Gold line, richer: the same intro as design 1 (key drawn in gold on a hairline, name rising letter by letter,
+   black doors parting) with added flourishes. intro.js gives them the shared class .ix-gl. Effects animate on inner
+   elements, so the .out fade on the .ix-fx wrappers is not overridden by a running animation. */
+.ix-gl { --kh: clamp(110px, 24vh, 200px); background: transparent; }
+.ix-gl .ix-key { height: var(--kh); filter: drop-shadow(0 0 10px rgba(217,196,143,.45)); }
+.ix-gl .ix-name .l { text-shadow: 0 0 18px rgba(217,196,143,.35); }
+.ix-gl .ix-door { position: absolute; top: 0; bottom: 0; width: 50.2%; background: var(--ix-bg); transition: transform 1.1s cubic-bezier(.77,0,.18,1); }
+.ix-gl .ix-door.l { left: 0; } .ix-gl .ix-door.r { right: 0; }
+.ix-gl .ix-stage::before { content: ""; position: absolute; left: 50%; top: -12vh; bottom: -12vh; width: 1px; background: linear-gradient(transparent, var(--ix-gold), transparent); transform: scaleY(0); animation: ix-line 1.4s var(--ix-e) .1s forwards; opacity: .55; }
+.ix-gl .ix-fx { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.ix-gl.out .ix-door.l { transform: translateX(-100%); } .ix-gl.out .ix-door.r { transform: translateX(100%); }
+.ix-gl.out .ix-stage, .ix-gl.out .ix-skip, .ix-gl.out .ix-fx, .ix-gl.out .ix-sheen { opacity: 0; transition: opacity .35s ease; }
+@keyframes ixg-sx { to { transform: none; } }
+@keyframes ixg-pop { to { transform: rotate(45deg) scale(1); } }
+
+/* Shared parts. Seam: a soft flare of light that opens from the centre line as the doors part. */
+.ix-gl .ix-seam { position: absolute; z-index: 1; top: 0; bottom: 0; left: 50%; width: 80px; margin-left: -40px; pointer-events: none; opacity: 0; transform: scaleX(.03);
+  background: radial-gradient(50% 50% at 50% 50%, rgba(255,247,226,.95), rgba(217,196,143,.4) 45%, transparent 100%); }
+.ix-gl.out .ix-seam { animation: ixg-flare 1.1s cubic-bezier(.3,0,.2,1) forwards; }
+@keyframes ixg-flare { 0% { opacity: 0; transform: scaleX(.03); } 20% { opacity: 1; transform: scaleX(.5); } 100% { opacity: 0; transform: scaleX(8); } }
+/* Lit door edges: a glowing gold line on the inner edge of each door. */
+.ix-11 .ix-door::after, .ix-20 .ix-door::after { content: ""; position: absolute; top: 0; bottom: 0; width: 1px; opacity: 0; animation: ix-fade 1.2s ease .3s forwards;
+  background: linear-gradient(transparent, var(--ix-gold) 25%, var(--ix-gold-hi) 50%, var(--ix-gold) 75%, transparent); box-shadow: 0 0 16px 2px rgba(217,196,143,.45); }
+.ix-11 .ix-door.l::after, .ix-20 .ix-door.l::after { right: 0; } .ix-11 .ix-door.r::after, .ix-20 .ix-door.r::after { left: 0; }
+/* Sheen: a band of light that brightens only the gold (colour-dodge leaves the black untouched). */
+.ix-gl .ix-sheen { position: absolute; inset: 0; z-index: 3; pointer-events: none; mix-blend-mode: color-dodge; transform: translateX(-110%);
+  background: linear-gradient(105deg, transparent 38%, rgba(255,244,214,.85) 50%, transparent 62%); animation: ixg-sweep 1.5s cubic-bezier(.45,0,.25,1) 2.5s forwards; }
+@keyframes ixg-sweep { to { transform: translateX(110%); } }
+/* Gold dust drifting upward. */
+.ix-dust { position: absolute; inset: 0; opacity: 0; animation: ix-fade 1.4s ease .2s forwards; }
+.ix-dust i { position: absolute; left: var(--x); bottom: -12px; width: var(--s); height: var(--s); border-radius: 50%; opacity: 0; animation: ixg-rise var(--t) linear var(--d) infinite;
+  background: radial-gradient(circle, var(--ix-gold-hi), rgba(217,196,143,.6) 45%, transparent 70%); }
+@keyframes ixg-rise { 0% { opacity: 0; transform: translate(0, 0); } 15%, 80% { opacity: var(--o); } 100% { opacity: 0; transform: translate(var(--dx), -105vh); } }
+/* Glint: a four-point star that flashes on the ring at the top of the key. */
+.ix-glint { position: absolute; left: 50%; top: calc(var(--kh) * .083); width: calc(var(--kh) * .44); aspect-ratio: 1; margin: calc(var(--kh) * -.22) 0 0 calc(var(--kh) * -.22); pointer-events: none; opacity: 0;
+  background: radial-gradient(circle, #fff 0 3%, rgba(246,235,200,.55) 9%, transparent 28%), linear-gradient(90deg, transparent, rgba(255,250,235,.95) 50%, transparent) center / 100% 1.5px no-repeat,
+  linear-gradient(transparent, rgba(255,250,235,.95) 50%, transparent) center / 1.5px 100% no-repeat; animation: ixg-glint 1.3s ease-out 2.2s forwards; }
+@keyframes ixg-glint { 0% { opacity: 0; transform: scale(0) rotate(0); } 35% { opacity: 1; transform: scale(1) rotate(45deg); } 100% { opacity: 0; transform: scale(.2) rotate(120deg); } }
+/* Halo and ring around the key. */
+.ix-halo { position: absolute; z-index: -1; left: 50%; top: calc(var(--kh) / 2); width: calc(var(--kh) * 2.6); aspect-ratio: 1; border-radius: 50%; opacity: 0; transform: translate(-50%, -50%) scale(.6);
+  background: radial-gradient(circle, rgba(217,196,143,.24), rgba(217,196,143,.08) 40%, transparent 68%); animation: ixg-halo 2.4s var(--ix-e) .4s forwards, ixg-breathe 3.2s ease-in-out 2.8s infinite alternate; }
+@keyframes ixg-halo { to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+@keyframes ixg-breathe { from { opacity: 1; transform: translate(-50%, -50%) scale(1); } to { opacity: .7; transform: translate(-50%, -50%) scale(1.1); } }
+.ix-ring { position: absolute; left: 50%; top: calc(var(--kh) / 2); width: calc(var(--kh) * 1.25); height: calc(var(--kh) * 1.25); transform: translate(-50%, -50%) rotate(-90deg); overflow: visible; fill: none; stroke: var(--ix-gold); pointer-events: none; }
+.ix-ring .a { stroke-width: .55; stroke-opacity: .65; stroke-dasharray: 1; stroke-dashoffset: 1; animation: ix-draw 2.4s var(--ix-e) .2s forwards; }
+.ix-ring .b { stroke-width: .9; stroke-opacity: .45; stroke-dasharray: .002 .018; stroke-linecap: round; opacity: 0; transform-box: fill-box; transform-origin: center; animation: ix-fade 1.2s ease 1.2s forwards, ixg-spin 30s linear infinite; }
+@keyframes ixg-spin { to { transform: rotate(360deg); } }
+
+/* 11. Gilded seam: lit gold door edges; a flare of light opens from the seam. */
+/* 12. Gold dust: drifting dust and a glint on the key (parts above). */
+/* 13. Halo: glow, ring and dotted orbit (parts above). */
+/* 14. Moorish arch: a double horseshoe arch drawn from both sides to meet above the key. */
+.ix-arch { position: absolute; left: 50%; top: calc(var(--kh) * -.186); width: calc(var(--kh) * .847); height: calc(var(--kh) * 1.27); transform: translateX(-50%); overflow: visible; fill: none; stroke: var(--ix-gold); pointer-events: none; }
+.ix-arch path { stroke-width: .8; stroke-dasharray: 1; stroke-dashoffset: 1; animation: ix-draw 2.1s cubic-bezier(.6,0,.2,1) .15s forwards; }
+.ix-arch .in { stroke-opacity: .45; animation-delay: .45s; }
+.ix-arch .gem { fill: var(--ix-gold); stroke: none; opacity: 0; transform-box: fill-box; transform-origin: center; animation: ixg-gem .8s var(--ix-e) 1.9s forwards; }
+@keyframes ixg-gem { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: none; } }
+/* 15. Gilt sheen: metallic gradient on the key; the sheen crosses key and name. */
+.ix-15 .ix-key, .ix-20 .ix-key { stroke: url(#ix-g15); }
+/* 16. Invitation: double hairline frame with diamond corners; an ornament under the name. */
+.ix-frame { position: absolute; inset: clamp(14px, 2.4vw, 28px); }
+.ix-frame + .ix-frame { inset: clamp(20px, 3.3vw, 38px); }
+.ix-frame i { position: absolute; background: rgba(217,196,143,.55); animation: ixg-sx 1.6s var(--ix-e) .2s forwards; }
+.ix-frame + .ix-frame i { background: rgba(217,196,143,.25); animation-delay: .45s; }
+.ix-frame i:nth-of-type(1), .ix-frame i:nth-of-type(2) { left: 0; right: 0; height: 1px; transform: scaleX(0); }
+.ix-frame i:nth-of-type(1) { top: 0; } .ix-frame i:nth-of-type(2) { bottom: 0; }
+.ix-frame i:nth-of-type(3), .ix-frame i:nth-of-type(4) { top: 0; bottom: 0; width: 1px; transform: scaleY(0); }
+.ix-frame i:nth-of-type(3) { left: 0; } .ix-frame i:nth-of-type(4) { right: 0; }
+.ix-frame b { position: absolute; width: 9px; height: 9px; margin: -4.5px; border: 1px solid var(--ix-gold); background: var(--ix-bg); transform: rotate(45deg) scale(0); animation: ixg-pop .7s var(--ix-e) 1.3s forwards; }
+.ix-frame b:nth-of-type(1) { top: 0; left: 0; } .ix-frame b:nth-of-type(2) { top: 0; right: 0; } .ix-frame b:nth-of-type(3) { bottom: 0; left: 0; } .ix-frame b:nth-of-type(4) { bottom: 0; right: 0; }
+.ix-rule { display: flex; align-items: center; gap: 10px; margin: -6px 0; color: var(--ix-gold); }
+.ix-rule i { width: clamp(40px, 8vw, 90px); height: 1px; background: currentColor; opacity: .6; transform: scaleX(0); animation: ixg-sx 1.2s var(--ix-e) 2.1s forwards; }
+.ix-rule i:first-child { transform-origin: right; } .ix-rule i:last-child { transform-origin: left; }
+.ix-rule b { width: 6px; height: 6px; border: 1px solid currentColor; transform: rotate(45deg) scale(0); animation: ixg-pop .6s var(--ix-e) 2s forwards; }
+/* 17. Riad doors: arched panels on the doors; they swing open inward instead of sliding. */
+.ix-17, .ix-20 { perspective: 1600px; }
+.ix-17 .ix-door, .ix-20 .ix-door { transition: transform 1.3s cubic-bezier(.65,0,.25,1), opacity .5s ease .8s; }
+.ix-17 .ix-door.l, .ix-20 .ix-door.l { transform-origin: 0 50%; box-shadow: inset -1px 0 rgba(217,196,143,.35); }
+.ix-17 .ix-door.r, .ix-20 .ix-door.r { transform-origin: 100% 50%; box-shadow: inset 1px 0 rgba(217,196,143,.35); }
+.ix-17 .ix-door::before, .ix-20 .ix-door::before { content: ""; position: absolute; top: 9%; bottom: 7%; left: 14%; right: 14%; border: 1px solid rgba(217,196,143,.22); border-radius: 50% 50% 0 0 / 22% 22% 0 0; opacity: 0; animation: ix-fade 1.4s ease .6s forwards; }
+.ix-17.out .ix-door.l, .ix-20.out .ix-door.l { transform: rotateY(96deg); opacity: 0; } .ix-17.out .ix-door.r, .ix-20.out .ix-door.r { transform: rotateY(-96deg); opacity: 0; }
+/* 18. Zellige: a faint eight-point star lattice on the doors, fading toward the key; it parts with the doors. */
+.ix-18 .ix-door::before { content: ""; position: absolute; inset: 0; opacity: 0; animation: ixg-zel 2s ease .3s forwards;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23D9C48F' stroke-width='.7'%3E%3Crect x='20' y='20' width='24' height='24'/%3E%3Crect x='20' y='20' width='24' height='24' transform='rotate(45 32 32)'/%3E%3Cpath d='M32 0V15M32 49V64M0 32H15M49 32H64M0 0L20 20M64 0L44 20M0 64L20 44M64 64L44 44'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 64px 64px; }
+.ix-18 .ix-door.l::before { background-position: right center; -webkit-mask-image: radial-gradient(circle at 100% 50%, transparent 16vmin, #000 72vmin); mask-image: radial-gradient(circle at 100% 50%, transparent 16vmin, #000 72vmin); }
+.ix-18 .ix-door.r::before { background-position: left center; -webkit-mask-image: radial-gradient(circle at 0 50%, transparent 16vmin, #000 72vmin); mask-image: radial-gradient(circle at 0 50%, transparent 16vmin, #000 72vmin); }
+@keyframes ixg-zel { to { opacity: .2; } }
+/* 19. Engraved: letters come into focus from a blur while the name settles to its spacing; the key glows; rules flank the tagline. */
+.ix-19 .ix-name { animation: ixg-track 2.6s var(--ix-e) 1.3s both; }
+@keyframes ixg-track { from { letter-spacing: .6em; } }
+.ix-19 .ix-name .l { animation-name: ixg-focus; animation-duration: 1.3s; }
+@keyframes ixg-focus { from { opacity: 0; filter: blur(8px); transform: translateY(.3em) scale(1.25); } to { opacity: 1; filter: none; transform: none; } }
+.ix-19 .ix-key { animation: ixg-glow 2.6s ease-in-out 1.2s both; }
+@keyframes ixg-glow { 0% { filter: drop-shadow(0 0 0 rgba(217,196,143,0)); } 45% { filter: drop-shadow(0 0 22px rgba(246,235,200,.85)); } 100% { filter: drop-shadow(0 0 10px rgba(217,196,143,.45)); } }
+.ix-19 .ix-sub { display: flex; align-items: center; gap: 1.2em; }
+.ix-19 .ix-sub::before, .ix-19 .ix-sub::after { content: ""; width: clamp(24px, 6vw, 64px); height: 1px; background: currentColor; transform: scaleX(0); animation: ixg-sx 1.2s var(--ix-e) 2.5s forwards; }
+.ix-19 .ix-sub::before { transform-origin: right; } .ix-19 .ix-sub::after { transform-origin: left; margin-left: -.5em; }
+/* 20. Grand: dust, halo and ring, glint, metallic key, sheen, lit seam, and riad doors swinging open (parts above). */
+
 @media (max-width: 600px) { .ix-name { letter-spacing: .2em; } .ix-sub { letter-spacing: .3em; } .ix-3 .ix-name { letter-spacing: .26em; } }
 @media (prefers-reduced-motion: reduce) { .ix * { animation-duration: .01s !important; animation-delay: 0s !important; } }

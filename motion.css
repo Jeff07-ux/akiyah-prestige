@@ -33,6 +33,12 @@ html.js .is-in .wr-w { opacity: 1; transform: none; }
 html.js [data-reveal] { opacity: 0; transform: translateY(24px);
   transition: opacity var(--dur-reveal) var(--ease), transform var(--dur-reveal) var(--ease); transition-delay: var(--d, 0s); }
 html.js [data-reveal].is-in { opacity: 1; transform: none; }
+/* The Events chips are frosted glass: a fading list would hide the photo from their blur until the fade ends,
+   so the list stays put and each chip fades up on its own. */
+html.js .ev-types[data-reveal] { opacity: 1; transform: none; }
+html.js .ev-types[data-reveal] > li { opacity: 0; translate: 0 24px;
+  transition: opacity var(--dur-reveal) var(--ease), translate var(--dur-reveal) var(--ease); transition-delay: var(--d, 0s); }
+html.js .ev-types[data-reveal].is-in > li { opacity: 1; translate: 0 0; }
 
 /* Parallax images get headroom via the independent `scale` property; GSAP moves them with yPercent. */
 [data-par] { scale: 1.18; }
@@ -66,7 +72,7 @@ header.site { view-transition-name: site-header; }
 
 /* Printing shows everything in its resting state. */
 @media print {
-  html.js :is([data-reveal], [data-word-reveal], .wr-w) { opacity: 1 !important; transform: none !important; }
+  html.js :is([data-reveal], [data-word-reveal], .wr-w, .ev-types[data-reveal] > li) { opacity: 1 !important; transform: none !important; translate: none !important; }
   html.js [data-masked-reveal] { visibility: visible !important; }
   .wm > .w { transform: none !important; }
 }

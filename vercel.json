@@ -1,18 +1,29 @@
 {
+  "cleanUrls": true,
+  "trailingSlash": false,
   "redirects": [
     {
       "source": "/service.html",
-      "destination": "/private-jet-charter.html",
+      "destination": "/private-jet-charter",
       "permanent": true
     }
   ],
   "headers": [
     {
+      "source": "/(post|design-01|design-01-b|design-02|design-02-b|design-03|design-03-b|design-04|design-04-b|design-05|design-05-b|design-06|design-06-b|design-07|design-07-b|design-08|design-08-b|design-09|design-09-b|design-10|design-10-b|design-11|design-11-b|design-12|design-12-b|design-13|design-13-b|design-14|design-14-b|design-15|design-15-b|design-16|design-16-b|design-17|design-17-b|design-18|design-18-b|design-19|design-19-b|design-20|design-20-b|service-designs|intro-designs|intro-gold|nav-designs|about-wall|about-1|about-2|about-3|about-4|about-5|sections|404)(\\.html)?",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, follow"
+        }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'sha256-xIJAXUQGx+WqKUZJ6SQqA0n5P8739Q4Yn4lD8YVEq8c='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+          "value": "default-src 'self'; script-src 'self' 'sha256-DJWx21BSYoLAHqW3pWaVcLhT8MU5HJpjYtza8tbFZGo='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
         },
         {
           "key": "X-Content-Type-Options",
@@ -61,6 +72,24 @@
     },
     {
       "source": "/motion.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/hero-video.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/video/(.*)",
       "headers": [
         {
           "key": "Cache-Control",

@@ -13,6 +13,22 @@ const WA = "+212 6 00 00 00 00";
 const WA_URL = "https://wa.me/212600000000";
 const EMAIL = "concierge@aliyahprestige.ma";
 const im = (k) => `img/${k}.jpg`;
+// Alt text for photos reused across cards (service tiles, signature panels, journal cards, contact band), keyed by image name.
+const ALT = {
+  "jet-tarmac": "A private jet on the tarmac at sunset", jet: "The cabin of a private jet with cream leather seats",
+  "riad-pool": "A riad courtyard with a tiled pool, terracotta urns and a draped salon", riad2: "A riad courtyard with palms around a small pool",
+  riad3: "A tiled pool in a quiet riad courtyard", "chef-plating": "A private chef plating a dish by hand",
+  "cooking-hands": "Hands stirring a pan during a Moroccan cooking class", tagine: "A Moroccan platter of roast chicken and vegetables",
+  "hammam-marble": "A private marble hammam with copper bowls", hammam: "A traditional hammam with zellige tiles and carved arches",
+  "bahia-court": "The marble courtyard of the Bahia Palace in Marrakech", "garden-banquet": "A long banquet table laid on a garden lawn",
+  "chauffeur-van": "A black Mercedes van with its door open for the guest", "chauffeur-suv": "A chauffeur waiting beside a black SUV",
+  "souk-lanterns": "A lantern shop glowing in the Marrakech souk", "souk-alley": "A souk alley hung with colourful slippers and bags",
+  tajines: "Painted tagines and plates in the souk", dunes: "Sand dunes in the Moroccan desert",
+  "medina-night": "The Koutoubia minaret above the Marrakech medina at night", "atlas-helicopter": "A helicopter flying through clouds over the Atlas Mountains",
+  "camp-fire": "A lantern-lit desert camp in the Agafay at dusk", "secret-garden": "A tiled fountain and potted plants in a walled garden",
+  agafay: "Travellers crossing the stone desert of the Agafay", essaouira: "The Atlantic shore and ramparts of Essaouira",
+};
+const alt = (k) => (ALT[k] || "").replace(/"/g, "&quot;");
 
 // ---------- SEO ----------
 // Production origin, no trailing slash. Build for deployment with: SITE_URL=https://your-domain node build.mjs
@@ -25,9 +41,12 @@ const SITE_URL = (process.env.SITE_URL || SITE_URL_PLACEHOLDER).replace(/\/+$/, 
 const PREVIEW = SITE_URL === SITE_URL_PLACEHOLDER;
 const SITE_NAME = "Aliyah Prestige";
 // Pages meant for search. Everything else (About layout variants, the section comparison page, 404) is noindex
-// and stays out of the sitemap.
-const INDEXABLE = ["index.html", ...SERVICES.map((sv) => `${sv.slug}.html`), "gallery.html", "journal.html", "post.html", "about.html"];
-const urlFor = (file) => `${SITE_URL}/${file === "index.html" ? "" : file}`;
+// and stays out of the sitemap. post.html stays out until the journal has real articles at their own URLs: today
+// every journal card opens this one sample post. Add it back here (and each new post) when they are written.
+const INDEXABLE = ["index.html", ...SERVICES.map((sv) => `${sv.slug}.html`), "gallery.html", "journal.html", "about.html"];
+// Vercel serves clean URLs (cleanUrls in vercel.json): /about, not /about.html. Canonicals, the sitemap and structured data use them.
+const urlPath = (file) => (file === "index.html" ? "" : file.replace(/\.html$/, ""));
+const urlFor = (file) => `${SITE_URL}/${urlPath(file)}`;
 const attr = (s) => String(s).replace(/<[^>]+>/g, "").replace(/&(?!amp;|lt;|gt;|quot;|#)/g, "&amp;").replace(/"/g, "&quot;");
 const isoDate = (d) => { const t = new Date(d + " UTC"); return isNaN(t) ? undefined : t.toISOString().slice(0, 10); };
 const sha = (s) => createHash("sha256").update(s).digest();
@@ -139,9 +158,10 @@ writeFileSync(CSS_MOTION, minifyCss(readFileSync("motion.css", "utf8")));
 }
 
 // Head script, also hashed into the Content-Security-Policy in vercel.json. Before first paint: hide entrance targets
-// only when motion will run, and show everything if motion.js fails.
+// only when motion will run, and show everything if motion.js fails. The opening animation is skipped for visitors
+// arriving from another site (a search result, a shared link): they came for a page, so it paints at once (LCP).
 const HEAD_SCRIPT = `(function(d){var still=location.hash==="#static"||matchMedia("(prefers-reduced-motion: reduce)").matches;d.classList.add(still?"still":"js");
-try{if(sessionStorage.getItem("keyDrawn"))d.classList.add("key-drawn");sessionStorage.setItem("keyDrawn","1");if(!still&&!sessionStorage.getItem("introSeen")){d.classList.add("intro-pending");sessionStorage.setItem("introSeen","1")}}catch(e){}
+try{if(sessionStorage.getItem("keyDrawn"))d.classList.add("key-drawn");sessionStorage.setItem("keyDrawn","1");var away=document.referrer&&document.referrer.indexOf(location.origin)!==0;if(!still&&!away&&!sessionStorage.getItem("introSeen")){d.classList.add("intro-pending");sessionStorage.setItem("introSeen","1")}}catch(e){}
 addEventListener("load",function(){if(!d.classList.contains("motion-ready"))d.classList.remove("js")})})(document.documentElement)`;
 const FONT_PRELOAD = ["fonts/playfair-latin.woff2", "fonts/poppins-400-latin.woff2", "fonts/poppins-500-latin.woff2"]
   .map((f) => `<link rel="preload" href="${f}" as="font" type="font/woff2" crossorigin>`).join("");
@@ -195,7 +215,7 @@ const planner = `<dialog class="planner" id="planner" aria-labelledby="planner-h
 const footer = `<footer class="site lab"><div class="in"><span>Aliyah Prestige · Marrakech</span><a href="${WA_URL}">WhatsApp ${WA}</a><span>Names stay private</span></div></footer>`;
 
 function cta(img, h, p, label = "WhatsApp the concierge") {
-  return `<section class="stage short" id="enquire"><img src="${im(img)}" alt="" data-par>${rails}<div class="in">
+  return `<section class="stage short" id="enquire"><img src="${im(img)}" alt="${alt(img)}" data-par>${rails}<div class="in">
   <div class="copy"><p class="lab">24/7 · Within the hour</p><h2 class="H" data-masked-reveal>${h}</h2><p data-reveal>${p}</p><div class="cta-acts" data-reveal style="--d:.1s"><a class="btn solid" href="${WA_URL}">${label}</a><a class="pnl-more cta-more" href="${WA_URL}" data-planner>Plan in three steps <span aria-hidden="true">→</span></a></div>${PROMISE}</div>
   <div class="side" data-reveal style="--d:.2s"><p class="lab">Concierge</p><p style="margin-top:10px;color:var(--bone)">${WA}<br>${EMAIL}</p></div></div></section>`;
 }
@@ -223,7 +243,8 @@ ${FONT_PRELOAD}
 <link rel="stylesheet" href="${asset(CSS_INTRO)}">
 <script src="${asset("motion.js")}" defer data-gsap="${asset("vendor/gsap.min.js")}" data-st="${asset("vendor/ScrollTrigger.min.js")}"></script>
 <script src="${asset("site.js")}" defer></script>
-<script src="${asset("intro-site.js")}" defer></script>
+<script src="${asset("intro-site.js")}" defer></script>${body.includes("data-hero-video") ? `
+<script src="${asset("hero-video.js")}" defer></script>` : ""}
 </head>
 <body data-page="${page}"${solid ? ' class="solid-head"' : ""}>
 ${header(page)}
@@ -235,6 +256,9 @@ ${footer}
 </body>
 </html>
 `;
+  // Production build: internal links use the clean URLs too, so no click goes through a .html -> clean redirect.
+  // The preview build keeps .html links so the pages also work opened from disk.
+  if (!PREVIEW) html = html.replace(/(\shref=")(?:\.\/)?([a-z0-9-]+)\.html(?=[#?"])/g, (m, p, f) => p + (f === "index" ? "/" : f));
   // The host serves 404.html at whatever path was missing (/a/b/c), so its links and assets must be root-absolute.
   if (file === "404.html") html = html.replace(/(\s(?:href|src)=")\.\//g, "$1/").replace(/(\s(?:href|src)=")(?![a-z]+:|#|\/)/g, "$1/");
   writeFileSync(file, html);
@@ -251,7 +275,7 @@ function svcItem(t) {
 }
 // Home tiles, one per service: the first and last span two columns so ten tiles close a four-column grid.
 // Tiles crop their photo with object-fit: cover into a tall box, so they ask for about twice the tile width.
-const svcTile = (sv, i, all) => `<a class="tile${i === 0 || i === all.length - 1 ? " wide" : ""}" href="${svcFile(sv)}" data-reveal style="--d:${(i % 4) * 0.06}s"><img src="${im(sv.img)}" alt="" loading="lazy" sizes="(max-width: 900px) 100vw, 50vw"><span class="lab n">${String(i + 1).padStart(2, "0")}</span><div class="t"><p class="lab">${esc(sv.kicker)}</p><h3>${esc(sv.card)}</h3><p>${esc(sv.line)}</p></div></a>`;
+const svcTile = (sv, i, all) => `<a class="tile${i === 0 || i === all.length - 1 ? " wide" : ""}" href="${svcFile(sv)}" data-reveal style="--d:${(i % 4) * 0.06}s"><img src="${im(sv.img)}" alt="${alt(sv.img)}" loading="lazy" sizes="(max-width: 900px) 100vw, 50vw"><span class="lab n">${String(i + 1).padStart(2, "0")}</span><div class="t"><p class="lab">${esc(sv.kicker)}</p><h3>${esc(sv.card)}</h3><p>${esc(sv.line)}</p></div></a>`;
 
 // Guest testimonials (with permission and photos, see PRODUCT.md): home band and About pages.
 const TESTIMONIALS = [
@@ -262,6 +286,11 @@ const TESTIMONIALS = [
 const AB_T_PICS = ["t-delauro", "t-whiteman", "t-gold"];
 
 // ---------- Home ----------
+// Hero video, as on the WordPress theme: no src in the markup, so the start frame (img/hero-video-frame.jpg, the
+// video's second frame, at HERO_VIDEO_START seconds) paints first. hero-video.js loads the file during the opening
+// animation and starts it from that frame as the doors open, so the switch from picture to video cannot be seen.
+const HERO_VIDEO_START = 0.0626;
+const HERO_VIDEO = `<video data-hero-video data-src="${asset("video/hero.mp4")}" data-start="${HERO_VIDEO_START}" data-same-frame loop muted playsinline preload="none" aria-hidden="true" data-par style="object-position:63% 50%"></video>`;
 const SIGNATURE = [
   ["atlas-helicopter", "Helicopter over the Atlas", "Lift off from Marrakech, land for lunch in a Berber valley, and be back before the evening call to prayer.", "Atlas", "desert-atlas-escapes"],
   ["camp-fire", "Dinner under the stars", "A table for two in the Agafay, lit by lanterns only. Your chef cooks over embers.", "Agafay", "desert-atlas-escapes"],
@@ -399,9 +428,9 @@ const AP = {
 };
 const apFig = (k, i) => `<figure class="isc-ph isc-${i + 1}" data-reveal style="--d:${(i * 0.09).toFixed(2)}s"><img src="img/ap/${k}.jpg" alt="${AP[k]}" loading="lazy"></figure>`;
 
-const HOME = { title: "Aliyah Prestige | Private concierge in Marrakech", page: "home",
-  desc: "Bespoke stays, journeys and evenings in Marrakech and across Morocco, arranged with absolute discretion.",
-  body: `<section class="stage" id="stays"><img src="img/hero-palais.png" alt="A Moroccan palace lit at dusk behind a long reflecting pool lined with lanterns and palm trees" style="object-position:63% 50%" data-par>${rails}<div class="in">
+const HOME = { title: "Luxury Concierge in Marrakech | Aliyah Prestige", page: "home",
+  desc: "Luxury private concierge in Marrakech since 1986: villas and riads, private chefs, jets, desert and Atlas escapes, arranged with absolute discretion.",
+  body: `<section class="stage" id="stays"><img src="img/hero-video-frame.jpg" alt="The carved courtyard and pool of a madrasa in Marrakech" style="object-position:63% 50%" data-par>${HERO_VIDEO}${rails}<div class="in">
   <div class="copy"><p class="lab">Luxury private concierge · Marrakech</p><h1 class="H">Marrakech,<br><span class="nw">entirely your <em>own</em>.</span></h1>
     <p data-reveal>Exceptional stays, private encounters and unforgettable evenings, thoughtfully arranged across Marrakech and beyond.</p>
     <a class="btn" href="${WA_URL}" data-planner data-reveal style="--d:.1s">Plan your stay <span aria-hidden="true">→</span></a>${PROMISE}</div>
@@ -411,7 +440,7 @@ const HOME = { title: "Aliyah Prestige | Private concierge in Marrakech", page: 
 <div class="sec intro" id="welcome" role="region" aria-labelledby="intro-h"><div class="inner intro-split">
   <div class="intro-copy">
     <div class="intro-head"><span class="intro-mark" data-reveal>${KEY.replace('class="logo-key"', 'class="intro-key"')}</span>
-    <h2 class="intro-h" id="intro-h" data-reveal style="--d:.15s">A world of privilege, rooted in excellence</h2></div>
+    <h2 class="intro-h" id="intro-h" data-reveal style="--d:.15s">A luxury concierge in Marrakech, rooted in excellence</h2></div>
     <p class="intro-p" data-word-reveal>At Aliyah Prestige, we craft bespoke experiences of rare elegance in Marrakech and beyond. Since 1986, discerning visionaries, global tastemakers, and loyal connoisseurs have entrusted us with their most exclusive moments, delivered with absolute discretion and timeless sophistication.</p>
     <p class="intro-sig" data-reveal style="--d:.3s">Marrakech <i aria-hidden="true"></i> Since 1986</p>
   </div>
@@ -437,7 +466,7 @@ const HOME = { title: "Aliyah Prestige | Private concierge in Marrakech", page: 
     <p class="muted">Six moments we arrange for our guests, and nowhere else in quite the same way.</p></div>
   <div class="pn" data-panels>${SIGNATURE.map(([img, t, d, where, svc], i) => `
     <article class="pnl${i === 0 ? " on" : ""}">
-      <img src="${im(img)}" alt="" loading="lazy">
+      <img src="${im(img)}" alt="${alt(img)}" loading="lazy">
       <button class="pnl-tab" type="button" aria-expanded="${i === 0}" aria-controls="sig-${i}"><i>0${i + 1}</i>${t}</button>
       <div class="pnl-d" id="sig-${i}"><p class="lab">0${i + 1} · ${where}</p><h3>${t}</h3><p>${d}</p>
         <a class="btn" href="${WA_URL}?text=${encodeURIComponent("Hello, I would like to ask about: " + t)}">Ask about this</a>
@@ -455,7 +484,7 @@ const HOME = { title: "Aliyah Prestige | Private concierge in Marrakech", page: 
 
 <section class="sec voices" id="voices" aria-labelledby="voices-h">${rails}<div class="inner">
   <div class="sec-head"><div><p class="lab">In their words</p><h2 class="H md" id="voices-h" data-masked-reveal>Trusted since <em>1986</em>.</h2></div><a class="chip" href="about.html">Our story</a></div>
-  <div class="vc3">${TESTIMONIALS.map(([q, who, role], i) => `<figure data-reveal style="--d:${i * 0.08}s"><div class="stars" role="img" aria-label="5 out of 5 stars">${"<i></i>".repeat(5)}</div><blockquote>“${q}”</blockquote><figcaption><img src="${im(AB_T_PICS[i])}" alt="" width="56" height="56" loading="lazy"><div><b>${who}</b>${role}</div></figcaption></figure>`).join("")}</div>
+  <div class="vc3">${TESTIMONIALS.map(([q, who, role], i) => `<figure data-reveal style="--d:${i * 0.08}s"><div class="stars" role="img" aria-label="5 out of 5 stars">${"<i></i>".repeat(5)}</div><blockquote>“${q}”</blockquote><figcaption><img src="${im(AB_T_PICS[i])}" alt="${who}" width="56" height="56" loading="lazy"><div><b>${who}</b>${role}</div></figcaption></figure>`).join("")}</div>
 </div></section>
 
 <section class="sec flush" id="journal-preview">${rails}<div class="inner">
@@ -501,7 +530,7 @@ page("gallery.html", { title: "Gallery | Aliyah Prestige", page: "gallery", soli
 </div></section>
 <dialog class="lb" id="lightbox" aria-label="Photo viewer">
   <div class="bar"><span class="lab" data-lb-pos></span><button type="button" class="lab" data-lb-close>Close ✕</button></div>
-  <div class="view"><button type="button" class="chip nav-btn" data-lb-prev aria-label="Previous photo">←</button><img alt=""><button type="button" class="chip nav-btn" data-lb-next aria-label="Next photo">→</button></div>
+  <div class="view"><button type="button" class="chip nav-btn" data-lb-prev aria-label="Previous photo">←</button><img alt="" hidden><button type="button" class="chip nav-btn" data-lb-next aria-label="Next photo">→</button></div>
   <div class="foot"><p class="muted" data-lb-text></p><a class="btn solid flat" href="${WA_URL}" data-lb-cta>Arrange this</a></div>
 </dialog>
 ${cta("riad3", "Want to be <em>here</em>?", "Send us a photo from the gallery. We will build a stay around it.")}` });
@@ -509,7 +538,7 @@ ${cta("riad3", "Want to be <em>here</em>?", "Send us a photo from the gallery. W
 // ---------- Journal ----------
 const ALL_POSTS = [...POSTS, { title: "A day in Essaouira, by road or by air", cat: "Places", date: "30 May 2026", read: "6 min", img: "essaouira", excerpt: "The Atlantic in two hours by car, or forty minutes by helicopter." }];
 function postCard(p) {
-  return `<a class="post" href="post.html" data-cat="${p.cat.toLowerCase()}" data-reveal><div class="img"><img src="${im(p.img)}" alt="" loading="lazy"></div><div class="meta"><b>${p.cat}</b><span>${p.read}</span><span>${p.date}</span></div><h3>${p.title}</h3><p>${p.excerpt}</p></a>`;
+  return `<a class="post" href="post.html" data-cat="${p.cat.toLowerCase()}" data-reveal><div class="img"><img src="${im(p.img)}" alt="${alt(p.img)}" loading="lazy"></div><div class="meta"><b>${p.cat}</b><span>${p.read}</span><span>${p.date}</span></div><h3>${p.title}</h3><p>${p.excerpt}</p></a>`;
 }
 const [feat, ...rest] = ALL_POSTS;
 const JCATS = ["All", ...new Set(rest.map((p) => p.cat))];
@@ -517,7 +546,7 @@ page("journal.html", { title: "Journal | Aliyah Prestige", page: "journal", page
   desc: "Guides, places and tables in Marrakech and Morocco, from the Aliyah Prestige concierge.",
   body: `<section class="stage feat"><img src="${im(feat.img)}" alt="Riad courtyard at dusk" data-par>${rails}
   <div class="in">
-  <div class="copy wide"><p class="lab">The journal · Latest</p><h1 class="H" style="font-size:clamp(40px,5.4vw,88px)" data-masked-reveal>A first evening in the <em>medina</em>.</h1><p>${feat.excerpt}</p><a class="btn" href="post.html">Read the article</a></div>
+  <div class="copy wide"><h1 class="lab" style="margin:12px 0">The Marrakech journal · Latest</h1><h2 class="H" style="font-size:clamp(40px,5.4vw,88px)">A first evening in the <em>medina</em>.</h2><p>${feat.excerpt}</p><a class="btn" href="post.html">Read the article</a></div>
   <div class="side"><div class="meta"><b>${feat.cat}</b><span>${feat.read}</span></div><p style="margin-top:12px">${feat.date}</p></div></div></section>
 <section class="sec">${rails}<div class="inner">
   <div class="sec-head"><div><p class="lab">All articles</p><h2 class="H md" data-masked-reveal>Notes from <em>Morocco</em>.</h2></div>
@@ -592,7 +621,7 @@ ${sv.day ? `<section class="sec day-sec" aria-labelledby="day-h">${rails}<div cl
   <ol class="day-tl">${sv.day.map(([t, h, p], k) => `<li data-reveal style="--d:${k * 0.06}s"><span class="day-t">${esc(t)}</span><div><h3>${esc(h)}</h3><p>${esc(p)}</p></div></li>`).join("")}</ol>
 </div></section>` : ""}
 <section class="sec flush">${rails}<div class="inner"><div class="sec-head"><div><p class="lab">More services</p><h2 class="H md">Also <em>arranged</em>.</h2></div><a class="chip" href="index.html#services">All services</a></div>
-  <div class="grid svc-more">${others.map((o, k) => `<a class="tile" href="${svcFile(o)}" data-reveal style="--d:${k * 0.06}s"><img src="${im(o.img)}" alt="" loading="lazy" sizes="(max-width: 900px) 100vw, 50vw"><div class="t"><p class="lab">${esc(o.kicker)}</p><h3>${esc(o.card)}</h3></div></a>`).join("")}</div></div></section>
+  <div class="grid svc-more">${others.map((o, k) => `<a class="tile" href="${svcFile(o)}" data-reveal style="--d:${k * 0.06}s"><img src="${im(o.img)}" alt="${alt(o.img)}" loading="lazy" sizes="(max-width: 900px) 100vw, 50vw"><div class="t"><p class="lab">${esc(o.kicker)}</p><h3>${esc(o.card)}</h3></div></a>`).join("")}</div></div></section>
 ${cta("riad3", "Tell us the <em>date</em>.", "A message on WhatsApp is enough: where from, when, how many. Two or three options follow within the hour.")}` });
 });
 
@@ -658,6 +687,27 @@ ${d.ownTail ? "" : tail(sv)}`) });
 <div class="fx-theme"><div class="fx fx-brand dz"><section><h1 class="H">Opening animation, ten designs.</h1>
   <p class="mute">Each one shows the logo and the company name. Press Play to see it over this page. The Skip button ends it at once.</p>
   <ol class="dz-list">${IN.map(row).join("")}</ol></section></div></div>
+<script src="${asset("intro.js")}" defer></script>` });
+
+  // intro-gold.html: ten richer versions of design 1 ("Gold line"), played as designs 11 to 20.
+  const GOLD = [
+    ["Gilded seam", "The door edges are lit in gold; as the doors part, a flare of light opens from the seam."],
+    ["Gold dust", "Fine gold dust drifts upward behind the key, and a star glint flashes on the ring of the key."],
+    ["Halo", "A soft glow breathes behind the key, a hairline circle is drawn round it, and a dotted orbit turns slowly."],
+    ["Moorish arch", "A double horseshoe arch is drawn from both sides around the key and meets in a gold gem at the top."],
+    ["Gilt sheen", "The key is drawn in graded metallic gold, then a band of light sweeps across the key and the name."],
+    ["Invitation", "A double hairline frame with diamond corners is drawn round the screen, like an engraved card; an ornament sits under the name."],
+    ["Riad doors", "The doors carry faint arched panels and swing open inward in depth, instead of sliding apart."],
+    ["Zellige", "A faint eight-point star lattice appears on the doors, fading toward the key, and parts with the doors."],
+    ["Engraved", "The letters come into focus from a blur while the name settles to its spacing; the key glows; fine rules flank the tagline."],
+    ["Grand", "All of it at once: gold dust, halo and ring, glint, metallic key, sheen, lit seam and riad doors."],
+  ];
+  const goldRow = ([n, d], i) => row([n, d], i).replace(/data-intro-play="\d+"/, `data-intro-play="${i + 11}"`);
+  page("intro-gold.html", { title: "Gold line, richer versions | Aliyah Prestige", page: "", solid: true, desc: "Ten richer versions of the Gold line opening animation.",
+    body: `${css}<template id="ix-key">${KEY}</template>
+<div class="fx-theme"><div class="fx fx-brand dz"><section><h1 class="H">Gold line, ten richer versions.</h1>
+  <p class="mute">The same opening as now: the key drawn in gold, the name rising letter by letter, the black doors parting. Each version adds a flourish. Press Play to see it over this page.</p>
+  <ol class="dz-list"><li><span class="num">00</span><div><h2>Current: Gold line</h2><p class="mute">The opening on the site today, for comparison.</p></div><div class="cta-acts"><button class="btn solid" type="button" data-intro-play="1">Play</button></div></li>${GOLD.map(goldRow).join("")}</ol></section></div></div>
 <script src="${asset("intro.js")}" defer></script>` });
 }
 
@@ -829,7 +879,7 @@ ${abSwitch(1)}` });
 
 // 2. Chapters: full-bleed photo hero, sticky chapter index beside scrolling chapters, quotes over a photo.
 const ABOUT_2 = `<section class="stage v2-hero">${abImg("riad2", "Riad courtyard in Marrakech", true)}<div class="in">
-  <div class="copy wide"><h1 class="H" style="font-size:clamp(40px,5.4vw,88px)" data-masked-reveal>A bespoke experience in <em>Marrakech</em>.</h1>
+  <div class="copy wide"><h1 class="H" style="font-size:clamp(40px,5.4vw,88px)" data-masked-reveal>A unique experience in <em>Marrakech</em>.</h1>
     <p data-reveal>A refined concierge service, opening the doors to Marrakech's hidden treasures.</p></div>
   <p class="v2-meta" data-reveal style="--d:.2s">Since <em>1986</em></p></div></section>
 
@@ -970,10 +1020,28 @@ page("404.html", { title: "Page not found | Aliyah Prestige", page: "", solid: t
   <a class="btn solid" href="index.html">Return home</a></div></section>` });
 
 // ---------- Crawl files and icon ----------
+// Content-Signal (contentsignals.org) states use preferences to AI crawlers: search and answering with citations are welcome.
+// No ai-train value is set, so no preference on model training is stated until the client decides.
 writeFileSync("robots.txt", `User-agent: *
+Content-Signal: search=yes, ai-input=yes
 Allow: /
 
 Sitemap: ${SITE_URL}/sitemap.xml
+`);
+// llms.txt (llmstxt.org): a short Markdown map of the site for AI assistants. Google Search ignores it.
+writeFileSync("llms.txt", `# ${SITE_NAME}
+
+> ${ORG.description} Family-run since 1986. One concierge per stay, a real person replying at any hour in English, French or Spanish, by WhatsApp.
+
+## Services
+
+${SERVICES.map((sv) => `- [${sv.name}](${urlFor(svcFile(sv))}): ${sv.desc}`).join("\n")}
+
+## About
+
+- [About us](${urlFor("about.html")}): the family story, values and four decades in Marrakech.
+- [Gallery](${urlFor("gallery.html")}): riads, desert camps, valleys and tables arranged for guests.
+- [Journal](${urlFor("journal.html")}): guides to Marrakech and Morocco.
 `);
 writeFileSync("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -982,19 +1050,26 @@ writeFileSync("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>
 writeFileSync(LASTMOD_FILE, JSON.stringify(LASTMOD, null, 1) + "\n");
 
 // ---------- Hosting: Vercel (static files from the repository root, no build step on Vercel) ----------
-// Home links use index.html so the site also works opened from disk; the canonical tag makes / the one indexed URL. Assets linked with ?v=<hash> (see asset()) and the fonts are
+// Preview builds link index.html and *.html so the site also works opened from disk; production builds link clean URLs (see page()). Assets linked with ?v=<hash> (see asset()) and the fonts are
 // cached for a year; photos for a week; HTML is always revalidated. The CSP allows only same-origin files, the hashed
 // head script and inline style attributes (used for animation delays). Vercel adds HSTS itself.
 const CSP = ["default-src 'self'", `script-src 'self' 'sha256-${sha(HEAD_SCRIPT).toString("base64")}'`, "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data:", "font-src 'self'", "connect-src 'self'", "object-src 'none'", "base-uri 'self'", "form-action 'self'",
+  "img-src 'self' data:", "media-src 'self' blob:", "font-src 'self'", "connect-src 'self'", "object-src 'none'", "base-uri 'self'", "form-action 'self'",
   "frame-ancestors 'self'", "upgrade-insecure-requests"].join("; ");
 const cache = (source, value) => ({ source, headers: [{ key: "Cache-Control", value }] });
 const YEAR = "public, max-age=31536000, immutable";
+// Design proposals and other non-indexable pages also get a noindex header, so they stay out of search even if a
+// build ever drops their meta tag. They stay deployed: the previews are how layouts are reviewed with the client.
+const NOINDEX = BUILT.filter((f) => !INDEXABLE.includes(f)).map((f) => f.replace(/\.html$/, ""));
 writeFileSync("vercel.json", JSON.stringify({
+  // /about.html is served (and redirected) as /about.
+  cleanUrls: true,
+  trailingSlash: false,
   redirects: [
     // The single sample service page became one page per service.
-    { source: "/service.html", destination: "/private-jet-charter.html", permanent: true }],
+    { source: "/service.html", destination: "/private-jet-charter", permanent: true }],
   headers: [
+    { source: `/(${NOINDEX.join("|")})(\\.html)?`, headers: [{ key: "X-Robots-Tag", value: "noindex, follow" }] },
     { source: "/(.*)", headers: [
       { key: "Content-Security-Policy", value: CSP },
       { key: "X-Content-Type-Options", value: "nosniff" },
@@ -1002,7 +1077,7 @@ writeFileSync("vercel.json", JSON.stringify({
       { key: "X-Frame-Options", value: "SAMEORIGIN" },
       { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=()" },
     ] },
-    ...["/site.min.css", "/motion.min.css", "/site.js", "/motion.js", "/vendor/(.*)", "/fonts/(.*)", "/img/opt/(.*)"].map((s) => cache(s, YEAR)),
+    ...["/site.min.css", "/motion.min.css", "/site.js", "/motion.js", "/hero-video.js", "/video/(.*)", "/vendor/(.*)", "/fonts/(.*)", "/img/opt/(.*)"].map((s) => cache(s, YEAR)),
     cache("/img/:file", "public, max-age=604800, stale-while-revalidate=86400"), cache("/img/ap/:file", "public, max-age=604800, stale-while-revalidate=86400"),
   ],
 }, null, 2) + "\n");
