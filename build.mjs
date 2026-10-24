@@ -181,10 +181,27 @@ const KEY = `<svg class="logo-key" viewBox="0 0 48 96" aria-hidden="true" fill="
 <path pathLength="1" d="M24 73H16.5V77.5H20V80.5H16.5V85H24"/>
 </svg>`;
 
+// Header drop-downs, as on the WordPress theme (header.php, aliyahp_dropdown_panel): Services lists every service,
+// Experiences the signature experiences. Each item: [image, title, small label, link]. Pure CSS (hover and
+// focus-within); look 1 of the five in site.css (header.site[data-dd]).
+const DROPDOWNS = {
+  service: { url: "index.html#services", items: () => SERVICES.map((sv) => [sv.img, sv.name, sv.kicker, svcFile(sv)]) },
+  experiences: { url: "index.html#signature", items: () => SIGNATURE.map(([img, t, , where, svc]) => [img, t, where, `${svc}.html`]) },
+};
+function ddPanel(title, url, items) {
+  const li = items.map(([img, t, sub, href], i) => `<li><a href="${href}"><span class="dd-img"><img src="${im(img)}" alt="" loading="lazy" sizes="320px"></span><span class="dd-n">${String(i + 1).padStart(2, "0")}</span><span class="dd-t">${esc(t)}</span>${sub ? `<span class="dd-s">${esc(sub)}</span>` : ""}</a></li>`).join("");
+  return `<div class="dd-panel"><div class="dd-in"><p class="dd-head"><span>${title}</span><a href="${url}">View all <span aria-hidden="true">→</span></a></p><ul class="dd-list">${li}</ul></div></div>`;
+}
+const CARET = `<svg class="dd-caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>`;
 function header(page) {
-  const link = ([t, h, k]) => `<a href="${h}"${k === page ? ' aria-current="page"' : ""}>${t}</a>`;
+  const cur = (k) => (k === page ? ' aria-current="page"' : "");
+  const link = ([t, h, k]) => {
+    const dd = DROPDOWNS[k];
+    return dd ? `<div class="dd"><a class="dd-top" href="${h}" aria-haspopup="true"${cur(k)}>${t}${CARET}</a>${ddPanel(t, dd.url, dd.items())}</div>`
+      : `<a href="${h}"${cur(k)}>${t}</a>`;
+  };
   return `<a class="skip" href="#main">Skip to content</a>
-<header class="site"><div class="in"><a class="logo" href="index.html" aria-label="Aliyah Prestige, home">${KEY}<span class="logo-word">Aliyah Prestige</span></a>
+<header class="site" data-dd="1"><div class="in"><a class="logo" href="index.html" aria-label="Aliyah Prestige, home">${KEY}<span class="logo-word">Aliyah Prestige</span></a>
   <nav aria-label="Main">${NAV.map(link).join("")}</nav>
   <div class="tools"><a class="nav-enq" href="#enquire">Enquire</a>
   <button class="menu-btn" type="button" data-menu-open aria-controls="drawer" aria-expanded="false">Menu</button></div></div></header>
@@ -228,6 +245,7 @@ function page(file, { title, desc, page, solid = false, body, type, schema, page
   const head = seoHead(file, { title, desc, body, type, schema });
   body = responsive(body);
   if (INDEXABLE.includes(file)) touch(file, title + desc + body);
+  const head_ = responsive(header(page));
   let html = `<!doctype html>
 <html lang="en" data-theme="atelier" data-tone="light">
 <head>
@@ -247,7 +265,7 @@ ${FONT_PRELOAD}
 <script src="${asset("hero-video.js")}" defer></script>` : ""}
 </head>
 <body data-page="${page}"${solid ? ' class="solid-head"' : ""}>
-${header(page)}
+${head_}
 <main id="main">
 ${body}
 </main>
